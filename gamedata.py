@@ -6,33 +6,17 @@ from PIL import Image
 
 class GameData():
     RESOURCE_FOLDER = "Resources"
-    CHARACTER_LIST = ["Squall", "Zell", "Irvine", "Quistis", "Rinoa", "Selphie", "Seifer", "Edea", "Laguna", "Kiros", "Ward", "Angelo",
-                      "Griever", "Boko"]
-    COLOR_LIST = ["Darkgrey", "Grey", "Yellow", "Red", "Green", "Blue", "Purple", "White",
-                  "DarkgreyBlink", "GreyBlink", "YellowBlink", "RedBlink", "GreenBlink", "BlueBlink", "PurpleBlink", "WhiteBlink"]
-    LOCATION_LIST = ["Galbadia", "Esthar", "Balamb", "Dollet", "Timber", "Trabia", "Centra", "Horizon"]
-
 
     def __init__(self):
-        self.devour_values = {}
-        self.card_values = {}
-        self.card_type_values = {}
-        self.magic_values = {}
-        self.item_values = {}
-        self.status_values = []
-        self.status_ia_values = {}
-        self.gforce_values = []
-        self.magic_type_values = []
-        self.stat_values = []
-        self.enemy_abilities_values = {}
-        self.enemy_abilities_type_values = {}
-        self.translate_hex_to_str_table = []
-        self.game_info_test = {}
-        self.special_action = {}
-        self.monster_values = {}
-        self.kernel_data_json = []
-        self.card_data_json = []
-        self.card_image_list = []
+        self.devour_data_json = {}
+        self.magic_data_json = {}
+        self.gforce_data_json = {}
+        self.item_data_json = {}
+        self.special_action_data_json = {}
+        self.stat_data_json = {}
+        self.monster_data_json = {}
+        self.status_data_json = {}
+        self.sysfnt_data_json = {}
         self.__init_hex_to_str_table()
 
     def __init_hex_to_str_table(self):
@@ -46,6 +30,46 @@ class GameData():
                 self.translate_hex_to_str_table[i] = self.translate_hex_to_str_table[i].replace(';;;', ',')
                 if self.translate_hex_to_str_table[i].count('"') == 2:
                     self.translate_hex_to_str_table[i] = self.translate_hex_to_str_table[i].replace('"', '')
+
+    def load_gforce_data(self, file_path):
+        with open(file_path, encoding="utf8") as f:
+            self.gforce_data_json = json.load(f)
+
+    def load_stat_data(self, file_path):
+        with open(file_path, encoding="utf8") as f:
+            self.stat_data_json = json.load(f)
+
+    def load_status_data(self, file_path):
+        with open(file_path, encoding="utf8") as f:
+            self.status_data_json = json.load(f)
+
+    def load_devour_data(self, file_path):
+        with open(file_path, encoding="utf8") as f:
+            self.devour_data_json = json.load(f)
+
+    def load_enemy_abilities_data(self, file_path):
+        with open(file_path, encoding="utf8") as f:
+            self.enemy_abilities_data_json = json.load(f)
+
+    def load_magic_data(self, file_path):
+        with open(file_path, encoding="utf8") as f:
+            self.magic_data_json = json.load(f)
+
+    def load_special_action_data(self, file_path):
+        with open(file_path, encoding="utf8") as f:
+            self.special_action_data_json = json.load(f)
+
+    def load_monster_data(self, file_path):
+        with open(file_path, encoding="utf8") as f:
+            self.monster_data_json = json.load(f)
+
+    def load_sysfnt_data(self, file_path):
+        with open(file_path, encoding="utf8") as f:
+            self.sysfnt_data_json = json.load(f)
+
+    def load_item_data(self, file_path):
+        with open(file_path, encoding="utf8") as f:
+            self.item_data_json = json.load(f)
 
     def load_kernel_data(self, file_path):
         with open(file_path, encoding="utf8") as f:
@@ -131,8 +155,9 @@ class GameData():
                 index_next_bracket = rest.find('}')
                 if index_next_bracket != -1:
                     substring = rest[:index_next_bracket]
-                    if substring in self.CHARACTER_LIST:  # {name}
-                        index_list = self.CHARACTER_LIST.index(substring)
+
+                    if substring in self.sysfnt_data_json['Characters']:  # {name}
+                        index_list = self.sysfnt_data_json['Characters'].index(substring)
                         if index_list < 11:
                             encode_list.extend([0x03, 0x30 + index_list])
                         elif index_list == 11:
@@ -141,11 +166,11 @@ class GameData():
                             encode_list.extend([0x03, 0x50])
                         elif index_list == 13:
                             encode_list.extend([0x03, 0x60])
-                    elif substring in self.COLOR_LIST:  # {Color}
-                        index_list = self.COLOR_LIST.index(substring)
+                    elif substring in self.sysfnt_data_json['Colors']:  # {Color}
+                        index_list = self.sysfnt_data_json['Colors'].index(substring)
                         encode_list.extend([0x06, 0x20 + index_list])
-                    elif substring in self.LOCATION_LIST:  # {Location}
-                        index_list = self.LOCATION_LIST.index(substring)
+                    elif substring in self.sysfnt_data_json['Locations']:  # {Location}
+                        index_list = self.sysfnt_data_json['Locations'].index(substring)
                         encode_list.extend([0x0e, 0x20 + index_list])
                     elif 'Var' in substring:
                         if len(substring) == 5:
@@ -188,13 +213,13 @@ class GameData():
                 if i < hex_size:
                     hex_val = hex_list[i]
                     if hex_val >= 0x30 and hex_val <= 0x3a:
-                        str += '{' + self.CHARACTER_LIST[hex_val - 0x30] + '}'
+                        str += '{' + self.sysfnt_data_json['Characters'][hex_val - 0x30] + '}'
                     elif hex_val == 0x40:
-                        str += '{' + self.CHARACTER_LIST[11] + '}'
+                        str += '{' + self.sysfnt_data_json['Characters'][11] + '}'
                     elif hex_val == 0x50:
-                        str += '{' + self.CHARACTER_LIST[12] + '}'
+                        str += '{' + self.sysfnt_data_json['Characters'][12] + '}'
                     elif hex_val == 0x60:
-                        str += '{' + self.CHARACTER_LIST[13] + '}'
+                        str += '{' + self.sysfnt_data_json['Characters'][13] + '}'
                     else:
                         str += "{{x03{:02x}}}".format(hex_val)
                 else:
@@ -219,7 +244,7 @@ class GameData():
                 if i < hex_size:
                     hex_val = hex_list[i]
                     if hex_val >= 0x20 and hex_val <= 0x2f:
-                        str += '{' + self.COLOR_LIST[hex_val - 0x20] + '}'
+                        str += '{' + self.sysfnt_data_json['Colors'][hex_val - 0x20] + '}'
                     else:
                         str += "{{x06{:02x}}}".format(hex_val)
                 else:
@@ -239,7 +264,7 @@ class GameData():
                 if i < hex_size:
                     hex_val = hex_list[i]
                     if hex_val >= 0x20 and hex_val <= 0x27:
-                        str += '{' + self.LOCATION_LIST[hex_val - 0x20] + '}'
+                        str += '{' + self.sysfnt_data_json['Locations'][hex_val - 0x20] + '}'
                     else:
                         str += "{{x0e{:02x}}}".format(hex_val)
                 else:
@@ -283,111 +308,16 @@ class GameData():
         return str
 
     def load_all(self):
-        self.load_card_data(os.path.join(self.RESOURCE_FOLDER, "card.txt"))
-        self.load_devour_data(os.path.join(self.RESOURCE_FOLDER, "devour.txt"))
-        self.load_magic_data(os.path.join(self.RESOURCE_FOLDER, "magic.txt"))
-        self.load_item_data(os.path.join(self.RESOURCE_FOLDER, "item.txt"))
-        self.load_status_data(os.path.join(self.RESOURCE_FOLDER, "status.txt"))
-        self.load_magic_type_data(os.path.join(self.RESOURCE_FOLDER, "magic_type.txt"))
-        self.load_stat_data(os.path.join(self.RESOURCE_FOLDER, "stat.txt"))
-        self.load_ennemy_abilities_data(os.path.join(self.RESOURCE_FOLDER, "enemy_abilities.txt"))
-        self.load_ennemy_abilities_type_data(os.path.join(self.RESOURCE_FOLDER, "enemy_abilities_type.txt"))
-        self.load_special_action_data(os.path.join(self.RESOURCE_FOLDER, "special_action.txt"))
-        self.load_monster_data(os.path.join(self.RESOURCE_FOLDER, "monster.txt"))
-        self.load_status_ai_data(os.path.join(self.RESOURCE_FOLDER, "status_ai.txt"))
-        self.load_gforce_data(os.path.join(self.RESOURCE_FOLDER, "gforce.txt"))
+        self.load_monster_data(os.path.join(self.RESOURCE_FOLDER, "monster.json"))
+        self.load_sysfnt_data(os.path.join(self.RESOURCE_FOLDER, "sysfnt_data.json"))
+        self.load_item_data(os.path.join(self.RESOURCE_FOLDER, "item.json"))
+        self.load_devour_data(os.path.join(self.RESOURCE_FOLDER, "devour.json"))
+        self.load_gforce_data(os.path.join(self.RESOURCE_FOLDER, "gforce.json"))
+        self.load_stat_data(os.path.join(self.RESOURCE_FOLDER, "stat.json"))
+        self.load_status_data(os.path.join(self.RESOURCE_FOLDER, "status.json"))
         self.load_kernel_data(os.path.join(self.RESOURCE_FOLDER, "kernel_bin_data.json"))
         self.load_card_json_data(os.path.join(self.RESOURCE_FOLDER, "card.json"))
 
-    def load_status_ai_data(self, file):
-        with (open(file, "r") as f):
-            file_split = f.read().split('\n')
-            for el_split in file_split:
-                split_line = el_split.split('>')
-                self.status_ia_values[int(split_line[0], 10)] = {'name': split_line[1],
-                                                                 'ref': str(int(split_line[0], 10)) + ":" + split_line[1]}
-
-    def load_special_action_data(self, file):
-        with (open(file, "r") as f):
-            file_split = f.read().split('\n')
-            for el_split in file_split:
-                split_line = el_split.split('>')
-                self.special_action[int(split_line[0], 10)] = {'name': split_line[1],
-                                                               'ref': str(int(split_line[0], 10)) + ":" + split_line[1]}
-
-    def load_devour_data(self, file):
-        with (open(file, "r") as f):
-            file_split = f.read().split('\n')
-            for el_split in file_split:
-                split_line = el_split.split('<')
-                self.devour_values[int(split_line[0], 16)] = {'name': split_line[1],
-                                                              'ref': str(int(split_line[0], 16)) + ":" + split_line[1]}
-
-    def load_card_data(self, file):
-        with (open(file, "r") as f):
-            file_split = f.read().split('\n')
-            for el_split in file_split:
-                split_line = el_split.split('<')
-                self.card_values[int(split_line[0], 16)] = {'name': split_line[1],
-                                                            'ref': str(int(split_line[0], 16)) + ":" + split_line[1]}
-
-    def load_card_type_data(self, file):
-        with (open(file, "r") as f):
-            file_split = f.read().split('\n')
-            for el_split in file_split:
-                split_line = el_split.split('<')
-                self.card_type_values[int(split_line[0], 16)] = {'name': split_line[1],
-                                                            'ref': str(int(split_line[0], 16)) + ":" + split_line[1]}
-
-    def load_magic_data(self, file):
-        with (open(file, "r") as f):
-            file_split = f.read().split('\n')
-            for el_split in file_split:
-                split_line = el_split.split('<')
-                self.magic_values[int(split_line[0], 16)] = {'name': split_line[1],
-                                                             'ref': str(int(split_line[0], 16)) + ":" + split_line[1]}
-
-    def load_item_data(self, file):
-        with (open(file, "r") as f):
-            file_split = f.read().split('\n')
-            for el_split in file_split:
-                split_line = el_split.split('<')
-                self.item_values[int(split_line[0], 16)] = {'name': split_line[1],
-                                                            'ref': str(int(split_line[0], 16)) + ":" + split_line[1]}
-
-    def load_status_data(self, file):
-        with (open(file, "r") as f):
-            self.status_values = f.read().split('\n')
-
-    def load_gforce_data(self, file):
-        with (open(file, "r") as f):
-            self.gforce_values = f.read().split('\n')
-
-    def load_magic_type_data(self, file):
-        with (open(file, "r") as f):
-            self.magic_type_values = f.read().split('\n')
-
-    def load_stat_data(self, file):
-        with (open(file, "r") as f):
-            self.stat_values = f.read().split('\n')
-
-    def load_monster_data(self, file):
-        with (open(file, "r", encoding='utf8') as f):
-            self.monster_values = f.read().split('\n')
-
-    def load_ennemy_abilities_data(self, file):
-        with (open(file, "r") as f):
-            file_split = f.read().split('\n')
-            for el_split in file_split:
-                self.enemy_abilities_values[int(el_split.split('>')[0])] = {'name': el_split.split('>')[1],
-                                                                             'ref': el_split.split('>')[0] + ":" + el_split.split('>')[1]}
-
-    def load_ennemy_abilities_type_data(self, file):
-        with (open(file, "r") as f):
-            file_split = f.read().split('\n')
-            for el_split in file_split:
-                self.enemy_abilities_type_values[int(el_split.split('>')[0])] = {'name': el_split.split('>')[1],
-                                                                                  'ref': el_split.split('>')[0] + ":" + el_split.split('>')[1]}
 
 if __name__ == "__main__":
     game_data = GameData()
