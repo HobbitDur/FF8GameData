@@ -5,9 +5,10 @@ from PIL import Image
 
 
 class GameData():
-    RESOURCE_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Resources")
 
-    def __init__(self):
+
+    def __init__(self, game_data_submodule_path=""):
+        self.resource_folder = os.path.join(game_data_submodule_path, "Resources")
         self.devour_data_json = {}
         self.magic_data_json = {}
         self.gforce_data_json = {}
@@ -22,7 +23,7 @@ class GameData():
 
     def __init_hex_to_str_table(self):
         self.load_sysfnt_data()
-        with open(os.path.join(self.RESOURCE_FOLDER, "sysfnt.txt"), "r", encoding="utf-8") as localize_file:
+        with open(os.path.join(self.resource_folder, "sysfnt.txt"), "r", encoding="utf-8") as localize_file:
             self.translate_hex_to_str_table = localize_file.read()
             self.translate_hex_to_str_table = self.translate_hex_to_str_table.replace(',",",',
                                                                                       ',";;;",')  # Handling the unique case of a "," character (which is also a separator)
@@ -34,57 +35,57 @@ class GameData():
                     self.translate_hex_to_str_table[i] = self.translate_hex_to_str_table[i].replace('"', '')
 
     def load_gforce_data(self):
-        file_path = os.path.join(self.RESOURCE_FOLDER, "gforce.json")
+        file_path = os.path.join(self.resource_folder, "gforce.json")
         with open(file_path, encoding="utf8") as f:
             self.gforce_data_json = json.load(f)
 
     def load_stat_data(self):
-        file_path = os.path.join(self.RESOURCE_FOLDER, "stat.json")
+        file_path = os.path.join(self.resource_folder, "stat.json")
         with open(file_path, encoding="utf8") as f:
             self.stat_data_json = json.load(f)
 
     def load_status_data(self):
-        file_path = os.path.join(self.RESOURCE_FOLDER, "status.json")
+        file_path = os.path.join(self.resource_folder, "status.json")
         with open(file_path, encoding="utf8") as f:
             self.status_data_json = json.load(f)
 
     def load_devour_data(self):
-        file_path = os.path.join(self.RESOURCE_FOLDER, "devour.json")
+        file_path = os.path.join(self.resource_folder, "devour.json")
         with open(file_path, encoding="utf8") as f:
             self.devour_data_json = json.load(f)
 
     def load_enemy_abilities_data(self):
-        file_path = os.path.join(self.RESOURCE_FOLDER, "enemy_abilities.json")
+        file_path = os.path.join(self.resource_folder, "enemy_abilities.json")
         with open(file_path, encoding="utf8") as f:
             self.enemy_abilities_data_json = json.load(f)
 
     def load_magic_data(self):
-        file_path = os.path.join(self.RESOURCE_FOLDER, "magic.json")
+        file_path = os.path.join(self.resource_folder, "magic.json")
         with open(file_path, encoding="utf8") as f:
             self.magic_data_json = json.load(f)
 
     def load_special_action_data(self, file_path):
-        file_path = os.path.join(self.RESOURCE_FOLDER, "special_action.json")
+        file_path = os.path.join(self.resource_folder, "special_action.json")
         with open(file_path, encoding="utf8") as f:
             self.special_action_data_json = json.load(f)
 
     def load_monster_data(self):
-        file_path = os.path.join(self.RESOURCE_FOLDER, "monster.json")
+        file_path = os.path.join(self.resource_folder, "monster.json")
         with open(file_path, encoding="utf8") as f:
             self.monster_data_json = json.load(f)
 
     def load_sysfnt_data(self):
-        file_path = os.path.join(self.RESOURCE_FOLDER, "sysfnt_data.json")
+        file_path = os.path.join(self.resource_folder, "sysfnt_data.json")
         with open(file_path, encoding="utf8") as f:
             self.sysfnt_data_json = json.load(f)
 
     def load_item_data(self):
-        file_path = os.path.join(self.RESOURCE_FOLDER, "item.json")
+        file_path = os.path.join(self.resource_folder, "item.json")
         with open(file_path, encoding="utf8") as f:
             self.item_data_json = json.load(f)
 
     def load_kernel_data(self):
-        file_path = os.path.join(self.RESOURCE_FOLDER, "kernel_bin_data.json")
+        file_path = os.path.join(self.resource_folder, "kernel_bin_data.json")
         with open(file_path, encoding="utf8") as f:
             self.kernel_data_json = json.load(f)
 
@@ -100,8 +101,7 @@ class GameData():
                     self.kernel_data_json["sections"][i]["section_offset_data_linked"], 16)
 
     def load_card_json_data(self):
-        file_path = os.path.join(self.RESOURCE_FOLDER, "card.json")
-        print(self.RESOURCE_FOLDER)
+        file_path = os.path.join(self.resource_folder, "card.json")
         with open(file_path, encoding="utf8") as f:
             self.card_data_json = json.load(f)
         for key in self.card_data_json["card_data_offset"]:
@@ -110,7 +110,7 @@ class GameData():
 
     def __load_cards(self):
         # Thank you Maki !
-        img = Image.open(os.path.join(self.RESOURCE_FOLDER, "text_0.png"))
+        img = Image.open(os.path.join(self.resource_folder, "text_0.png"))
         TILES_WIDTH_EL = 128
         TILES_HEIGHT_EL = 128
         for i, list_el in enumerate(self.card_data_json["card_type"]):
@@ -123,8 +123,8 @@ class GameData():
             tile = img.crop((left, upper, right, lower))
             self.card_data_json["card_type"][i]["img"] = tile
 
-        img = Image.open(os.path.join(self.RESOURCE_FOLDER, "cards_00.png"))
-        img_remaster = Image.open(os.path.join(self.RESOURCE_FOLDER, "cards_00_remaster.png"))
+        img = Image.open(os.path.join(self.resource_folder, "cards_00.png"))
+        img_remaster = Image.open(os.path.join(self.resource_folder, "cards_00_remaster.png"))
 
         TILES_WIDTH = 64
         TILES_HEIGHT = 64
