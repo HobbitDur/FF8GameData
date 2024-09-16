@@ -1,0 +1,20 @@
+{
+  "gforce":[
+	{"id":0, "name":"Quezacotl", "name_fr":"Golgotha"},
+	{"id":1, "name":"Shiva", "name_fr":"Shiva"},
+	{"id":2, "name":"Ifrit", "name_fr":"Ifrit"},
+	{"id":3, "name":"Siren", "name_fr":"Ondine"},
+	{"id":4, "name":"Brothers", "name_fr":"Taurus"},
+	{"id":5, "name":"Diablos", "name_fr":"Nosferatu"},
+	{"id":6, "name":"Carbuncle", "name_fr":"Ahuri"},
+	{"id":7, "name":"Leviathan", "name_fr":"Leviathan"},
+	{"id":8, "name":"Pandemona", "name_fr":"Zéphyr"},
+	{"id":9, "name":"Cerberus", "name_fr":"Cerberus"},
+	{"id":10, "name":"Alexander", "name_fr":"Alexander"},
+	{"id":11, "name":"Doomtrain", "name_fr":"Helltrain"},
+	{"id":12, "name":"Bahamut", "name_fr":"Bahamut"},
+	{"id":13, "name":"Cactuar", "name_fr":"Pampa"},
+	{"id":14, "name":"Tonberry King", "name_fr":"Tomberry Sr"},
+	{"id":15, "name":"Eden", "name_fr":"Orbital"}
+  ]
+}

@@ -8,26 +8,15 @@ class GameData():
     RESOURCE_FOLDER = "Resources"
 
     def __init__(self):
+        self.devour_data_json = {}
+        self.magic_data_json = {}
+        self.gforce_data_json = {}
+        self.item_data_json = {}
+        self.special_action_data_json = {}
+        self.stat_data_json = {}
+        self.monster_data_json = {}
+        self.status_data_json = {}
         self.sysfnt_data_json = {}
-        self.devour_values = {}
-        self.card_values = {}
-        self.card_type_values = {}
-        self.magic_values = {}
-        self.item_values = {}
-        self.status_values = []
-        self.status_ia_values = {}
-        self.gforce_values = []
-        self.magic_type_values = []
-        self.stat_values = []
-        self.enemy_abilities_values = {}
-        self.enemy_abilities_type_values = {}
-        self.translate_hex_to_str_table = []
-        self.game_info_test = {}
-        self.special_action = {}
-        self.monster_values = {}
-        self.kernel_data_json = []
-        self.card_data_json = []
-        self.card_image_list = []
         self.__init_hex_to_str_table()
 
     def __init_hex_to_str_table(self):
@@ -43,9 +32,45 @@ class GameData():
                     self.translate_hex_to_str_table[i] = self.translate_hex_to_str_table[i].replace('"', '')
 
 
+    def load_gforce_data(self, file_path):
+        with open(file_path, encoding="utf8") as f:
+            self.gforce_data_json = json.load(f)
+
+    def load_stat_data(self, file_path):
+        with open(file_path, encoding="utf8") as f:
+            self.stat_data_json = json.load(f)
+
+    def load_status_data(self, file_path):
+        with open(file_path, encoding="utf8") as f:
+            self.status_data_json = json.load(f)
+
+    def load_devour_data(self, file_path):
+        with open(file_path, encoding="utf8") as f:
+            self.devour_data_json = json.load(f)
+
+    def load_enemy_abilities_data(self, file_path):
+        with open(file_path, encoding="utf8") as f:
+            self.enemy_abilities_data_json = json.load(f)
+
+    def load_magic_data(self, file_path):
+        with open(file_path, encoding="utf8") as f:
+            self.magic_data_json = json.load(f)
+
+    def load_special_action_data(self, file_path):
+        with open(file_path, encoding="utf8") as f:
+            self.special_action_data_json = json.load(f)
+
+    def load_monster_data(self, file_path):
+        with open(file_path, encoding="utf8") as f:
+            self.monster_data_json = json.load(f)
+
     def load_sysfnt_data(self, file_path):
         with open(file_path, encoding="utf8") as f:
             self.sysfnt_data_json = json.load(f)
+
+    def load_item_data(self, file_path):
+        with open(file_path, encoding="utf8") as f:
+            self.item_data_json = json.load(f)
 
     def load_kernel_data(self, file_path):
         with open(file_path, encoding="utf8") as f:
@@ -283,113 +308,16 @@ class GameData():
         return str
 
     def load_all(self):
-
+        self.load_monster_data(os.path.join(self.RESOURCE_FOLDER, "monster.json"))
         self.load_sysfnt_data(os.path.join(self.RESOURCE_FOLDER, "sysfnt_data.json"))
-        self.load_card_data(os.path.join(self.RESOURCE_FOLDER, "card.txt"))
-        self.load_devour_data(os.path.join(self.RESOURCE_FOLDER, "devour.txt"))
-        self.load_magic_data(os.path.join(self.RESOURCE_FOLDER, "magic.txt"))
-        self.load_item_data(os.path.join(self.RESOURCE_FOLDER, "item.txt"))
-        self.load_status_data(os.path.join(self.RESOURCE_FOLDER, "status.txt"))
-        self.load_magic_type_data(os.path.join(self.RESOURCE_FOLDER, "magic_type.txt"))
-        self.load_stat_data(os.path.join(self.RESOURCE_FOLDER, "stat.txt"))
-        self.load_ennemy_abilities_data(os.path.join(self.RESOURCE_FOLDER, "enemy_abilities.txt"))
-        self.load_ennemy_abilities_type_data(os.path.join(self.RESOURCE_FOLDER, "enemy_abilities_type.txt"))
-        self.load_special_action_data(os.path.join(self.RESOURCE_FOLDER, "special_action.txt"))
-        self.load_monster_data(os.path.join(self.RESOURCE_FOLDER, "monster.txt"))
-        self.load_status_ai_data(os.path.join(self.RESOURCE_FOLDER, "status_ai.txt"))
-        self.load_gforce_data(os.path.join(self.RESOURCE_FOLDER, "gforce.txt"))
+        self.load_item_data(os.path.join(self.RESOURCE_FOLDER, "item.json"))
+        self.load_devour_data(os.path.join(self.RESOURCE_FOLDER, "devour.json"))
+        self.load_gforce_data(os.path.join(self.RESOURCE_FOLDER, "gforce.json"))
+        self.load_stat_data(os.path.join(self.RESOURCE_FOLDER, "stat.json"))
+        self.load_status_data(os.path.join(self.RESOURCE_FOLDER, "status.json"))
         self.load_kernel_data(os.path.join(self.RESOURCE_FOLDER, "kernel_bin_data.json"))
         self.load_card_json_data(os.path.join(self.RESOURCE_FOLDER, "card.json"))
 
-    def load_status_ai_data(self, file):
-        with (open(file, "r") as f):
-            file_split = f.read().split('\n')
-            for el_split in file_split:
-                split_line = el_split.split('>')
-                self.status_ia_values[int(split_line[0], 10)] = {'name': split_line[1],
-                                                                 'ref': str(int(split_line[0], 10)) + ":" + split_line[1]}
-
-    def load_special_action_data(self, file):
-        with (open(file, "r") as f):
-            file_split = f.read().split('\n')
-            for el_split in file_split:
-                split_line = el_split.split('>')
-                self.special_action[int(split_line[0], 10)] = {'name': split_line[1],
-                                                               'ref': str(int(split_line[0], 10)) + ":" + split_line[1]}
-
-    def load_devour_data(self, file):
-        with (open(file, "r") as f):
-            file_split = f.read().split('\n')
-            for el_split in file_split:
-                split_line = el_split.split('<')
-                self.devour_values[int(split_line[0], 16)] = {'name': split_line[1],
-                                                              'ref': str(int(split_line[0], 16)) + ":" + split_line[1]}
-
-    def load_card_data(self, file):
-        with (open(file, "r") as f):
-            file_split = f.read().split('\n')
-            for el_split in file_split:
-                split_line = el_split.split('<')
-                self.card_values[int(split_line[0], 16)] = {'name': split_line[1],
-                                                            'ref': str(int(split_line[0], 16)) + ":" + split_line[1]}
-
-    def load_card_type_data(self, file):
-        with (open(file, "r") as f):
-            file_split = f.read().split('\n')
-            for el_split in file_split:
-                split_line = el_split.split('<')
-                self.card_type_values[int(split_line[0], 16)] = {'name': split_line[1],
-                                                            'ref': str(int(split_line[0], 16)) + ":" + split_line[1]}
-
-    def load_magic_data(self, file):
-        with (open(file, "r") as f):
-            file_split = f.read().split('\n')
-            for el_split in file_split:
-                split_line = el_split.split('<')
-                self.magic_values[int(split_line[0], 16)] = {'name': split_line[1],
-                                                             'ref': str(int(split_line[0], 16)) + ":" + split_line[1]}
-
-    def load_item_data(self, file):
-        with (open(file, "r") as f):
-            file_split = f.read().split('\n')
-            for el_split in file_split:
-                split_line = el_split.split('<')
-                self.item_values[int(split_line[0], 16)] = {'name': split_line[1],
-                                                            'ref': str(int(split_line[0], 16)) + ":" + split_line[1]}
-
-    def load_status_data(self, file):
-        with (open(file, "r") as f):
-            self.status_values = f.read().split('\n')
-
-    def load_gforce_data(self, file):
-        with (open(file, "r") as f):
-            self.gforce_values = f.read().split('\n')
-
-    def load_magic_type_data(self, file):
-        with (open(file, "r") as f):
-            self.magic_type_values = f.read().split('\n')
-
-    def load_stat_data(self, file):
-        with (open(file, "r") as f):
-            self.stat_values = f.read().split('\n')
-
-    def load_monster_data(self, file):
-        with (open(file, "r", encoding='utf8') as f):
-            self.monster_values = f.read().split('\n')
-
-    def load_ennemy_abilities_data(self, file):
-        with (open(file, "r") as f):
-            file_split = f.read().split('\n')
-            for el_split in file_split:
-                self.enemy_abilities_values[int(el_split.split('>')[0])] = {'name': el_split.split('>')[1],
-                                                                             'ref': el_split.split('>')[0] + ":" + el_split.split('>')[1]}
-
-    def load_ennemy_abilities_type_data(self, file):
-        with (open(file, "r") as f):
-            file_split = f.read().split('\n')
-            for el_split in file_split:
-                self.enemy_abilities_type_values[int(el_split.split('>')[0])] = {'name': el_split.split('>')[1],
-                                                                                  'ref': el_split.split('>')[0] + ":" + el_split.split('>')[1]}
 
 if __name__ == "__main__":
     game_data = GameData()
