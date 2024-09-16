@@ -1,0 +1,11 @@
+{
+  "Characters": [
+    "Squall", "Zell", "Irvine", "Quistis", "Rinoa", "Selphie", "Seifer", "Edea", "Laguna", "Kiros", "Ward", "Angelo", "Griever", "Boko"
+  ],
+  "Colors": [
+    "Darkgrey", "Grey", "Yellow", "Red", "Green", "Blue", "Purple", "White", "DarkgreyBlink", "GreyBlink", "YellowBlink", "RedBlink", "GreenBlink", "BlueBlink", "PurpleBlink", "WhiteBlink"
+  ],
+  "Locations": [
+    "Galbadia", "Esthar", "Balamb", "Dollet", "Timber", "Trabia", "Centra", "Horizon"
+  ]
+}

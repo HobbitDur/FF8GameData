@@ -6,14 +6,9 @@ from PIL import Image
 
 class GameData():
     RESOURCE_FOLDER = "Resources"
-    CHARACTER_LIST = ["Squall", "Zell", "Irvine", "Quistis", "Rinoa", "Selphie", "Seifer", "Edea", "Laguna", "Kiros", "Ward", "Angelo",
-                      "Griever", "Boko"]
-    COLOR_LIST = ["Darkgrey", "Grey", "Yellow", "Red", "Green", "Blue", "Purple", "White",
-                  "DarkgreyBlink", "GreyBlink", "YellowBlink", "RedBlink", "GreenBlink", "BlueBlink", "PurpleBlink", "WhiteBlink"]
-    LOCATION_LIST = ["Galbadia", "Esthar", "Balamb", "Dollet", "Timber", "Trabia", "Centra", "Horizon"]
-
 
     def __init__(self):
+        self.sysfnt_data_json = {}
         self.devour_values = {}
         self.card_values = {}
         self.card_type_values = {}
@@ -46,6 +41,11 @@ class GameData():
                 self.translate_hex_to_str_table[i] = self.translate_hex_to_str_table[i].replace(';;;', ',')
                 if self.translate_hex_to_str_table[i].count('"') == 2:
                     self.translate_hex_to_str_table[i] = self.translate_hex_to_str_table[i].replace('"', '')
+
+
+    def load_sysfnt_data(self, file_path):
+        with open(file_path, encoding="utf8") as f:
+            self.sysfnt_data_json = json.load(f)
 
     def load_kernel_data(self, file_path):
         with open(file_path, encoding="utf8") as f:
@@ -131,8 +131,8 @@ class GameData():
                 index_next_bracket = rest.find('}')
                 if index_next_bracket != -1:
                     substring = rest[:index_next_bracket]
-                    if substring in self.CHARACTER_LIST:  # {name}
-                        index_list = self.CHARACTER_LIST.index(substring)
+                    if substring in self.sysfnt_data_json['Characters']:  # {name}
+                        index_list = self.sysfnt_data_json['Characters'].index(substring)
                         if index_list < 11:
                             encode_list.extend([0x03, 0x30 + index_list])
                         elif index_list == 11:
@@ -141,11 +141,11 @@ class GameData():
                             encode_list.extend([0x03, 0x50])
                         elif index_list == 13:
                             encode_list.extend([0x03, 0x60])
-                    elif substring in self.COLOR_LIST:  # {Color}
-                        index_list = self.COLOR_LIST.index(substring)
+                    elif substring in self.sysfnt_data_json['Colors']:  # {Color}
+                        index_list = self.sysfnt_data_json['Colors'].index(substring)
                         encode_list.extend([0x06, 0x20 + index_list])
-                    elif substring in self.LOCATION_LIST:  # {Location}
-                        index_list = self.LOCATION_LIST.index(substring)
+                    elif substring in self.sysfnt_data_json['Locations']:  # {Location}
+                        index_list = self.sysfnt_data_json['Locations'].index(substring)
                         encode_list.extend([0x0e, 0x20 + index_list])
                     elif 'Var' in substring:
                         if len(substring) == 5:
@@ -188,13 +188,13 @@ class GameData():
                 if i < hex_size:
                     hex_val = hex_list[i]
                     if hex_val >= 0x30 and hex_val <= 0x3a:
-                        str += '{' + self.CHARACTER_LIST[hex_val - 0x30] + '}'
+                        str += '{' + elf.sysfnt_data_json['Characters'][hex_val - 0x30] + '}'
                     elif hex_val == 0x40:
-                        str += '{' + self.CHARACTER_LIST[11] + '}'
+                        str += '{' + elf.sysfnt_data_json['Characters'][11] + '}'
                     elif hex_val == 0x50:
-                        str += '{' + self.CHARACTER_LIST[12] + '}'
+                        str += '{' + elf.sysfnt_data_json['Characters'][12] + '}'
                     elif hex_val == 0x60:
-                        str += '{' + self.CHARACTER_LIST[13] + '}'
+                        str += '{' + elf.sysfnt_data_json['Characters'][13] + '}'
                     else:
                         str += "{{x03{:02x}}}".format(hex_val)
                 else:
@@ -219,7 +219,7 @@ class GameData():
                 if i < hex_size:
                     hex_val = hex_list[i]
                     if hex_val >= 0x20 and hex_val <= 0x2f:
-                        str += '{' + self.COLOR_LIST[hex_val - 0x20] + '}'
+                        str += '{' + self.sysfnt_data_json['Colors'][hex_val - 0x20] + '}'
                     else:
                         str += "{{x06{:02x}}}".format(hex_val)
                 else:
@@ -239,7 +239,7 @@ class GameData():
                 if i < hex_size:
                     hex_val = hex_list[i]
                     if hex_val >= 0x20 and hex_val <= 0x27:
-                        str += '{' + self.LOCATION_LIST[hex_val - 0x20] + '}'
+                        str += '{' + self.sysfnt_data_json['Locations'][hex_val - 0x20] + '}'
                     else:
                         str += "{{x0e{:02x}}}".format(hex_val)
                 else:
@@ -283,6 +283,8 @@ class GameData():
         return str
 
     def load_all(self):
+
+        self.load_sysfnt_data(os.path.join(self.RESOURCE_FOLDER, "sysfnt_data.json"))
         self.load_card_data(os.path.join(self.RESOURCE_FOLDER, "card.txt"))
         self.load_devour_data(os.path.join(self.RESOURCE_FOLDER, "devour.txt"))
         self.load_magic_data(os.path.join(self.RESOURCE_FOLDER, "magic.txt"))
