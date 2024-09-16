@@ -5,7 +5,7 @@ from PIL import Image
 
 
 class GameData():
-    RESOURCE_FOLDER = "Resources"
+    RESOURCE_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "Resources")
 
     def __init__(self):
         self.devour_data_json = {}
@@ -20,7 +20,7 @@ class GameData():
         self.__init_hex_to_str_table()
 
     def __init_hex_to_str_table(self):
-        with open("Resources/sysfnt.txt", "r", encoding="utf-8") as localize_file:
+        with open(os.path.join(self.RESOURCE_FOLDER, "sysfnt.txt"), "r", encoding="utf-8") as localize_file:
             self.translate_hex_to_str_table = localize_file.read()
             self.translate_hex_to_str_table = self.translate_hex_to_str_table.replace(',",",',
                                                                                       ',";;;",')  # Handling the unique case of a "," character (which is also a separator)
@@ -31,59 +31,75 @@ class GameData():
                 if self.translate_hex_to_str_table[i].count('"') == 2:
                     self.translate_hex_to_str_table[i] = self.translate_hex_to_str_table[i].replace('"', '')
 
-    def load_gforce_data(self, file_path):
+    def load_gforce_data(self):
+        file_path = os.path.join(self.RESOURCE_FOLDER, "gforce.json")
         with open(file_path, encoding="utf8") as f:
             self.gforce_data_json = json.load(f)
 
-    def load_stat_data(self, file_path):
+    def load_stat_data(self):
+        file_path = os.path.join(self.RESOURCE_FOLDER, "stat.json")
         with open(file_path, encoding="utf8") as f:
             self.stat_data_json = json.load(f)
 
-    def load_status_data(self, file_path):
+    def load_status_data(self):
+        file_path = os.path.join(self.RESOURCE_FOLDER, "status.json")
         with open(file_path, encoding="utf8") as f:
             self.status_data_json = json.load(f)
 
-    def load_devour_data(self, file_path):
+    def load_devour_data(self):
+        file_path = os.path.join(self.RESOURCE_FOLDER, "devour.json")
         with open(file_path, encoding="utf8") as f:
             self.devour_data_json = json.load(f)
 
-    def load_enemy_abilities_data(self, file_path):
+    def load_enemy_abilities_data(self):
+        file_path = os.path.join(self.RESOURCE_FOLDER, "enemy_abilities.json")
         with open(file_path, encoding="utf8") as f:
             self.enemy_abilities_data_json = json.load(f)
 
-    def load_magic_data(self, file_path):
+    def load_magic_data(self):
+        file_path = os.path.join(self.RESOURCE_FOLDER, "magic.json")
         with open(file_path, encoding="utf8") as f:
             self.magic_data_json = json.load(f)
 
     def load_special_action_data(self, file_path):
+        file_path = os.path.join(self.RESOURCE_FOLDER, "special_action.json")
         with open(file_path, encoding="utf8") as f:
             self.special_action_data_json = json.load(f)
 
-    def load_monster_data(self, file_path):
+    def load_monster_data(self):
+        file_path = os.path.join(self.RESOURCE_FOLDER, "monster.json")
         with open(file_path, encoding="utf8") as f:
             self.monster_data_json = json.load(f)
 
-    def load_sysfnt_data(self, file_path):
+    def load_sysfnt_data(self):
+        file_path = os.path.join(self.RESOURCE_FOLDER, "sysfnt.json")
         with open(file_path, encoding="utf8") as f:
             self.sysfnt_data_json = json.load(f)
 
-    def load_item_data(self, file_path):
+    def load_item_data(self):
+        file_path = os.path.join(self.RESOURCE_FOLDER, "item.json")
         with open(file_path, encoding="utf8") as f:
             self.item_data_json = json.load(f)
 
-    def load_kernel_data(self, file_path):
+    def load_kernel_data(self):
+        file_path = os.path.join(self.RESOURCE_FOLDER, "kernel_bin_data.json")
         with open(file_path, encoding="utf8") as f:
             self.kernel_data_json = json.load(f)
 
         for i in range(len(self.kernel_data_json["sections"])):
             if self.kernel_data_json["sections"][i]["section_offset"]:
-                self.kernel_data_json["sections"][i]["section_offset"] = int( self.kernel_data_json["sections"][i]["section_offset"], 16)
+                self.kernel_data_json["sections"][i]["section_offset"] = int(
+                    self.kernel_data_json["sections"][i]["section_offset"], 16)
             if self.kernel_data_json["sections"][i]["section_offset_text_linked"]:
-                self.kernel_data_json["sections"][i]["section_offset_text_linked"] = int(self.kernel_data_json["sections"][i]["section_offset_text_linked"], 16)
+                self.kernel_data_json["sections"][i]["section_offset_text_linked"] = int(
+                    self.kernel_data_json["sections"][i]["section_offset_text_linked"], 16)
             if self.kernel_data_json["sections"][i]["section_offset_data_linked"]:
-                self.kernel_data_json["sections"][i]["section_offset_data_linked"] = int(self.kernel_data_json["sections"][i]["section_offset_data_linked"], 16)
+                self.kernel_data_json["sections"][i]["section_offset_data_linked"] = int(
+                    self.kernel_data_json["sections"][i]["section_offset_data_linked"], 16)
 
-    def load_card_json_data(self, file_path):
+    def load_card_json_data(self):
+        file_path = os.path.join(self.RESOURCE_FOLDER, "card.json")
+        print(self.RESOURCE_FOLDER)
         with open(file_path, encoding="utf8") as f:
             self.card_data_json = json.load(f)
         for key in self.card_data_json["card_data_offset"]:
@@ -92,7 +108,7 @@ class GameData():
 
     def __load_cards(self):
         # Thank you Maki !
-        img = Image.open(os.path.join("Resources", "text_0.png"))
+        img = Image.open(os.path.join(self.RESOURCE_FOLDER, "text_0.png"))
         TILES_WIDTH_EL = 128
         TILES_HEIGHT_EL = 128
         for i, list_el in enumerate(self.card_data_json["card_type"]):
@@ -105,8 +121,8 @@ class GameData():
             tile = img.crop((left, upper, right, lower))
             self.card_data_json["card_type"][i]["img"] = tile
 
-        img = Image.open(os.path.join("Resources", "cards_00.png"))
-        img_remaster = Image.open(os.path.join("Resources", "cards_00_remaster.png"))
+        img = Image.open(os.path.join(self.RESOURCE_FOLDER, "cards_00.png"))
+        img_remaster = Image.open(os.path.join(self.RESOURCE_FOLDER, "cards_00_remaster.png"))
 
         TILES_WIDTH = 64
         TILES_HEIGHT = 64
@@ -130,7 +146,7 @@ class GameData():
             lower = upper + TILES_HEIGHT
             # Extract the tile using cropping
             tile_remaster = img_remaster.crop((left, upper, right, lower))
-            self.card_data_json["card_info"][i]["img_remaster"] =tile_remaster
+            self.card_data_json["card_info"][i]["img_remaster"] = tile_remaster
 
     def translate_str_to_hex(self, string):
         c = 0
@@ -155,7 +171,6 @@ class GameData():
                 index_next_bracket = rest.find('}')
                 if index_next_bracket != -1:
                     substring = rest[:index_next_bracket]
-
                     if substring in self.sysfnt_data_json['Characters']:  # {name}
                         index_list = self.sysfnt_data_json['Characters'].index(substring)
                         if index_list < 11:
@@ -308,15 +323,15 @@ class GameData():
         return str
 
     def load_all(self):
-        self.load_monster_data(os.path.join(self.RESOURCE_FOLDER, "monster.json"))
-        self.load_sysfnt_data(os.path.join(self.RESOURCE_FOLDER, "sysfnt_data.json"))
-        self.load_item_data(os.path.join(self.RESOURCE_FOLDER, "item.json"))
-        self.load_devour_data(os.path.join(self.RESOURCE_FOLDER, "devour.json"))
-        self.load_gforce_data(os.path.join(self.RESOURCE_FOLDER, "gforce.json"))
-        self.load_stat_data(os.path.join(self.RESOURCE_FOLDER, "stat.json"))
-        self.load_status_data(os.path.join(self.RESOURCE_FOLDER, "status.json"))
-        self.load_kernel_data(os.path.join(self.RESOURCE_FOLDER, "kernel_bin_data.json"))
-        self.load_card_json_data(os.path.join(self.RESOURCE_FOLDER, "card.json"))
+        self.load_monster_data()
+        self.load_sysfnt_data()
+        self.load_item_data()
+        self.load_devour_data()
+        self.load_gforce_data()
+        self.load_stat_data()
+        self.load_status_data()
+        self.load_kernel_data()
+        self.load_card_json_data()
 
 
 if __name__ == "__main__":
