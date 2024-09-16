@@ -17,6 +17,7 @@ class GameData():
         self.monster_data_json = {}
         self.status_data_json = {}
         self.sysfnt_data_json = {}
+        self.kernel_data_json = {}
         self.__init_hex_to_str_table()
 
     def __init_hex_to_str_table(self):
