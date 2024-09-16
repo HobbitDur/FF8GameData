@@ -20,6 +20,7 @@ class GameData():
         self.__init_hex_to_str_table()
 
     def __init_hex_to_str_table(self):
+        self.load_sysfnt_data()
         with open(os.path.join(self.RESOURCE_FOLDER, "sysfnt.txt"), "r", encoding="utf-8") as localize_file:
             self.translate_hex_to_str_table = localize_file.read()
             self.translate_hex_to_str_table = self.translate_hex_to_str_table.replace(',",",',
@@ -72,7 +73,7 @@ class GameData():
             self.monster_data_json = json.load(f)
 
     def load_sysfnt_data(self):
-        file_path = os.path.join(self.RESOURCE_FOLDER, "sysfnt.json")
+        file_path = os.path.join(self.RESOURCE_FOLDER, "sysfnt_data.json")
         with open(file_path, encoding="utf8") as f:
             self.sysfnt_data_json = json.load(f)
 
