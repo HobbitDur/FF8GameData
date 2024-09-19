@@ -6,7 +6,6 @@ from PIL import Image
 
 class GameData():
 
-
     def __init__(self, game_data_submodule_path=""):
         self.resource_folder = os.path.join(game_data_submodule_path, "Resources")
         self.devour_data_json = {}
@@ -214,7 +213,7 @@ class GameData():
             # Jp ?
         return encode_list
 
-    def translate_hex_to_str(self, hex_list):
+    def translate_hex_to_str(self, hex_list, zero_as_slash_n=False):
         str = ""
         i = 0
         hex_size = len(hex_list)
@@ -222,7 +221,10 @@ class GameData():
             hex_val = hex_list[i]
 
             if hex_val == 0x00:
-                pass
+                if zero_as_slash_n:
+                    str += "\n"
+                else:
+                    pass
             elif hex_val in [0x01, 0x02]:
                 str += self.translate_hex_to_str_table[hex_val]
             elif hex_val == 0x03:  # {Name}
@@ -337,6 +339,49 @@ class GameData():
 
 
 if __name__ == "__main__":
+    # To be able to read a file and write back in a file
+    file_to_load = "FF8_EN.exe"  # Fill with the file you want. use os.path.join if it is in folder
+    file_export = "export.txt"  # The file to write the final string back
+    print("Loading core data engine")
     game_data = GameData()
-    game_data.load_all()
-    print("Hello, World!")
+    # game_data.load_all() # This load all data if you want to test further, not just text translation
+
+    print(f"Reading the file: {file_to_load}")
+    current_file_data = bytearray()
+    with open(file_to_load, "rb") as in_file:
+        while el := in_file.read(1):
+            current_file_data.extend(el)
+
+    # Ignoring not wanted values (for example only alphabet)
+    # EOL => 0x00
+    # 0-> 9 => 0x21 -> 0x2a
+    # A -> œ => 0x45 -> 0xa7
+    # {in} -> {ag} => 0xe8 -> 0xff
+    print("Limiting to specific characters")
+    transformed_file = bytearray()
+    for byte in current_file_data:
+        if byte == 0 or 0x21 <= byte <= 0x2a or 0x45 <= byte <= 0xa7 or 0xe8 <= byte <= 0xff:
+            transformed_file.append(byte)
+
+    current_file_data = transformed_file
+    zero_as_slash_n = True
+    print(f"Transforming the byte data into ff8 string and considering byte 0 (end of string) as a \\n: {zero_as_slash_n}")
+    ff8_string = game_data.translate_hex_to_str(current_file_data, zero_as_slash_n)
+    # line_break = 200 # To define how often we return to line (for increase readability)
+    # print(f"Now breaking the line every {line_break} characters")
+    # ff8_string = '\n'.join(ff8_string[i:i + line_break] for i in range(0, len(ff8_string), line_break))
+
+    # Now removing the multiple following \n
+    new_string = ""
+    for index, char in enumerate(ff8_string):
+        if index < len(ff8_string) - 1:
+            if char == '\n' and ff8_string[index + 1] == '\n':
+                continue
+        new_string += char
+    ff8_string = new_string
+
+    print(f"Now writing in export file: {file_export}")
+    with open(file_export, "w", encoding="utf-8") as in_file:
+        in_file.write(ff8_string)
+
+    print("Enjoy !")

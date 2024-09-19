@@ -3,3 +3,6 @@
 **/release/**
 **/OriginalFiles
 **/csv/**
+*.txt
+*.exe
+*.bin
