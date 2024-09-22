@@ -1,13 +1,27 @@
 import json
 import os
+from enum import Enum
 
 from PIL import Image
 
-class FileType():
+
+class FileType(Enum):
     NONE = 0
     KERNEL = 1
     NAMEDIC = 2
-    MNGRP = 3
+    TKMNMES = 3
+    MNGRP = 4
+
+
+class SectionType(Enum):
+    DATA = 1
+    FF8_TEXT = 2
+    KERNEL_HEADER = 3
+    TKMNMES = 4
+    MNGRP_STRING = 5
+    MNGRP_MAP_COMPLEX_STRING = 6
+    MNGRP_COMPLEX_STRING = 7
+
 
 class GameData():
 
@@ -100,6 +114,20 @@ class GameData():
             if self.mngrp_data_json["sections"][i]["size"]:
                 self.mngrp_data_json["sections"][i]["size"] = int(
                     self.mngrp_data_json["sections"][i]["size"], 16)
+            data_type_str = self.mngrp_data_json["sections"][i]["data_type"]
+            if data_type_str == "tkmnmes":
+                self.mngrp_data_json["sections"][i]["data_type"] = SectionType.TKMNMES
+            elif data_type_str == "mngrp_string":
+                self.mngrp_data_json["sections"][i]["data_type"] = SectionType.MNGRP_STRING
+            elif data_type_str == "data":
+                self.mngrp_data_json["sections"][i]["data_type"] = SectionType.DATA
+            elif data_type_str == "text":
+                self.mngrp_data_json["sections"][i]["data_type"] = SectionType.FF8_TEXT
+            elif data_type_str == "mngrp_complex_string":
+                self.mngrp_data_json["sections"][i]["data_type"] = SectionType.MNGRP_COMPLEX_STRING
+            elif data_type_str == "mngrp_map_complex_string":
+                self.mngrp_data_json["sections"][i]["data_type"] = SectionType.MNGRP_MAP_COMPLEX_STRING
+
         print(self.mngrp_data_json)
 
     def load_kernel_data(self):
@@ -117,6 +145,12 @@ class GameData():
             if self.kernel_data_json["sections"][i]["section_offset_data_linked"]:
                 self.kernel_data_json["sections"][i]["section_offset_data_linked"] = int(
                     self.kernel_data_json["sections"][i]["section_offset_data_linked"], 16)
+            data_type_str = self.kernel_data_json["sections"][i]["type"]
+            if data_type_str == "data":
+                self.kernel_data_json["sections"][i]["type"] = SectionType.DATA
+            elif data_type_str == "text":
+                self.kernel_data_json["sections"][i]["type"] = SectionType.FF8_TEXT
+        print(self.kernel_data_json)
 
     def load_card_json_data(self):
         file_path = os.path.join(self.resource_folder, "card.json")
