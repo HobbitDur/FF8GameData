@@ -3,6 +3,11 @@ import os
 
 from PIL import Image
 
+class FileType():
+    NONE = 0
+    KERNEL = 1
+    NAMEDIC = 2
+    MNGRP = 3
 
 class GameData():
 
@@ -18,6 +23,7 @@ class GameData():
         self.status_data_json = {}
         self.sysfnt_data_json = {}
         self.kernel_data_json = {}
+        self.mngrp_data_json = {}
         self.__init_hex_to_str_table()
 
     def __init_hex_to_str_table(self):
@@ -82,6 +88,19 @@ class GameData():
         file_path = os.path.join(self.resource_folder, "item.json")
         with open(file_path, encoding="utf8") as f:
             self.item_data_json = json.load(f)
+
+    def load_mngrp_data(self):
+        file_path = os.path.join(self.resource_folder, "mngrp_bin_data.json")
+        with open(file_path, encoding="utf8") as f:
+            self.mngrp_data_json = json.load(f)
+        for i in range(len(self.mngrp_data_json["sections"])):
+            if self.mngrp_data_json["sections"][i]["section_offset"]:
+                self.mngrp_data_json["sections"][i]["section_offset"] = int(
+                    self.mngrp_data_json["sections"][i]["section_offset"], 16)
+            if self.mngrp_data_json["sections"][i]["size"]:
+                self.mngrp_data_json["sections"][i]["size"] = int(
+                    self.mngrp_data_json["sections"][i]["size"], 16)
+        print(self.mngrp_data_json)
 
     def load_kernel_data(self):
         file_path = os.path.join(self.resource_folder, "kernel_bin_data.json")
@@ -336,11 +355,12 @@ class GameData():
         self.load_status_data()
         self.load_kernel_data()
         self.load_card_json_data()
+        self.load_mngrp_json_data()
 
 
 if __name__ == "__main__":
     # To be able to read a file and write back in a file
-    file_to_load = "FF8_EN.exe"  # Fill with the file you want. use os.path.join if it is in folder
+    file_to_load = "mngrp.bin"  # Fill with the file you want. use os.path.join if it is in folder
     file_export = "export.txt"  # The file to write the final string back
     print("Loading core data engine")
     game_data = GameData()
