@@ -241,6 +241,15 @@ class GameData():
                     elif substring in self.sysfnt_data_json['Locations']:  # {Location}
                         index_list = self.sysfnt_data_json['Locations'].index(substring)
                         encode_list.extend([0x0e, 0x20 + index_list])
+                    elif substring in self.sysfnt_data_json['Icons']:  # {Icons}
+                        index_list = self.sysfnt_data_json['Locations'].index(substring)
+                        encode_list.extend([0x0e, 0x20 + index_list])
+                    elif 'Curseur_location_id:0x' in substring:
+                        len_curs = len('Curseur_location_id:0x')
+                        if len(substring) == len_curs + 4:
+                            encode_list.extend([0x0b, int(substring[len_curs:len_curs + 2], 16), int(substring[len_curs + 2:len_curs + 4], 16)])
+                        else:
+                            encode_list.extend([0x0b, int(substring[len_curs:len_curs + 2], 16)])
                     elif 'Var' in substring:
                         if len(substring) == 5:
                             if 'b' in substring:  # {Varb0}
@@ -266,7 +275,7 @@ class GameData():
             # Jp ?
         return encode_list
 
-    def translate_hex_to_str(self, hex_list, zero_as_slash_n=False):
+    def translate_hex_to_str(self, hex_list, zero_as_slash_n=False, cursor_location_size=2):
         str = ""
         i = 0
         hex_size = len(hex_list)
@@ -311,6 +320,16 @@ class GameData():
 
                 else:
                     str += "{x04}"
+            elif hex_val == 0x05:  # {Icons}
+                i += 1
+                if i < hex_size:
+                    hex_val = hex_list[i]
+                    if hex_val >= 0x20 and hex_val <= 0x71:
+                        str += '{' + self.sysfnt_data_json['Icons'][hex_val - 0x20] + '}'
+                    else:
+                        str += "{{x05{:02x}}}".format(hex_val)
+                else:
+                    str += "{x05}"
             elif hex_val == 0x06:  # {Color}
                 i += 1
                 if i < hex_size:
@@ -331,6 +350,19 @@ class GameData():
                         str += "{{x09{:02x}}}".format(hex_val)
                 else:
                     str += "{x06}"
+            elif hex_val == 0x0b:  # {cursor_location}
+                i += 1
+                if i < hex_size:
+                    if cursor_location_size == 2:
+                        hex_val = hex_list[i]
+                        str += "{{Curseur_location_id:0x{:02x}}}".format(hex_val)
+                    if cursor_location_size == 3:
+                        hex_val1 = hex_list[i]
+                        i += 1
+                        hex_val2 = hex_list[i]
+                        str += "{{Curseur_location_id:0x{:02x}{:02x}}}".format(hex_val1, hex_val2)
+                else:
+                    str += "{x0b}"
             elif hex_val == 0x0e:  # {Location}
                 i += 1
                 if i < hex_size:
@@ -372,7 +404,7 @@ class GameData():
                 else:
                     str += "{{x{:02x}}}".format(hex_val)
             else:
-                character = self.translate_hex_to_str_table[hex_val]  # To be done
+                character = self.translate_hex_to_str_table[hex_val]
                 if not character:
                     character = "{{x{:02x}}}".format(hex_val)
                 str += character
