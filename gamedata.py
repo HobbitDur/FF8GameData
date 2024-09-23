@@ -389,7 +389,7 @@ class GameData():
         self.load_status_data()
         self.load_kernel_data()
         self.load_card_json_data()
-        self.load_mngrp_json_data()
+        self.load_mngrp_data()
 
 
 if __name__ == "__main__":
