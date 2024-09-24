@@ -128,8 +128,6 @@ class GameData():
             elif data_type_str == "mngrp_map_complex_string":
                 self.mngrp_data_json["sections"][i]["data_type"] = SectionType.MNGRP_MAP_COMPLEX_STRING
 
-        print(self.mngrp_data_json)
-
     def load_kernel_data(self):
         file_path = os.path.join(self.resource_folder, "kernel_bin_data.json")
         with open(file_path, encoding="utf8") as f:
@@ -150,7 +148,6 @@ class GameData():
                 self.kernel_data_json["sections"][i]["type"] = SectionType.DATA
             elif data_type_str == "text":
                 self.kernel_data_json["sections"][i]["type"] = SectionType.FF8_TEXT
-        print(self.kernel_data_json)
 
     def load_card_json_data(self):
         file_path = os.path.join(self.resource_folder, "card.json")
@@ -235,17 +232,17 @@ class GameData():
                             encode_list.extend([0x03, 0x50])
                         elif index_list == 13:
                             encode_list.extend([0x03, 0x60])
+                    elif substring in self.sysfnt_data_json['Icons']:  # {Icons}
+                        index_list = self.sysfnt_data_json['Icons'].index(substring)
+                        encode_list.extend([0x05, 0x20 + index_list])
                     elif substring in self.sysfnt_data_json['Colors']:  # {Color}
                         index_list = self.sysfnt_data_json['Colors'].index(substring)
                         encode_list.extend([0x06, 0x20 + index_list])
                     elif substring in self.sysfnt_data_json['Locations']:  # {Location}
                         index_list = self.sysfnt_data_json['Locations'].index(substring)
                         encode_list.extend([0x0e, 0x20 + index_list])
-                    elif substring in self.sysfnt_data_json['Icons']:  # {Icons}
-                        index_list = self.sysfnt_data_json['Locations'].index(substring)
-                        encode_list.extend([0x0e, 0x20 + index_list])
-                    elif 'Curseur_location_id:0x' in substring:
-                        len_curs = len('Curseur_location_id:0x')
+                    elif 'Cursor_location_id:0x' in substring:
+                        len_curs = len('Cursor_location_id:0x')
                         if len(substring) == len_curs + 4:
                             encode_list.extend([0x0b, int(substring[len_curs:len_curs + 2], 16), int(substring[len_curs + 2:len_curs + 4], 16)])
                         else:
@@ -266,6 +263,7 @@ class GameData():
                         encode_list.append(self.translate_hex_to_str_table.index('{' + substring + '}'))
                     elif 'x' in substring and len(substring) == 5:  # {xffff}
                         encode_list.extend([int(substring[1:3], 16), int(substring[3:5], 16)])
+                        c += len(substring) + 2
                     elif 'x' in substring and len(substring) == 3:  # {xff}
                         encode_list.append(int(substring[1:3], 16))
                     c += len(substring) + 2
@@ -276,7 +274,7 @@ class GameData():
         return encode_list
 
     def translate_hex_to_str(self, hex_list, zero_as_slash_n=False, cursor_location_size=2):
-        str = ""
+        build_str = ""
         i = 0
         hex_size = len(hex_list)
         while i < hex_size:
@@ -284,95 +282,95 @@ class GameData():
 
             if hex_val == 0x00:
                 if zero_as_slash_n:
-                    str += "\n"
+                    build_str += "\n"
                 else:
                     pass
             elif hex_val in [0x01, 0x02]:
-                str += self.translate_hex_to_str_table[hex_val]
+                build_str += self.translate_hex_to_str_table[hex_val]
             elif hex_val == 0x03:  # {Name}
                 i += 1
                 if i < hex_size:
                     hex_val = hex_list[i]
                     if hex_val >= 0x30 and hex_val <= 0x3a:
-                        str += '{' + self.sysfnt_data_json['Characters'][hex_val - 0x30] + '}'
+                        build_str += '{' + self.sysfnt_data_json['Characters'][hex_val - 0x30] + '}'
                     elif hex_val == 0x40:
-                        str += '{' + self.sysfnt_data_json['Characters'][11] + '}'
+                        build_str += '{' + self.sysfnt_data_json['Characters'][11] + '}'
                     elif hex_val == 0x50:
-                        str += '{' + self.sysfnt_data_json['Characters'][12] + '}'
+                        build_str += '{' + self.sysfnt_data_json['Characters'][12] + '}'
                     elif hex_val == 0x60:
-                        str += '{' + self.sysfnt_data_json['Characters'][13] + '}'
+                        build_str += '{' + self.sysfnt_data_json['Characters'][13] + '}'
                     else:
-                        str += "{{x03{:02x}}}".format(hex_val)
+                        build_str += "{{x03{:02x}}}".format(hex_val)
                 else:
-                    str += "{x03}"
+                    build_str += "{x03}"
             elif hex_val == 0x04:  # {Var0}, {Var00} et {Varb0}
                 i += 1
                 if i < hex_size:
                     hex_val = hex_list[i]
                     if hex_val >= 0x20 and i <= 0x27:
-                        str += "{{Var{:02x}}}".format(hex_val - 0x20)
+                        build_str += "{{Var{:02x}}}".format(hex_val - 0x20)
                     elif hex_val >= 0x30 and i <= 0x37:
-                        str += "{{Var0{:02x}}}".format(hex_val - 0x30)
+                        build_str += "{{Var0{:02x}}}".format(hex_val - 0x30)
                     elif hex_val >= 0x40 and i <= 0x47:
-                        str += "{{Varb{:02x}}}".format(hex_val - 0x40)
+                        build_str += "{{Varb{:02x}}}".format(hex_val - 0x40)
                     else:
-                        str += "{{x04{:02x}}}".format(hex_val)
+                        build_str += "{{x04{:02x}}}".format(hex_val)
 
                 else:
-                    str += "{x04}"
+                    build_str += "{x04}"
             elif hex_val == 0x05:  # {Icons}
                 i += 1
                 if i < hex_size:
                     hex_val = hex_list[i]
                     if hex_val >= 0x20 and hex_val <= 0x71:
-                        str += '{' + self.sysfnt_data_json['Icons'][hex_val - 0x20] + '}'
+                        build_str += '{' + self.sysfnt_data_json['Icons'][hex_val - 0x20] + '}'
                     else:
-                        str += "{{x05{:02x}}}".format(hex_val)
+                        build_str += "{{x05{:02x}}}".format(hex_val)
                 else:
-                    str += "{x05}"
+                    build_str += "{x05}"
             elif hex_val == 0x06:  # {Color}
                 i += 1
                 if i < hex_size:
                     hex_val = hex_list[i]
                     if hex_val >= 0x20 and hex_val <= 0x2f:
-                        str += '{' + self.sysfnt_data_json['Colors'][hex_val - 0x20] + '}'
+                        build_str += '{' + self.sysfnt_data_json['Colors'][hex_val - 0x20] + '}'
                     else:
-                        str += "{{x06{:02x}}}".format(hex_val)
+                        build_str += "{{x06{:02x}}}".format(hex_val)
                 else:
-                    str += "{x06}"
+                    build_str += "{x06}"
             elif hex_val == 0x09:  # {Wait000}
                 i += 1
                 if i < hex_size:
                     hex_val = hex_list[i]
                     if hex_val >= 0x20:
-                        str += "{{Wait{:03}}}".format(hex_val - 0x20)
+                        build_str += "{{Wait{:03}}}".format(hex_val - 0x20)
                     else:
-                        str += "{{x09{:02x}}}".format(hex_val)
+                        build_str += "{{x09{:02x}}}".format(hex_val)
                 else:
-                    str += "{x06}"
+                    build_str += "{x06}"
             elif hex_val == 0x0b:  # {cursor_location}
                 i += 1
                 if i < hex_size:
                     if cursor_location_size == 2:
                         hex_val = hex_list[i]
-                        str += "{{Curseur_location_id:0x{:02x}}}".format(hex_val)
+                        build_str += "{{Cursor_location_id:0x{:02x}}}".format(hex_val)
                     if cursor_location_size == 3:
                         hex_val1 = hex_list[i]
                         i += 1
                         hex_val2 = hex_list[i]
-                        str += "{{Curseur_location_id:0x{:02x}{:02x}}}".format(hex_val1, hex_val2)
+                        build_str += "{{Cursor_location_id:0x{:02x}{:02x}}}".format(hex_val1, hex_val2)
                 else:
-                    str += "{x0b}"
+                    build_str += "{x0b}"
             elif hex_val == 0x0e:  # {Location}
                 i += 1
                 if i < hex_size:
                     hex_val = hex_list[i]
                     if hex_val >= 0x20 and hex_val <= 0x27:
-                        str += '{' + self.sysfnt_data_json['Locations'][hex_val - 0x20] + '}'
+                        build_str += '{' + self.sysfnt_data_json['Locations'][hex_val - 0x20] + '}'
                     else:
-                        str += "{{x0e{:02x}}}".format(hex_val)
+                        build_str += "{{x0e{:02x}}}".format(hex_val)
                 else:
-                    str += "{x0e}"
+                    build_str += "{x0e}"
             elif hex_val >= 0x019 and hex_val <= 0x1b:  # jp19, jp1a, jp1b
                 i += 1
                 if i < len(hex_list):
@@ -384,32 +382,33 @@ class GameData():
                         character = None
                     if not character:
                         character = "{{x{:02x}{:02x}}}".format(old_hex_val, hex_val)
-                    str += character
+                    build_str += character
                 else:
-                    str += "{{x{:02x}}}".format(hex_val)
+                    build_str += "{{x{:02x}}}".format(hex_val)
             elif hex_val == 0x1c:  # addJp
                 i += 1
                 if i < hex_size:
                     hex_val = hex_list[i]
                     if hex_val >= 0x20:
-                        str += "{{Jp{:03}}}".format(hex_val - 0x20)
+                        build_str += "{{Jp{:03}}}".format(hex_val - 0x20)
                     else:
-                        str += "{{x1c{:02x}}}".format(hex_val)
+                        build_str += "{{x1c{:02x}}}".format(hex_val)
                 else:
-                    str += "{x1c}"
-            elif hex_val >= 0x05 and hex_val <= 0x1f:
+                    build_str += "{x1c}"
+            elif hex_val >= 0x03 and hex_val <= 0x1f:
                 i += 1
                 if i < hex_size:
-                    str += "{{x{:02x}{:02x}}}".format(hex_val, hex_list[i])
+                    build_str += "{{x{:02x}{:02x}}}".format(hex_val, hex_list[i])
+                    i+=1
                 else:
-                    str += "{{x{:02x}}}".format(hex_val)
+                    build_str += "{{x{:02x}}}".format(hex_val)
             else:
                 character = self.translate_hex_to_str_table[hex_val]
                 if not character:
                     character = "{{x{:02x}}}".format(hex_val)
-                str += character
+                build_str += character
             i += 1
-        return str
+        return build_str
 
     def load_all(self):
         self.load_monster_data()
@@ -450,9 +449,9 @@ if __name__ == "__main__":
             transformed_file.append(byte)
 
     current_file_data = transformed_file
-    zero_as_slash_n = True
-    print(f"Transforming the byte data into ff8 string and considering byte 0 (end of string) as a \\n: {zero_as_slash_n}")
-    ff8_string = game_data.translate_hex_to_str(current_file_data, zero_as_slash_n)
+    zero_as_slash_n_param = True
+    print(f"Transforming the byte data into ff8 string and considering byte 0 (end of string) as a \\n: {zero_as_slash_n_param}")
+    ff8_string = game_data.translate_hex_to_str(current_file_data, zero_as_slash_n_param)
     # line_break = 200 # To define how often we return to line (for increase readability)
     # print(f"Now breaking the line every {line_break} characters")
     # ff8_string = '\n'.join(ff8_string[i:i + line_break] for i in range(0, len(ff8_string), line_break))
