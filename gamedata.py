@@ -238,8 +238,8 @@ class GameData():
                     elif substring in self.sysfnt_data_json['Colors']:  # {Color}
                         index_list = self.sysfnt_data_json['Colors'].index(substring)
                         encode_list.extend([0x06, 0x20 + index_list])
-                    elif substring in self.sysfnt_data_json['Skills']:  # {Skills}
-                        index_list = self.sysfnt_data_json['Skills'].index(substring)
+                    elif substring in self.sysfnt_data_json['GuardianForce']:  # {GuardianForce}
+                        index_list = self.sysfnt_data_json['GuardianForce'].index(substring)
                         encode_list.extend([0x0c, 0x60 + index_list])
                     elif substring in self.sysfnt_data_json['Locations']:  # {Location}
                         index_list = self.sysfnt_data_json['Locations'].index(substring)
@@ -364,12 +364,12 @@ class GameData():
                         build_str += "{{Cursor_location_id:0x{:02x}{:02x}}}".format(hex_val1, hex_val2)
                 else:
                     build_str += "{x0b}"
-            elif hex_val == 0x0c:  # {Skills}
+            elif hex_val == 0x0c:  # {GuardianForce}
                 i += 1
                 if i < hex_size:
                     hex_val = hex_list[i]
                     if hex_val >= 0x60 and hex_val <= 0x6f:
-                        build_str += '{' + self.sysfnt_data_json['Skills'][hex_val - 0x60] + '}'
+                        build_str += '{' + self.sysfnt_data_json['GuardianForce'][hex_val - 0x60] + '}'
                     else:
                         build_str += "{{x0c{:02x}}}".format(hex_val)
                 else:

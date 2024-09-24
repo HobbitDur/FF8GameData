@@ -102,11 +102,10 @@ class TestGameData(unittest.TestCase):
         self.assertEqual(len(ff8_hex), 2)
         self.assertEqual(ff8_hex, bytes([0x0c, 0x60]))
         ff8_re_str = self.game_data.translate_hex_to_str(ff8_hex)
-        self.assertEqual(ff8_re_str, "{Thunder Storm}")
+        self.assertEqual(ff8_re_str, "{Quezacotl}")
         # Test char to char
-        ff8_str = ("{Thunder Storm}{Diamond Dust}{Hell Fire}{Silent Voice}{Brotherly Love}{Dark Messenger}{Ruby Light}"
-                   "{Tsunami}{Tornado Zone}{Holy Judgement}{Counter Rockets}{Runaway Train}{Mega Flare}{1,000 Needles}"
-                   "{Chef's Knife}{Eternal Breath}")
+        ff8_str = ("{Quezacotl}{Shiva}{Ifrit}{Sire}{Brothers}{Diablos}{Carbuncle}{Leviathan}{Pandemona}{Cerberus}"
+                   "{Alexander}{Doomtrain}{Bahamut}{Cactuar}{Tonberry}{Eden}")
         ff8_list = self.game_data.translate_str_to_hex(ff8_str)
         ff8_hex = bytearray(ff8_list)
         self.assertEqual(len(ff8_hex), 32)
