@@ -2,9 +2,9 @@
   "items": [
     {"id":0,  "name":"Nothing"},
     {"id":1,  "name":"Potion"},
-    {"id":2,  "name":"Potion&"},
+    {"id":2,  "name":"Potion+"},
     {"id":3,  "name":"Hi-Potion"},
-    {"id":4,  "name":"Hi-Potion&"},
+    {"id":4,  "name":"Hi-Potion+"},
     {"id":5,  "name":"X-Potion"},
     {"id":6,  "name":"Mega-Potion"},
     {"id":7,  "name":"Phoenix Down"},
