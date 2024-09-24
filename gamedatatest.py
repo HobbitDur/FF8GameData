@@ -95,6 +95,24 @@ class TestGameData(unittest.TestCase):
         ff8_re_str = self.game_data.translate_hex_to_str(ff8_hex)
         self.assertEqual(ff8_re_str, ff8_str)
 
+    def test_sysfnt_skill(self):
+        ff8_str = "{x0c60}"
+        ff8_list = self.game_data.translate_str_to_hex(ff8_str)
+        ff8_hex = bytearray(ff8_list)
+        self.assertEqual(len(ff8_hex), 2)
+        self.assertEqual(ff8_hex, bytes([0x0c, 0x60]))
+        ff8_re_str = self.game_data.translate_hex_to_str(ff8_hex)
+        self.assertEqual(ff8_re_str, "{Thunder Storm}")
+        # Test char to char
+        ff8_str = ("{Thunder Storm}{Diamond Dust}{Hell Fire}{Silent Voice}{Brotherly Love}{Dark Messenger}{Ruby Light}"
+                   "{Tsunami}{Tornado Zone}{Holy Judgement}{Counter Rockets}{Runaway Train}{Mega Flare}{1,000 Needles}"
+                   "{Chef's Knife}{Eternal Breath}")
+        ff8_list = self.game_data.translate_str_to_hex(ff8_str)
+        ff8_hex = bytearray(ff8_list)
+        self.assertEqual(len(ff8_hex), 32)
+        ff8_re_str = self.game_data.translate_hex_to_str(ff8_hex)
+        self.assertEqual(ff8_re_str, ff8_str)
+
     def test_sysfnt_cursor_location(self):
         ff8_str = "{x0b20}"
         ff8_list = self.game_data.translate_str_to_hex(ff8_str)
