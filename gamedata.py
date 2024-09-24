@@ -322,7 +322,8 @@ class GameData():
                 i += 1
                 if i < hex_size:
                     hex_val = hex_list[i]
-                    if hex_val >= 0x20 and hex_val <= 0x71:
+                    if hex_val >= 0x20 and hex_val <= 0x5d:
+                        print(hex_val)
                         build_str += '{' + self.sysfnt_data_json['Icons'][hex_val - 0x20] + '}'
                     else:
                         build_str += "{{x05{:02x}}}".format(hex_val)
@@ -382,6 +383,7 @@ class GameData():
                         character = None
                     if not character:
                         character = "{{x{:02x}{:02x}}}".format(old_hex_val, hex_val)
+                        i+=1
                     build_str += character
                 else:
                     build_str += "{{x{:02x}}}".format(hex_val)
