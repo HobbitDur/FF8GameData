@@ -149,7 +149,7 @@ class GameData():
             elif data_type_str == "text":
                 self.kernel_data_json["sections"][i]["type"] = SectionType.FF8_TEXT
 
-    def load_card_json_data(self):
+    def load_card_data(self):
         file_path = os.path.join(self.resource_folder, "card.json")
         with open(file_path, encoding="utf8") as f:
             self.card_data_json = json.load(f)
@@ -433,7 +433,7 @@ class GameData():
         self.load_stat_data()
         self.load_status_data()
         self.load_kernel_data()
-        self.load_card_json_data()
+        self.load_card_data()
         self.load_mngrp_data()
 
 
