@@ -21,6 +21,8 @@ class SectionType(Enum):
     MNGRP_STRING = 5
     MNGRP_MAP_COMPLEX_STRING = 6
     MNGRP_COMPLEX_STRING = 7
+    MNGRP_M00BIN = 8
+    MNGRP_M00MSG = 9
 
 
 class GameData():
@@ -127,6 +129,10 @@ class GameData():
                 self.mngrp_data_json["sections"][i]["data_type"] = SectionType.MNGRP_COMPLEX_STRING
             elif data_type_str == "mngrp_map_complex_string":
                 self.mngrp_data_json["sections"][i]["data_type"] = SectionType.MNGRP_MAP_COMPLEX_STRING
+            elif data_type_str == "m00bin":
+                self.mngrp_data_json["sections"][i]["data_type"] = SectionType.MNGRP_M00BIN
+            elif data_type_str == "m00msg":
+                self.mngrp_data_json["sections"][i]["data_type"] = SectionType.MNGRP_M00MSG
 
     def load_kernel_data(self):
         file_path = os.path.join(self.resource_folder, "kernel_bin_data.json")
