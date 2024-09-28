@@ -22,10 +22,18 @@ class Mngrp(Section):
                                       own_offset=section["section_offset"], name=section["section_name"])
                 self._section_list.append(new_section)
         else:
+            current_id_section = 0
             for index_section, entry in enumerate(header_entry_list):
                 section_hex = self._data_hex[entry.seek: entry.seek + entry.size]
-                new_section = Section(game_data=self._game_data, data_hex=section_hex, id=index_section,
-                                      own_offset=entry.seek, name="")
+                if entry.invalid_value:
+                    id_section = -1
+                    offset = entry.seek
+                else:
+                    id_section = current_id_section
+                    offset = entry.seek + 1
+                    current_id_section += 1
+                new_section = Section(game_data=self._game_data, data_hex=section_hex, id=id_section,
+                                      own_offset=offset, name="")
                 self._section_list.append(new_section)
 
             # Updating own data as it could have been modified
@@ -46,25 +54,36 @@ class Mngrp(Section):
     def get_section_by_id(self, section_id):
         return self._section_list[section_id]
 
-    def set_section_by_id(self, section_id: int, data_section_hex: bytearray, mngrphd:Mngrphd):
+    def set_section_by_id_and_bytearray(self, section_id: int, data_section_hex: bytearray, mngrphd: Mngrphd):
         own_offset_start = self._section_list[section_id].own_offset
         name = self._section_list[section_id].name
         new_section = Section(game_data=self._game_data, data_hex=data_section_hex, id=section_id,
                               own_offset=own_offset_start, name=name)
         self._section_list[section_id] = new_section
-        own_offset_diff = len(new_section) - own_offset_start
-        for i in range(section_id, len(self._section_list)):
-            self._section_list[i].own_offset += own_offset_diff
-        self.__update_data_hex()
-        mngrphd.update_from_section_list(self._section_list)
+        self.__shift_offset(own_offset_start=own_offset_start, mngrphd=mngrphd, section_id=section_id, new_section=new_section)
 
+    def set_section_by_id(self, section_id: int, section: Section, mngrphd: Mngrphd):
+        own_offset_start = self._section_list[section_id].own_offset
+        self._section_list[section_id] = section
+        self.__shift_offset(own_offset_start=own_offset_start, mngrphd=mngrphd, section_id=section_id, new_section=section)
+
+    def __shift_offset(self, own_offset_start: int, mngrphd: Mngrphd, section_id, new_section):
+        print("Shifting offset !")
+        if not mngrphd.get_entry_list()[section_id].invalid_value:
+            own_offset_diff = len(new_section) - own_offset_start
+            print(f"own_offset_start: {own_offset_start}")
+            print(f"len(new_section): {len(new_section)}")
+            print(f"own_offset_diff: {own_offset_diff}")
+            for i in range(section_id, len(self._section_list)):
+                self._section_list[i].own_offset += own_offset_diff
+            self.__update_data_hex()
+            mngrphd.update_from_section_list(self._section_list)
 
     def __update_data_hex(self):
         self._data_hex = bytearray()
         for section in self._section_list:
             self._data_hex.extend(section.get_data_hex())
         self._size = len(self._data_hex)
-
 
 
 if __name__ == "__main__":
@@ -88,7 +107,7 @@ if __name__ == "__main__":
     with open(file_mngrp_out, "wb") as file:
         file.write(mngrp_section.get_data_hex())
 
-    #mngrp_section_valid.set_section_by_id(0, bytearray([0x60, 0x02, 0x00]), mngprhd_section )
+    # mngrp_section_valid.set_section_by_id(0, bytearray([0x60, 0x02, 0x00]), mngprhd_section )
 
     file_mngrp_out = "mngrp_valid_out.bin"
     with open(file_mngrp_out, "wb") as file:

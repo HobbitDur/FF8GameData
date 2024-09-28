@@ -18,7 +18,7 @@ class Section:
         return self._size
 
     def __str__(self):
-        return f"Section - OwnOffet: {self.own_offset} - data_hex: {self._data_hex.hex(sep=" ", bytes_per_sep=1)}"
+        return f"Section(OwnOffet: {self.own_offset}, data_hex: {self._data_hex.hex(sep=" ", bytes_per_sep=1)})"
 
     def get_data_hex(self):
         return self._data_hex

@@ -22,14 +22,15 @@ class Mngrphd(Section):
         self._mngprhd_entry_valid_list = []
         i = 0
         while i < len(data_hex):
-            seek = int.from_bytes(self._data_hex[i: i + MngrphdEntry.SEEK_LENGTH], byteorder='little') - 1
+            seek = int.from_bytes(self._data_hex[i: i + MngrphdEntry.SEEK_LENGTH], byteorder='little')
             size = int.from_bytes(
-                self._data_hex[i + MngrphdEntry.SEEK_LENGTH: i + +MngrphdEntry.SEEK_LENGTH + MngrphdEntry.SIZE_LENGTH],
+                self._data_hex[i + MngrphdEntry.SEEK_LENGTH: i + MngrphdEntry.SEEK_LENGTH + MngrphdEntry.SIZE_LENGTH],
                 byteorder='little')
-            if seek ==  0xFFFFFF - 1 or size == 0 or (seek == -1 and i == 0):
+            if seek == 0xFFFFFF or size == 0:
                 invalid_value = True
             else:
                 invalid_value = False
+                seek = seek - 1
             new_entry = MngrphdEntry(seek=seek, size=size, invalid_value=invalid_value)
             self._mngprhd_entry_list.append(new_entry)
             if not invalid_value:
@@ -44,17 +45,31 @@ class Mngrphd(Section):
         return self._mngprhd_entry_valid_list
 
     def update_from_section_list(self, section_list):
+        self._mngprhd_valid_list = []
         self._mngprhd_entry_valid_list = []
         for section in section_list:
-            new_entry = MngrphdEntry(seek=section.own_offset, size=len(section))
-            self._mngprhd_entry_valid_list.append(new_entry)
+            seek = section.own_offset
+            size = len(section)
+            if seek == 0xFFFFFF or size == 0:
+                invalid = True
+            else:
+                invalid = False
+            new_entry = MngrphdEntry(seek=section.own_offset, size=len(section), invalid_value=invalid)
+            self._mngprhd_entry_list.append(new_entry)
+            if not invalid:
+                self._mngprhd_entry_valid_list.append(new_entry)
         self.__update_data_hex()
 
     def __update_data_hex(self):
         data_valid_hex = bytearray()
         for entry in self._mngprhd_entry_valid_list:
+            print(entry)
             entry_hex = bytearray()
-            entry_hex.extend((entry.seek + 1).to_bytes(length=MngrphdEntry.SEEK_LENGTH, byteorder='little'))
+            if entry.invalid_value:
+                new_seek = entry.seek
+            else:
+                new_seek = entry.seek + 1
+            entry_hex.extend(new_seek.to_bytes(length=MngrphdEntry.SEEK_LENGTH, byteorder='little'))
             entry_hex.extend(entry.size.to_bytes(length=MngrphdEntry.SIZE_LENGTH, byteorder='little'))
             data_valid_hex.extend(entry_hex)
         self._data_hex = data_valid_hex
@@ -62,7 +77,7 @@ class Mngrphd(Section):
 
     def __str__(self):
         str_return = ""
-        for i, entry in enumerate(self._mngprhd_entry_valid_list):
+        for i, entry in enumerate(self._mngprhd_entry_list):
             str_return += f"Entry n°{i}: " + str(entry) + "\n"
         return str_return
 
