@@ -45,7 +45,7 @@ class Mngrphd(Section):
         return self._mngprhd_entry_valid_list
 
     def update_from_section_list(self, section_list):
-        self._mngprhd_valid_list = []
+        self._mngprhd_entry_list = []
         self._mngprhd_entry_valid_list = []
         for section in section_list:
             seek = section.own_offset
@@ -54,7 +54,8 @@ class Mngrphd(Section):
                 invalid = True
             else:
                 invalid = False
-            new_entry = MngrphdEntry(seek=section.own_offset, size=len(section), invalid_value=invalid)
+                seek -= 1
+            new_entry = MngrphdEntry(seek=seek, size=len(section), invalid_value=invalid)
             self._mngprhd_entry_list.append(new_entry)
             if not invalid:
                 self._mngprhd_entry_valid_list.append(new_entry)
@@ -62,8 +63,7 @@ class Mngrphd(Section):
 
     def __update_data_hex(self):
         data_valid_hex = bytearray()
-        for entry in self._mngprhd_entry_valid_list:
-            print(entry)
+        for entry in self._mngprhd_entry_list:
             entry_hex = bytearray()
             if entry.invalid_value:
                 new_seek = entry.seek

@@ -42,7 +42,7 @@ class Mngrp(Section):
     def __str__(self):
         return_str = ""
         for i, section in enumerate(self._section_list):
-            return_str += f"Section mngrp n°{i}(offset={section.own_offset}, len={section.get_size()})" + "\n"
+            return_str += f"Section mngrp n°{i}(id={section.id}, offset={section.own_offset}, len={section.get_size()})" + "\n"
         return return_str
 
     def __repr__(self):
@@ -55,27 +55,34 @@ class Mngrp(Section):
         return self._section_list[section_id]
 
     def set_section_by_id_and_bytearray(self, section_id: int, data_section_hex: bytearray, mngrphd: Mngrphd):
-        own_offset_start = self._section_list[section_id].own_offset
-        name = self._section_list[section_id].name
-        new_section = Section(game_data=self._game_data, data_hex=data_section_hex, id=section_id,
-                              own_offset=own_offset_start, name=name)
-        self._section_list[section_id] = new_section
-        self.__shift_offset(own_offset_start=own_offset_start, mngrphd=mngrphd, section_id=section_id, new_section=new_section)
+        local_index_section = 0
+        for i, section in enumerate(self._section_list):
+            if section.id == section_id:
+                local_index_section = i
+                break
+        own_offset_start = self._section_list[local_index_section].own_offset
+        len_old = len(self._section_list[local_index_section])
+        name = self._section_list[local_index_section].name
+        new_section = Section(game_data=self._game_data, data_hex=data_section_hex, id=local_index_section,own_offset=own_offset_start, name=name)
+        self._section_list[local_index_section] = new_section
+        self.__shift_offset(len_old=len_old, mngrphd=mngrphd, section_id=local_index_section, new_section=new_section)
 
     def set_section_by_id(self, section_id: int, section: Section, mngrphd: Mngrphd):
-        own_offset_start = self._section_list[section_id].own_offset
-        self._section_list[section_id] = section
-        self.__shift_offset(own_offset_start=own_offset_start, mngrphd=mngrphd, section_id=section_id, new_section=section)
+        local_index_section = 0
+        for i, section in enumerate(self._section_list):
+            if section.id == section_id:
+                local_index_section = i
+                break
+        len_old = len(self._section_list[local_index_section])
+        self._section_list[local_index_section] = section
+        self.__shift_offset(len_old=len_old, mngrphd=mngrphd, section_id=local_index_section, new_section=section)
 
-    def __shift_offset(self, own_offset_start: int, mngrphd: Mngrphd, section_id, new_section):
-        print("Shifting offset !")
+    def __shift_offset(self, len_old: int, mngrphd: Mngrphd, section_id, new_section):
         if not mngrphd.get_entry_list()[section_id].invalid_value:
-            own_offset_diff = len(new_section) - own_offset_start
-            print(f"own_offset_start: {own_offset_start}")
-            print(f"len(new_section): {len(new_section)}")
-            print(f"own_offset_diff: {own_offset_diff}")
-            for i in range(section_id, len(self._section_list)):
-                self._section_list[i].own_offset += own_offset_diff
+            own_offset_diff = len(new_section) - len_old
+            for i in range(section_id+1, len(self._section_list)):
+                if not mngrphd.get_entry_list()[i].invalid_value:
+                    self._section_list[i].own_offset += own_offset_diff
             self.__update_data_hex()
             mngrphd.update_from_section_list(self._section_list)
 
