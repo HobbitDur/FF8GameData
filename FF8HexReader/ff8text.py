@@ -10,7 +10,7 @@ class FF8Text(Section):
         self.type = SectionType.FF8_TEXT
 
     def __str__(self):
-        return f"FF8Text: Text: {self._text_str} - Hex: {self._data_hex.hex(sep=" ")}"
+        return f"FF8Text: Text: {self._text_str}"# - Hex: {self._data_hex.hex(sep=" ")}"
 
     def __repr__(self):
         return self.__str__()

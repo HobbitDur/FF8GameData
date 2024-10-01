@@ -36,7 +36,6 @@ class Mngrphd(Section):
             if not invalid_value:
                 self._mngprhd_entry_valid_list.append(new_entry)
             i += MngrphdEntry.SEEK_LENGTH + MngrphdEntry.SIZE_LENGTH
-        self.__update_data_hex()
 
     def get_entry_list(self):
         return self._mngprhd_entry_list
@@ -59,9 +58,8 @@ class Mngrphd(Section):
             self._mngprhd_entry_list.append(new_entry)
             if not invalid:
                 self._mngprhd_entry_valid_list.append(new_entry)
-        self.__update_data_hex()
 
-    def __update_data_hex(self):
+    def update_data_hex(self):
         data_valid_hex = bytearray()
         for entry in self._mngprhd_entry_list:
             entry_hex = bytearray()

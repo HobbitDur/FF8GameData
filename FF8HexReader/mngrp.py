@@ -2,7 +2,7 @@ import os
 
 from FF8GameData.FF8HexReader.mngrphd import MngrphdEntry, Mngrphd
 from FF8GameData.FF8HexReader.section import Section
-from FF8GameData.gamedata import GameData
+from FF8GameData.gamedata import GameData, SectionType
 
 
 class Mngrp(Section):
@@ -36,8 +36,6 @@ class Mngrp(Section):
                                       own_offset=offset, name="")
                 self._section_list.append(new_section)
 
-            # Updating own data as it could have been modified
-            self.__update_data_hex()
 
     def __str__(self):
         return_str = ""
@@ -63,32 +61,34 @@ class Mngrp(Section):
         own_offset_start = self._section_list[local_index_section].own_offset
         len_old = len(self._section_list[local_index_section])
         name = self._section_list[local_index_section].name
-        new_section = Section(game_data=self._game_data, data_hex=data_section_hex, id=local_index_section,own_offset=own_offset_start, name=name)
+        new_section = Section(game_data=self._game_data, data_hex=data_section_hex, id=local_index_section,
+                              own_offset=own_offset_start, name=name)
         self._section_list[local_index_section] = new_section
         self.__shift_offset(len_old=len_old, mngrphd=mngrphd, section_id=local_index_section, new_section=new_section)
 
-    def set_section_by_id(self, section_id: int, section: Section, mngrphd: Mngrphd):
+    def set_section_by_id(self, section_id: int, new_section: Section, mngrphd: Mngrphd):
         local_index_section = 0
         for i, section in enumerate(self._section_list):
             if section.id == section_id:
                 local_index_section = i
                 break
         len_old = len(self._section_list[local_index_section])
-        self._section_list[local_index_section] = section
-        self.__shift_offset(len_old=len_old, mngrphd=mngrphd, section_id=local_index_section, new_section=section)
+        self._section_list[local_index_section] = new_section
+        self.__shift_offset(len_old=len_old, mngrphd=mngrphd, section_id=local_index_section, new_section=new_section)
 
     def __shift_offset(self, len_old: int, mngrphd: Mngrphd, section_id, new_section):
         if not mngrphd.get_entry_list()[section_id].invalid_value:
             own_offset_diff = len(new_section) - len_old
-            for i in range(section_id+1, len(self._section_list)):
+            for i in range(section_id + 1, len(self._section_list)):
                 if not mngrphd.get_entry_list()[i].invalid_value:
                     self._section_list[i].own_offset += own_offset_diff
-            self.__update_data_hex()
             mngrphd.update_from_section_list(self._section_list)
 
-    def __update_data_hex(self):
+    def update_data_hex(self):
         self._data_hex = bytearray()
         for section in self._section_list:
+            if section.type == SectionType.TKMNMES:
+                section.update_data_hex()
             self._data_hex.extend(section.get_data_hex())
         self._size = len(self._data_hex)
 

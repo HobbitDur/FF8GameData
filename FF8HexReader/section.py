@@ -27,3 +27,6 @@ class Section:
         self._data_hex = new_data_hex
         self._size = len(self._data_hex)
 
+    def update_data_hex(self):
+        self._size = len(self._data_hex)
+
