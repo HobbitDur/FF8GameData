@@ -60,11 +60,15 @@ class Mngrp(Section):
                 local_index_section = i
                 break
         print(f"local_index_section: {local_index_section}")
+
+
+
         own_offset_start = self._section_list[local_index_section].own_offset
         len_old = len(self._section_list[local_index_section])
         name = self._section_list[local_index_section].name
         new_section = Section(game_data=self._game_data, data_hex=data_section_hex, id=local_index_section,
                               own_offset=own_offset_start, name=name)
+        new_section.fill_256()
         self._section_list[local_index_section] = new_section
         self.__shift_offset(len_old=len_old, mngrphd=mngrphd, section_id=local_index_section, new_section=new_section)
 
@@ -76,7 +80,7 @@ class Mngrp(Section):
                 break
 
         len_old = len(self._section_list[local_index_section])
-
+        new_section.fill_256()
         self._section_list[local_index_section] = new_section
         self.__shift_offset(len_old=len_old, mngrphd=mngrphd, section_id=local_index_section, new_section=new_section)
 
