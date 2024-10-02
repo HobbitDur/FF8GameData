@@ -7,6 +7,7 @@ class FF8Text(Section):
         Section.__init__(self, game_data=game_data, own_offset=own_offset, data_hex=data_hex, id=id, name="")
         self._cursor_location_size = cursor_location_size
         self._text_str = self._game_data.translate_hex_to_str(self._data_hex, cursor_location_size=self._cursor_location_size)
+        self.set_str(self._text_str) # To remove unwanted 0 for example
         self.type = SectionType.FF8_TEXT
 
     def __str__(self):
@@ -19,7 +20,10 @@ class FF8Text(Section):
         return self._text_str
 
     def set_str(self, text: str):
+        print("set_str")
+        print(text)
         converted_data_list = self._game_data.translate_str_to_hex(text)
+        print(converted_data_list)
         self._data_hex = bytearray(converted_data_list)
         self._text_str = text
         if text != "":  # If empty don't put \x00

@@ -18,6 +18,15 @@ class TestGameData(unittest.TestCase):
         ff8_re_str = self.game_data.translate_hex_to_str(ff8_hex)
         self.assertEqual(ff8_re_str, ff8_str)
 
+    def test_sysfnt_basic2(self):
+        ff8_str = "{x0a27}s {x0a26}OK?"
+        ff8_list = self.game_data.translate_str_to_hex(ff8_str)
+        ff8_hex = bytearray(ff8_list)
+        #self.assertEqual(len(ff8_hex), 6)
+        #self.assertEqual(ff8_hex, b'Xfgq \xe8')
+        ff8_re_str = self.game_data.translate_hex_to_str(ff8_hex)
+        self.assertEqual(ff8_re_str, ff8_str)
+
     def test_sysfnt_var_simple(self):
         ff8_str = "{xdf}"
         ff8_list = self.game_data.translate_str_to_hex(ff8_str)

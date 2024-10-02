@@ -272,10 +272,9 @@ class GameData():
                         encode_list.append(self.translate_hex_to_str_table.index('{' + substring + '}'))
                     elif 'x' in substring and len(substring) == 5:  # {xffff}
                         encode_list.extend([int(substring[1:3], 16), int(substring[3:5], 16)])
-                        c += len(substring) + 2
                     elif 'x' in substring and len(substring) == 3:  # {xff}
                         encode_list.append(int(substring[1:3], 16))
-                    c += len(substring) + 2
+                    c += len(substring) + 2  # +2 for the {}
                     continue
             encode_list.append(self.translate_hex_to_str_table.index(char))
             c += 1
@@ -390,9 +389,9 @@ class GameData():
                         build_str += "{{x0e{:02x}}}".format(hex_val)
                 else:
                     build_str += "{x0e}"
-            elif hex_val >= 0x019 and hex_val <= 0x1b:  # jp19, jp1a, jp1b
+            elif hex_val >= 0x19 and hex_val <= 0x1b:  # jp19, jp1a, jp1b
                 i += 1
-                if i < len(hex_list):
+                if i < hex_size:
                     old_hex_val = hex_val
                     hex_val = hex_list[i]
                     if hex_val >= 0x20:
@@ -401,7 +400,6 @@ class GameData():
                         character = None
                     if not character:
                         character = "{{x{:02x}{:02x}}}".format(old_hex_val, hex_val)
-                        i+=1
                     build_str += character
                 else:
                     build_str += "{{x{:02x}}}".format(hex_val)
@@ -419,7 +417,6 @@ class GameData():
                 i += 1
                 if i < hex_size:
                     build_str += "{{x{:02x}{:02x}}}".format(hex_val, hex_list[i])
-                    i+=1
                 else:
                     build_str += "{{x{:02x}}}".format(hex_val)
             else:
