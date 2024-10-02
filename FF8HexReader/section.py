@@ -32,9 +32,7 @@ class Section:
 
     def fill_256(self):
         # The size of each section must be a multiple of 256
-        print(f"Section id: {self.id}")
         while len(self._data_hex)%256 != 0:
-            print(f"Fill 256: {len(self._data_hex)}")
             self._data_hex.extend([0x00])
         self._size = len(self._data_hex)
 

@@ -10,6 +10,7 @@ class Mngrp(Section):
         Section.__init__(self, game_data=game_data, data_hex=data_hex, id=0, own_offset=0, name="mngrp")
         self._section_list = []
         self._game_data.load_mngrp_data()
+        self.header_entry_list = header_entry_list
         # If not entry list given, use the default one
         if not header_entry_list:
             for index_section, section in enumerate(self._game_data.mngrp_data_json()['sections']):
@@ -52,16 +53,8 @@ class Mngrp(Section):
     def get_section_by_id(self, section_id):
         return self._section_list[section_id]
 
-    def set_section_by_id_and_bytearray(self, section_id: int, data_section_hex: bytearray, mngrphd: Mngrphd):
-        print("set_section_by_id")
-        local_index_section = 0
-        for i, section in enumerate(self._section_list):
-            if section.id == section_id:
-                local_index_section = i
-                break
-        print(f"local_index_section: {local_index_section}")
-
-
+    def set_section_by_id_and_bytearray(self, section_id: int, data_section_hex: bytearray):
+        local_index_section = self.__find_local_id_from_section_id(section_id)
 
         own_offset_start = self._section_list[local_index_section].own_offset
         len_old = len(self._section_list[local_index_section])
@@ -70,37 +63,38 @@ class Mngrp(Section):
                               own_offset=own_offset_start, name=name)
         new_section.fill_256()
         self._section_list[local_index_section] = new_section
-        self.__shift_offset(len_old=len_old, mngrphd=mngrphd, section_id=local_index_section, new_section=new_section)
+        self.__shift_offset(len_old=len_old, section_id=local_index_section, new_section=new_section)
 
-    def set_section_by_id(self, section_id: int, new_section: Section, mngrphd: Mngrphd):
+    def set_section_by_id(self, section_id: int, new_section: Section):
+        local_index_section = self.__find_local_id_from_section_id(section_id)
+        len_old = len(self._section_list[local_index_section])
+        new_section.fill_256()
+        self._section_list[local_index_section] = new_section
+        self.__shift_offset(len_old=len_old, section_id=local_index_section, new_section=new_section)
+
+    def __shift_offset(self, len_old: int, section_id, new_section):
+        if not self.header_entry_list[section_id].invalid_value:
+            own_offset_diff = len(new_section) - len_old
+            for i in range(section_id + 1, len(self._section_list)):
+                if not self.header_entry_list[i].invalid_value:
+                    self._section_list[i].own_offset += own_offset_diff
+
+    def __find_local_id_from_section_id(self, section_id):
         local_index_section = 0
         for i, section in enumerate(self._section_list):
             if section.id == section_id:
                 local_index_section = i
                 break
-
-        len_old = len(self._section_list[local_index_section])
-        new_section.fill_256()
-        self._section_list[local_index_section] = new_section
-        self.__shift_offset(len_old=len_old, mngrphd=mngrphd, section_id=local_index_section, new_section=new_section)
-
-    def __shift_offset(self, len_old: int, mngrphd: Mngrphd, section_id, new_section):
-        print(f"len_old: {len_old}")
-        print(f"section_id: {section_id}")
-        print(f"new_section: {new_section}")
-        print(f"len(new_section): {len(new_section)}")
-        if not mngrphd.get_entry_list()[section_id].invalid_value:
-            own_offset_diff = len(new_section) - len_old
-            for i in range(section_id + 1, len(self._section_list)):
-                if not mngrphd.get_entry_list()[i].invalid_value:
-                    self._section_list[i].own_offset += own_offset_diff
-            mngrphd.update_from_section_list(self._section_list)
+        return local_index_section
 
     def update_data_hex(self):
         self._data_hex = bytearray()
-        for section in self._section_list:
-            #if section.type == SectionType.TKMNMES:
-            section.update_data_hex()
+        for local_index, section in enumerate(self._section_list):
+            if section.type == SectionType.MNGRP_COMPLEX_STRING:
+                len_old = len(section)
+                section.update_data_hex()
+                section.fill_256()
+                self.__shift_offset(len_old=len_old,section_id=local_index, new_section=section)
             self._data_hex.extend(section.get_data_hex())
         self._size = len(self._data_hex)
 
