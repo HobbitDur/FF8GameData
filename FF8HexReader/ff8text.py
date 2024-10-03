@@ -24,13 +24,13 @@ class FF8Text(Section):
             data_hex.extend(other._data_hex)
             new_id = self.id
             new_cursor_location_size = self._cursor_location_size
-
         else:
             own_offset = other.own_offset
             data_hex = other.get_data_hex()
             data_hex.extend(self._data_hex)
             new_id = other.id
             new_cursor_location_size = other._cursor_location_size
+
         return FF8Text(game_data=self._game_data, own_offset=own_offset, data_hex=data_hex, id=new_id,
                        cursor_location_size=new_cursor_location_size)
 

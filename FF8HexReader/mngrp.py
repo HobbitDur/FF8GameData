@@ -90,7 +90,7 @@ class Mngrp(Section):
     def update_data_hex(self):
         self._data_hex = bytearray()
         for local_index, section in enumerate(self._section_list):
-            if section.type == SectionType.MNGRP_COMPLEX_STRING:
+            if section.type == SectionType.MNGRP_COMPLEX_STRING or section.type == SectionType.MNGRP_MAP_COMPLEX_STRING :
                 len_old = len(section)
                 section.update_data_hex()
                 section.fill_256()
