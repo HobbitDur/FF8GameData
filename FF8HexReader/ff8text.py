@@ -6,15 +6,33 @@ class FF8Text(Section):
     def __init__(self, game_data: GameData, own_offset: int, data_hex: bytearray, id: int, cursor_location_size=2):
         Section.__init__(self, game_data=game_data, own_offset=own_offset, data_hex=data_hex, id=id, name="")
         self._cursor_location_size = cursor_location_size
-        self._text_str = self._game_data.translate_hex_to_str(self._data_hex, cursor_location_size=self._cursor_location_size)
-        self.set_str(self._text_str) # To remove unwanted 0 for example
+        self._text_str = self._game_data.translate_hex_to_str(self._data_hex,
+                                                              cursor_location_size=self._cursor_location_size)
+        self.set_str(self._text_str)  # To remove unwanted 0 for example
         self.type = SectionType.FF8_TEXT
 
     def __str__(self):
-        return f"FF8Text: Text: {self._text_str}"# - Hex: {self._data_hex.hex(sep=" ")}"
+        return f"FF8Text: Text: {self._text_str}"  # - Hex: {self._data_hex.hex(sep=" ")}"
 
     def __repr__(self):
         return self.__str__()
+
+    def __add__(self, other):
+        if self.own_offset <= other.own_offset:
+            own_offset = self.own_offset
+            data_hex = self._data_hex
+            data_hex.extend(other._data_hex)
+            new_id = self.id
+            new_cursor_location_size = self._cursor_location_size
+
+        else:
+            own_offset = other.own_offset
+            data_hex = other.get_data_hex()
+            data_hex.extend(self._data_hex)
+            new_id = other.id
+            new_cursor_location_size = other._cursor_location_size
+        return FF8Text(game_data=self._game_data, own_offset=own_offset, data_hex=data_hex, id=new_id,
+                       cursor_location_size=new_cursor_location_size)
 
     def get_str(self):
         return self._text_str
@@ -31,11 +49,11 @@ class FF8Text(Section):
         self._size = len(self._data_hex)
 
     def compress_str(self, compressible=3):
-        if compressible == 0: # Not compressible
+        if compressible == 0:  # Not compressible
             return
-        if compressible == 2 and self.id%2 == 0:# Only second is compressible but we are id 0 of the subsection
+        if compressible == 2 and self.id % 2 == 0:  # Only second is compressible but we are id 0 of the subsection
             return
-        if compressible == 1 and self.id%2 == 1:# Only first is compressible but we are id 1 of the subsection (not 0)
+        if compressible == 1 and self.id % 2 == 1:  # Only first is compressible but we are id 1 of the subsection (not 0)
             return
 
         compress_list = ["{in}", "{e }", "{ne}", "{to}", "{re}", "{HP}", "{l }", "{ll}", "{GF}", "{nt}", "{il}", "{o }",
