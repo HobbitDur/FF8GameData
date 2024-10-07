@@ -14,11 +14,11 @@ class Mngrp(Section):
         self.header_entry_list = header_entry_list
         # If not entry list given, use the default one
         if not header_entry_list:
-            for index_section, section in enumerate(self._game_data.mngrp_data_json()['sections']):
-                if index_section == len(self._game_data.mngrp_data_json()['sections']) - 1:
+            for index_section, section in enumerate(self._game_data.mngrp_data_json['sections']):
+                if index_section == len(self._game_data.mngrp_data_json['sections']) - 1:
                     end_section = len(self._data_hex)
                 else:
-                    end_section = self._game_data.mngrp_data_json()['sections'][index_section + 1]['section_offset']
+                    end_section = self._game_data.mngrp_data_json['sections'][index_section + 1]['section_offset']
                 section_hex = self._data_hex[section['section_offset']:end_section]
                 new_section = Section(game_data=self._game_data, data_hex=section_hex, id=index_section,
                                       own_offset=section["section_offset"], name=section["section_name"])
@@ -89,12 +89,11 @@ class Mngrp(Section):
     def update_data_hex(self):
         self._data_hex = bytearray()
         for local_index, section in enumerate(self._section_list):
-            if section.type == SectionType.TKMNMES and self.test ==0:
-                len_old = len(section)
-                section.update_data_hex()
-                section.fill(2048)
-                self.test +=1
-                self.__shift_offset(len_old=len_old,section_id=local_index, new_section=section)
+            #if section.type == SectionType.TKMNMES and self.test ==0:
+            len_old = len(section)
+            section.update_data_hex()
+            section.fill(2048)
+            self.__shift_offset(len_old=len_old,section_id=local_index, new_section=section)
             self._data_hex.extend(section.get_data_hex())
         self._size = len(self._data_hex)
 
