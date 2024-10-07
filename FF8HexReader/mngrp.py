@@ -9,7 +9,6 @@ class Mngrp(Section):
     def __init__(self, game_data: GameData, data_hex: bytearray, header_entry_list: [MngrphdEntry] = ()):
         Section.__init__(self, game_data=game_data, data_hex=data_hex, id=0, own_offset=0, name="mngrp")
         self._section_list = []
-        self.test = 0
         self._game_data.load_mngrp_data()
         self.header_entry_list = header_entry_list
         # If not entry list given, use the default one
@@ -37,7 +36,6 @@ class Mngrp(Section):
                 new_section = Section(game_data=self._game_data, data_hex=section_hex, id=id_section,
                                       own_offset=offset, name="")
                 self._section_list.append(new_section)
-
 
     def __str__(self):
         return_str = ""
@@ -89,11 +87,10 @@ class Mngrp(Section):
     def update_data_hex(self):
         self._data_hex = bytearray()
         for local_index, section in enumerate(self._section_list):
-            #if section.type == SectionType.TKMNMES and self.test ==0:
             len_old = len(section)
             section.update_data_hex()
             section.fill(2048)
-            self.__shift_offset(len_old=len_old,section_id=local_index, new_section=section)
+            self.__shift_offset(len_old=len_old, section_id=local_index, new_section=section)
             self._data_hex.extend(section.get_data_hex())
         self._size = len(self._data_hex)
 

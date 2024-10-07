@@ -20,7 +20,7 @@ class SectionType(Enum):
     TKMNMES = 4
     MNGRP_STRING = 5
     MNGRP_MAP_COMPLEX_STRING = 6
-    MNGRP_COMPLEX_STRING = 7
+    MNGRP_TEXTBOX = 7
     MNGRP_M00BIN = 8
     MNGRP_M00MSG = 9
 
@@ -126,7 +126,7 @@ class GameData():
             elif data_type_str == "text":
                 self.mngrp_data_json["sections"][i]["data_type"] = SectionType.FF8_TEXT
             elif data_type_str == "mngrp_complex_string":
-                self.mngrp_data_json["sections"][i]["data_type"] = SectionType.MNGRP_COMPLEX_STRING
+                self.mngrp_data_json["sections"][i]["data_type"] = SectionType.MNGRP_TEXTBOX
             elif data_type_str == "mngrp_map_complex_string":
                 self.mngrp_data_json["sections"][i]["data_type"] = SectionType.MNGRP_MAP_COMPLEX_STRING
             elif data_type_str == "m00bin":

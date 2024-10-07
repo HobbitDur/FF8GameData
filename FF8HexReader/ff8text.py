@@ -38,10 +38,7 @@ class FF8Text(Section):
         return self._text_str
 
     def set_str(self, text: str):
-        print("set_str")
-        print(text)
         converted_data_list = self._game_data.translate_str_to_hex(text)
-        print(converted_data_list)
         self._data_hex = bytearray(converted_data_list)
         self._text_str = text
         if text != "":  # If empty don't put \x00
