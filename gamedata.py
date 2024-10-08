@@ -180,6 +180,7 @@ class GameData():
 
         img = Image.open(os.path.join(self.resource_folder, "cards_00.png"))
         img_remaster = Image.open(os.path.join(self.resource_folder, "cards_00_remaster.png"))
+        img_xylomod = Image.open(os.path.join(self.resource_folder, "cards_00_xylomod.png"))
 
         TILES_WIDTH = 64
         TILES_HEIGHT = 64
@@ -204,6 +205,18 @@ class GameData():
             # Extract the tile using cropping
             tile_remaster = img_remaster.crop((left, upper, right, lower))
             self.card_data_json["card_info"][i]["img_remaster"] = tile_remaster
+
+        TILES_WIDTH = 256
+        TILES_HEIGHT = 256
+        for i, list_el in enumerate(self.card_data_json["card_info"]):
+            # Calculate the bounding box of the tile
+            left = list_el["img_x"] * TILES_WIDTH
+            upper = list_el["img_y"] * TILES_HEIGHT
+            right = left + TILES_WIDTH
+            lower = upper + TILES_HEIGHT
+            # Extract the tile using cropping
+            tile_xylomod = img_xylomod.crop((left, upper, right, lower))
+            self.card_data_json["card_info"][i]["img_xylomod"] = tile_xylomod
 
     def translate_str_to_hex(self, string):
         c = 0
