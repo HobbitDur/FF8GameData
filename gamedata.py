@@ -40,6 +40,7 @@ class GameData():
         self.sysfnt_data_json = {}
         self.kernel_data_json = {}
         self.mngrp_data_json = {}
+        self.exe_data_json = {}
         self.__init_hex_to_str_table()
 
     def __init_hex_to_str_table(self):
@@ -104,6 +105,15 @@ class GameData():
         file_path = os.path.join(self.resource_folder, "item.json")
         with open(file_path, encoding="utf8") as f:
             self.item_data_json = json.load(f)
+
+    def load_exe_data(self):
+        file_path = os.path.join(self.resource_folder, "exe.json")
+        with open(file_path, encoding="utf8") as f:
+            self.exe_data_json = json.load(f)
+        for key in self.exe_data_json["lang"]:
+            if self.exe_data_json["lang"][key]:
+                self.exe_data_json["lang"][key] = int(
+                    self.exe_data_json["lang"][key], 16)
 
     def load_mngrp_data(self):
         file_path = os.path.join(self.resource_folder, "mngrp_bin_data.json")
@@ -451,6 +461,7 @@ class GameData():
         self.load_kernel_data()
         self.load_card_data()
         self.load_mngrp_data()
+        self.load_exe_data()
 
 
 if __name__ == "__main__":

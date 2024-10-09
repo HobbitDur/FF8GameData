@@ -2,6 +2,7 @@
   "card_data_offset":{
     "eng_menu": "0x796508",
     "eng_game_data": "0x874D00",
+    "eng_name": "0x875078",
     "fr_offset": "+0x168"},
 
   "card_type": [
