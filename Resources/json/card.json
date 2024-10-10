@@ -1,9 +1,13 @@
 {
   "card_data_offset":{
-    "eng_menu": "0x796508",
-    "eng_game_data": "0x874D00",
-    "eng_name": "0x875078",
-    "fr_offset": "+0x168"},
+    "card_data_size":        "0x08",
+    "eng_menu":              "0x796508",
+    "eng_game_data":         "0x874D00",
+    "eng_name_section_start":"0x875074",
+    "eng_name_section_end":  "0x87551f",
+    "fr_offset":             "+0x168"
+  },
+
 
   "card_type": [
     {"id":  0, "name": "None",   "img_x": 11,"img_y": 0},

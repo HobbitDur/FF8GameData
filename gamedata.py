@@ -4,6 +4,12 @@ from enum import Enum
 
 from PIL import Image
 
+class LangType(Enum):
+    ENGLISH = 0
+    SPANISH = 1
+    FRENCH = 2
+    ITALIAN = 3
+    GERMAN = 4
 
 class FileType(Enum):
     NONE = 0
@@ -11,6 +17,7 @@ class FileType(Enum):
     NAMEDIC = 2
     TKMNMES = 3
     MNGRP = 4
+    EXE = 5
 
 
 class SectionType(Enum):
@@ -23,11 +30,15 @@ class SectionType(Enum):
     MNGRP_TEXTBOX = 7
     MNGRP_M00BIN = 8
     MNGRP_M00MSG = 9
+    OFFSET_AND_TEXT = 10
+    SIZE_AND_OFFSET_AND_TEXT = 11
 
 
 class GameData():
 
     def __init__(self, game_data_submodule_path=""):
+        self.resource_folder_json = os.path.join(game_data_submodule_path,  "Resources", "json")
+        self.resource_folder_image = os.path.join(game_data_submodule_path,  "Resources", "image")
         self.resource_folder = os.path.join(game_data_submodule_path, "Resources")
         self.devour_data_json = {}
         self.magic_data_json = {}
@@ -57,57 +68,57 @@ class GameData():
                     self.translate_hex_to_str_table[i] = self.translate_hex_to_str_table[i].replace('"', '')
 
     def load_gforce_data(self):
-        file_path = os.path.join(self.resource_folder, "gforce.json")
+        file_path = os.path.join(self.resource_folder_json, "gforce.json")
         with open(file_path, encoding="utf8") as f:
             self.gforce_data_json = json.load(f)
 
     def load_stat_data(self):
-        file_path = os.path.join(self.resource_folder, "stat.json")
+        file_path = os.path.join(self.resource_folder_json, "stat.json")
         with open(file_path, encoding="utf8") as f:
             self.stat_data_json = json.load(f)
 
     def load_status_data(self):
-        file_path = os.path.join(self.resource_folder, "status.json")
+        file_path = os.path.join(self.resource_folder_json, "status.json")
         with open(file_path, encoding="utf8") as f:
             self.status_data_json = json.load(f)
 
     def load_devour_data(self):
-        file_path = os.path.join(self.resource_folder, "devour.json")
+        file_path = os.path.join(self.resource_folder_json, "devour.json")
         with open(file_path, encoding="utf8") as f:
             self.devour_data_json = json.load(f)
 
     def load_enemy_abilities_data(self):
-        file_path = os.path.join(self.resource_folder, "enemy_abilities.json")
+        file_path = os.path.join(self.resource_folder_json, "enemy_abilities.json")
         with open(file_path, encoding="utf8") as f:
             self.enemy_abilities_data_json = json.load(f)
 
     def load_magic_data(self):
-        file_path = os.path.join(self.resource_folder, "magic.json")
+        file_path = os.path.join(self.resource_folder_json, "magic.json")
         with open(file_path, encoding="utf8") as f:
             self.magic_data_json = json.load(f)
 
     def load_special_action_data(self, file_path):
-        file_path = os.path.join(self.resource_folder, "special_action.json")
+        file_path = os.path.join(self.resource_folder_json, "special_action.json")
         with open(file_path, encoding="utf8") as f:
             self.special_action_data_json = json.load(f)
 
     def load_monster_data(self):
-        file_path = os.path.join(self.resource_folder, "monster.json")
+        file_path = os.path.join(self.resource_folder_json, "monster.json")
         with open(file_path, encoding="utf8") as f:
             self.monster_data_json = json.load(f)
 
     def load_sysfnt_data(self):
-        file_path = os.path.join(self.resource_folder, "sysfnt_data.json")
+        file_path = os.path.join(self.resource_folder_json, "sysfnt_data.json")
         with open(file_path, encoding="utf8") as f:
             self.sysfnt_data_json = json.load(f)
 
     def load_item_data(self):
-        file_path = os.path.join(self.resource_folder, "item.json")
+        file_path = os.path.join(self.resource_folder_json, "item.json")
         with open(file_path, encoding="utf8") as f:
             self.item_data_json = json.load(f)
 
     def load_exe_data(self):
-        file_path = os.path.join(self.resource_folder, "exe.json")
+        file_path = os.path.join(self.resource_folder_json, "exe.json")
         with open(file_path, encoding="utf8") as f:
             self.exe_data_json = json.load(f)
         for key in self.exe_data_json["lang"]:
@@ -116,7 +127,7 @@ class GameData():
                     self.exe_data_json["lang"][key], 16)
 
     def load_mngrp_data(self):
-        file_path = os.path.join(self.resource_folder, "mngrp_bin_data.json")
+        file_path = os.path.join(self.resource_folder_json, "mngrp_bin_data.json")
         with open(file_path, encoding="utf8") as f:
             self.mngrp_data_json = json.load(f)
         for i in range(len(self.mngrp_data_json["sections"])):
@@ -145,7 +156,7 @@ class GameData():
                 self.mngrp_data_json["sections"][i]["data_type"] = SectionType.MNGRP_M00MSG
 
     def load_kernel_data(self):
-        file_path = os.path.join(self.resource_folder, "kernel_bin_data.json")
+        file_path = os.path.join(self.resource_folder_json, "kernel_bin_data.json")
         with open(file_path, encoding="utf8") as f:
             self.kernel_data_json = json.load(f)
 
@@ -166,7 +177,7 @@ class GameData():
                 self.kernel_data_json["sections"][i]["type"] = SectionType.FF8_TEXT
 
     def load_card_data(self):
-        file_path = os.path.join(self.resource_folder, "card.json")
+        file_path = os.path.join(self.resource_folder_json, "card.json")
         with open(file_path, encoding="utf8") as f:
             self.card_data_json = json.load(f)
         for key in self.card_data_json["card_data_offset"]:
@@ -175,7 +186,7 @@ class GameData():
 
     def __load_cards(self):
         # Thank you Maki !
-        img = Image.open(os.path.join(self.resource_folder, "text_0.png"))
+        img = Image.open(os.path.join(self.resource_folder_image, "text_0.png"))
         TILES_WIDTH_EL = 128
         TILES_HEIGHT_EL = 128
         for i, list_el in enumerate(self.card_data_json["card_type"]):
@@ -188,9 +199,9 @@ class GameData():
             tile = img.crop((left, upper, right, lower))
             self.card_data_json["card_type"][i]["img"] = tile
 
-        img = Image.open(os.path.join(self.resource_folder, "cards_00.png"))
-        img_remaster = Image.open(os.path.join(self.resource_folder, "cards_00_remaster.png"))
-        img_xylomod = Image.open(os.path.join(self.resource_folder, "cards_00_xylomod.png"))
+        img = Image.open(os.path.join(self.resource_folder_image, "cards_00.png"))
+        img_remaster = Image.open(os.path.join(self.resource_folder_image, "cards_00_remaster.png"))
+        img_xylomod = Image.open(os.path.join(self.resource_folder_image, "cards_00_xylomod.png"))
 
         TILES_WIDTH = 64
         TILES_HEIGHT = 64

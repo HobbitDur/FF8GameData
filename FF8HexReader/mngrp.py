@@ -1,8 +1,8 @@
 import os
 
 from FF8GameData.FF8HexReader.mngrphd import MngrphdEntry, Mngrphd
-from FF8GameData.FF8HexReader.section import Section
-from FF8GameData.gamedata import GameData, SectionType
+from FF8GameData.GenericSection.section import Section
+from FF8GameData.gamedata import GameData
 
 
 class Mngrp(Section):
