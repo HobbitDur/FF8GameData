@@ -10,6 +10,9 @@ class LangType(Enum):
     FRENCH = 2
     ITALIAN = 3
     GERMAN = 4
+class MsdType(Enum):
+    CARD_NAME = 0
+    SCAN_TEXT = 1
 
 class FileType(Enum):
     NONE = 0
@@ -34,8 +37,7 @@ class SectionType(Enum):
     SIZE_AND_OFFSET_AND_TEXT = 11
 
 
-class GameData():
-
+class GameData:
     def __init__(self, game_data_submodule_path=""):
         self.resource_folder_json = os.path.join(game_data_submodule_path,  "Resources", "json")
         self.resource_folder_image = os.path.join(game_data_submodule_path,  "Resources", "image")
@@ -125,6 +127,10 @@ class GameData():
             if self.exe_data_json["lang"][key]:
                 self.exe_data_json["lang"][key] = int(
                     self.exe_data_json["lang"][key], 16)
+        for key in self.exe_data_json["card_data_offset"]:
+            self.exe_data_json["card_data_offset"][key] = int(self.exe_data_json["card_data_offset"][key], 16)
+        for key in self.exe_data_json["scan_data_offset"]:
+            self.exe_data_json["scan_data_offset"][key] = int(self.exe_data_json["scan_data_offset"][key], 16)
 
     def load_mngrp_data(self):
         file_path = os.path.join(self.resource_folder_json, "mngrp_bin_data.json")
@@ -180,8 +186,6 @@ class GameData():
         file_path = os.path.join(self.resource_folder_json, "card.json")
         with open(file_path, encoding="utf8") as f:
             self.card_data_json = json.load(f)
-        for key in self.card_data_json["card_data_offset"]:
-            self.card_data_json["card_data_offset"][key] = int(self.card_data_json["card_data_offset"][key], 16)
         self.__load_cards()
 
     def __load_cards(self):

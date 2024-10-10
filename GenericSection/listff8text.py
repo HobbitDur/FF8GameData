@@ -12,7 +12,7 @@ class ListFF8Text(Section):
         self.cursor_location_size = cursor_location_size
 
     def __str__(self):
-        return "FF8SectionText : " + str(self._text_list)
+        return f"FF8SectionText({str(self._text_list)})"
 
     def __repr__(self):
         return self.__str__()
@@ -21,7 +21,6 @@ class ListFF8Text(Section):
         return bool(self._text_list)
 
     def init_text(self, offset_list: list):
-        print("init text !")
         if not offset_list:
             return
         for i, offset in enumerate(offset_list):

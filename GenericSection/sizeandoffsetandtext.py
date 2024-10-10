@@ -12,7 +12,7 @@ class SectionSizeAndOffsetAndText(Section):
     def __init__(self, game_data: GameData, data_hex, id=0, own_offset=0, name="", nb_offset_size = 2, offset_size=2, ignore_empty_offset=True):
         Section.__init__(self, game_data=game_data, data_hex=data_hex, id=id, own_offset=own_offset, name=name)
         self._nb_offset = int.from_bytes(self._data_hex[0:nb_offset_size], byteorder="little")
-        self._section = SectionOffsetAndText( game_data, data_hex[nb_offset_size:], id=0, own_offset=nb_offset_size, name="", offset_size=offset_size, nb_offset=self._nb_offset, ignore_empty_offset=ignore_empty_offset, nb_byte_shift=2)
+        self._section = SectionOffsetAndText( game_data, data_hex[nb_offset_size:], id=id, own_offset=nb_offset_size, name=name, offset_size=offset_size, nb_offset=self._nb_offset, ignore_empty_offset=ignore_empty_offset, nb_byte_shift=2)
         self._ignore_empty_offset = ignore_empty_offset
         self.type = SectionType.SIZE_AND_OFFSET_AND_TEXT
 
@@ -41,3 +41,6 @@ class SectionSizeAndOffsetAndText(Section):
 
     def get_text_section(self) -> ListFF8Text:
         return self._section.get_text_section()
+
+    def get_offset_section(self) -> SectionData:
+        return self._section.get_offset_section()
