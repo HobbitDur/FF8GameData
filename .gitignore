@@ -7,3 +7,7 @@
 *.exe
 *.bin
 **/Resources/FFNxTripod/**
+*.fs
+*.fi
+*.fl
+*.tim
