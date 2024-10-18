@@ -94,7 +94,6 @@ class Lzs:
         len_input = len(input_bytes)
         input_pos = 0
 
-        # Préremplir la mémoire tampon
         for i in range(s, r):
             self.buffer[i] = 0
 
@@ -153,11 +152,12 @@ class Lzs:
 
         return output_bytes
 
-    def decode(self, input_bytes: bytearray):
+    def decode(self, input_bytes: bytearray, generator = True):
         flags = 0
         input_pos = 0
         r = Lzs.N - Lzs.F
-        buffer = self.buffer
+        if not generator:
+            output = bytearray()
 
         while input_pos < len(input_bytes):
             if (flags := flags >> 1) & 0x100 == 0:
@@ -173,7 +173,10 @@ class Lzs:
                     self.buffer[r] = byte
                     input_pos += 1
                     r = (r + 1) & (Lzs.N - 1)
-                    yield byte  # Renvoie l'octet décodé au lieu de l'ajouter dans un tableau
+                    if generator:
+                        yield byte
+                    else:
+                        output.append(byte)
                 else:
                     break
             else:
@@ -188,6 +191,11 @@ class Lzs:
                         byte = self.buffer[(i + k) & (Lzs.N - 1)]
                         self.buffer[r] = byte
                         r = (r + 1) & (Lzs.N - 1)
-                        yield byte  # Renvoie chaque octet décodé
+                        if generator:
+                            yield byte
+                        else:
+                            output.append(byte)
                 else:
                     break
+            if not generator:
+                return output
