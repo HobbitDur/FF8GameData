@@ -7,13 +7,10 @@ on:
       - "*"
   pull_request:
     branches: [ "master" ]
-  workflow_dispatch:
 
 jobs:
   release_assets:
     name: Release
-    needs:
-    - create_assets
     runs-on: windows-latest
     concurrency: release-${{ github.ref }}
     steps:
