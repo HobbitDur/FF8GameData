@@ -88,29 +88,25 @@ class SectionExeFile(Section):
         card_data_size = self._game_data.exe_data_json["card_data_offset"]["card_data_size"]
 
         menu_offset = self._game_data.exe_data_json["card_data_offset"]["eng_menu"]
-        menu_offset += self.__get_lang_offset()
+        menu_offset += self.__get_lang_card_offset()
 
         self._section_list.append(
             Section(self._game_data, self._data_hex[0:menu_offset], id=0, own_offset=0, name="Ignored start data"))
-
         next_offset = menu_offset + nb_card * card_data_size
         self._section_list.append(
             Section(self._game_data, self._data_hex[menu_offset:next_offset], id=1, own_offset=0, name="Card data"))
-
         name_offset = self._game_data.exe_data_json["card_data_offset"][
-                          "eng_name_section_start"] + self.__get_lang_offset()
-
+                          "eng_name_section_start"] + self.__get_lang_card_offset()
         self._section_list.append(
             Section(self._game_data, self._data_hex[next_offset:name_offset], id=2, own_offset=0,
                     name="Ignored after card data"))
-
         card_name_section = SectionSizeAndOffsetAndText(self._game_data, self._data_hex[name_offset:], id=3,
                                                         own_offset=name_offset, name="Card name", offset_size=2,
                                                         ignore_empty_offset=False)
         card_name_section.update_data_hex()
         self._section_list.append(card_name_section)
 
-        scan_offset_start = self._game_data.exe_data_json["scan_data_offset"]["eng_section_start"]
+        scan_offset_start = self._game_data.exe_data_json["scan_data_offset"]["eng_section_start"]+self.__get_lang_scan_offset()
         scan_nb_offset = self._game_data.exe_data_json["scan_data_offset"]["nb_offset"]
         scan_offset_size = self._game_data.exe_data_json["scan_data_offset"]["offset_size"]
         scan_section = SectionOffsetAndText(self._game_data, self._data_hex[scan_offset_start:], id=4,
@@ -121,7 +117,6 @@ class SectionExeFile(Section):
 
         self._section_list.append(Section(self._game_data, self._data_hex[name_offset + len(card_name_section):], id=5,
                                           own_offset=name_offset + len(card_name_section), name="Ignored end data"))
-
     def __analyse_lang(self):
         if self._data_hex[self._game_data.exe_data_json["lang"]["offset"]] == self._game_data.exe_data_json["lang"]["english_value"]:
             self._lang = LangType.ENGLISH
@@ -137,11 +132,32 @@ class SectionExeFile(Section):
             print(f"Unexpected language, value: {self._data_hex[self._game_data.exe_data_json["lang"]["offset"]]}")
             self._lang = LangType.ENGLISH
 
-    def __get_lang_offset(self):
-        if self._data_hex[self._game_data.exe_data_json["lang"]["offset"]] == self._game_data.exe_data_json["lang"]["english_value"]:
+    def __get_lang_card_offset(self):
+        if self._lang == LangType.ENGLISH:
             return 0
-        elif self._data_hex[self._game_data.exe_data_json["lang"]["offset"]] == self._game_data.exe_data_json["lang"]["french_value"]:
-            return self._game_data.card_data_json["card_data_offset"]["fr_offset"]
+        elif self._lang == LangType.FRENCH:
+            return self._game_data.exe_data_json["card_data_offset"]["fr_offset"]
+        elif self._lang == LangType.ITALIAN:
+            return self._game_data.exe_data_json["card_data_offset"]["it_offset"]
+        elif self._lang == LangType.GERMAN:
+            return self._game_data.exe_data_json["card_data_offset"]["de_offset"]
+        elif self._lang == LangType.SPANISH:
+            return self._game_data.exe_data_json["card_data_offset"]["es_offset"]
         else:
-            print("Language not supported yet")
+            print("Unknown Language")
+            return 0
+
+    def __get_lang_scan_offset(self):
+        if self._lang == LangType.ENGLISH:
+            return 0
+        elif self._lang == LangType.FRENCH:
+            return self._game_data.exe_data_json["scan_data_offset"]["fr_offset"]
+        elif self._lang == LangType.ITALIAN:
+            return self._game_data.exe_data_json["scan_data_offset"]["it_offset"]
+        elif self._lang == LangType.GERMAN:
+            return self._game_data.exe_data_json["scan_data_offset"]["de_offset"]
+        elif self._lang == LangType.SPANISH:
+            return self._game_data.exe_data_json["scan_data_offset"]["es_offset"]
+        else:
+            print("Unknown Language")
             return 0
