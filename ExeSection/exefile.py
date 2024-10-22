@@ -26,21 +26,26 @@ class SectionExeFile(Section):
         msd_offset_size = 4
         msd_data = bytearray()
         if msd_type == MsdType.CARD_NAME:
-            offset_list = self._section_list[3].get_offset_section().get_all_offset()
-            text_list = self._section_list[3].get_text_section().get_text_list()
-            if len(text_list) != len(offset_list):
-                print(f"Unexpected diff size between offset list (size:{len(offset_list)}) and text list (size:{len(text_list)})")
-            for i in range(len(offset_list)):
-                msd_data.extend(offset_list[i].to_bytes(length=msd_offset_size, byteorder="little"))
-            msd_data.extend(self._section_list[3].get_text_section().get_data_hex())
-        if msd_type == MsdType.SCAN_TEXT:
-            offset_list = self._section_list[4].get_offset_section().get_all_offset()
-            text_list = self._section_list[4].get_text_section().get_text_list()
-            if len(text_list) != len(offset_list):
-                print(f"Unexpected diff size between offset list (size:{len(offset_list)}) and text list (size:{len(text_list)})")
-            for i in range(len(offset_list)):
-                msd_data.extend(offset_list[i].to_bytes(length=msd_offset_size, byteorder="little"))
-            msd_data.extend(self._section_list[4].get_text_section().get_data_hex())
+            id = 3
+        elif msd_type == MsdType.SCAN_TEXT:
+            id = 4
+        else:
+            print("Unknown msd type")
+            id = 4
+        index = [i for i in range(len(self._section_list)) if self._section_list[i].id == id][0]
+        self._section_list[index].update_data_hex()
+        offset_list = self._section_list[index].get_offset_section().get_all_offset()
+        print(offset_list)
+        text_list = self._section_list[index].get_text_section().get_text_list()
+        print(text_list)
+        if len(text_list) != len(offset_list):
+            print(f"Unexpected diff size between offset list (size:{len(offset_list)}) and text list (size:{len(text_list)})")
+        for i in range(len(offset_list)):
+            offset_list[i] += len(offset_list) * msd_offset_size
+            print(offset_list[i])
+            print(offset_list[i].to_bytes(length=msd_offset_size, byteorder="little").hex(" "))
+            msd_data.extend(offset_list[i].to_bytes(length=msd_offset_size, byteorder="little"))
+        msd_data.extend(self._section_list[index].get_text_section().get_data_hex())
         return msd_data
 
     def produce_str_hext(self, card_name=False):
@@ -71,6 +76,7 @@ class SectionExeFile(Section):
     # TODO Change the index 3 by a value in a json file
     def get_section_card_name(self) -> SectionSizeAndOffsetAndText:
         return self._section_list[3]
+
     # TODO Change the index 4 by a value in a json file
     def get_section_scan_text(self) -> SectionOffsetAndText:
         return self._section_list[4]
@@ -106,7 +112,7 @@ class SectionExeFile(Section):
         card_name_section.update_data_hex()
         self._section_list.append(card_name_section)
 
-        scan_offset_start = self._game_data.exe_data_json["scan_data_offset"]["eng_section_start"]+self.__get_lang_scan_offset()
+        scan_offset_start = self._game_data.exe_data_json["scan_data_offset"]["eng_section_start"] + self.__get_lang_scan_offset()
         scan_nb_offset = self._game_data.exe_data_json["scan_data_offset"]["nb_offset"]
         scan_offset_size = self._game_data.exe_data_json["scan_data_offset"]["offset_size"]
         scan_section = SectionOffsetAndText(self._game_data, self._data_hex[scan_offset_start:], id=4,
@@ -117,6 +123,7 @@ class SectionExeFile(Section):
 
         self._section_list.append(Section(self._game_data, self._data_hex[name_offset + len(card_name_section):], id=5,
                                           own_offset=name_offset + len(card_name_section), name="Ignored end data"))
+
     def __analyse_lang(self):
         if self._data_hex[self._game_data.exe_data_json["lang"]["offset"]] == self._game_data.exe_data_json["lang"]["english_value"]:
             self._lang = LangType.ENGLISH
