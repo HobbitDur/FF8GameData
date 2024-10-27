@@ -35,15 +35,16 @@ class SectionExeFile(Section):
         index = [i for i in range(len(self._section_list)) if self._section_list[i].id == id][0]
         self._section_list[index].update_data_hex()
         offset_list = self._section_list[index].get_offset_section().get_all_offset()
-        print(offset_list)
         text_list = self._section_list[index].get_text_section().get_text_list()
-        print(text_list)
         if len(text_list) != len(offset_list):
             print(f"Unexpected diff size between offset list (size:{len(offset_list)}) and text list (size:{len(text_list)})")
+        first_offset = offset_list[0]
+        # As the offset from .exe vary from the one use in msd, shift them !
         for i in range(len(offset_list)):
+            # First remove the original offset
+            offset_list[i] -= first_offset
+            # Then add the start of the first one for msd
             offset_list[i] += len(offset_list) * msd_offset_size
-            print(offset_list[i])
-            print(offset_list[i].to_bytes(length=msd_offset_size, byteorder="little").hex(" "))
             msd_data.extend(offset_list[i].to_bytes(length=msd_offset_size, byteorder="little"))
         msd_data.extend(self._section_list[index].get_text_section().get_data_hex())
         return msd_data
