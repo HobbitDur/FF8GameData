@@ -14,6 +14,10 @@ class MsdType(Enum):
     CARD_NAME = 0
     SCAN_TEXT = 1
 
+class RemasterCardType(Enum):
+    CARD_NAME = 0
+    CARD_NAME2 = 1
+
 class FileType(Enum):
     NONE = 0
     KERNEL = 1
@@ -22,6 +26,7 @@ class FileType(Enum):
     MNGRP = 4
     EXE = 5
     DAT = 6
+    REMASTER_DAT = 7
 
 
 class SectionType(Enum):

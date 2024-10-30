@@ -48,7 +48,6 @@ class SectionOffsetAndText(Section):
         self._offset_section.update_data_hex()
 
         self._data_hex = bytearray()
-        self._data_hex.extend(self._nb_offset.to_bytes(byteorder='little', length=2))
         self._data_hex.extend(self._offset_section.get_data_hex())
         self._data_hex.extend(self._text_section.get_data_hex())
         self._size = len(self._data_hex)

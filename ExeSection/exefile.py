@@ -1,7 +1,7 @@
 from FF8GameData.GenericSection.offsetandtext import SectionOffsetAndText
 from FF8GameData.GenericSection.section import Section
 from FF8GameData.GenericSection.sizeandoffsetandtext import SectionSizeAndOffsetAndText
-from FF8GameData.gamedata import GameData, LangType, MsdType
+from FF8GameData.gamedata import GameData, LangType, MsdType, RemasterCardType
 
 
 class SectionExeFile(Section):
@@ -48,6 +48,12 @@ class SectionExeFile(Section):
             msd_data.extend(offset_list[i].to_bytes(length=msd_offset_size, byteorder="little"))
         msd_data.extend(self._section_list[index].get_text_section().get_data_hex())
         return msd_data
+
+    def produce_remaster_file(self, remaster_type:RemasterCardType):
+        if remaster_type == RemasterCardType.CARD_NAME:
+            return self._section_list[3].get_data_hex()
+        else:
+            return self._section_list[3].get_data_hex()
 
     def produce_str_hext(self, card_name=False):
         """Deprecated and bugged, msd is better for text"""
