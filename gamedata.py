@@ -629,6 +629,9 @@ class GameData:
         self.load_mngrp_data()
         self.load_exe_data()
         self.load_ai_data()
+        self.load_magic_data()
+        self.load_enemy_abilities_data()
+        self.load_special_action_data()
 
 
 if __name__ == "__main__":
