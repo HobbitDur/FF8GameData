@@ -42,7 +42,7 @@
 {"id":39,  "section_offset":"0x1AB000","size":"0x00800", "section_name":"Battle tutorial", "data_type": "mngrp_string"},
 {"id":40,  "section_offset":"0x1AB800","size":"0x01000", "section_name":"Card rules + Icon", "data_type": "mngrp_string"},
 {"id":41,  "section_offset":"0x1AC800","size":"0x01000", "section_name":"Chocobo tutorial", "data_type": "mngrp_string"},
-{"id":42,  "section_offset":"0x1AD800","size":"0x00800", "section_name":"Test seed ge", "data_type": "mngrp_string"},
+{"id":42,  "section_offset":"0x1AD800","size":"0x00800", "section_name":"Test seed general", "data_type": "mngrp_string"},
 {"id":43,  "section_offset":"0x1AE000","size":"0x00800", "section_name":"Test seed 1 ", "data_type": "mngrp_string"},
 {"id":44,  "section_offset":"0x1AE800","size":"0x00800", "section_name":"Test seed 2 ", "data_type": "mngrp_string"},
 {"id":45,  "section_offset":"0x1AF000","size":"0x00800", "section_name":"Test seed 3 ", "data_type": "mngrp_string"},
