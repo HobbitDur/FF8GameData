@@ -6,20 +6,29 @@ import subprocess
 
 class DelingCliManager:
 
-    DELING_PATH = os.path.join("fs", "DelingCli")
-    DELING_LIST_FILES = glob.glob(os.path.join(DELING_PATH, "*"))
-    DELING_OUTPUT_ROOT_PATH = os.path.join("OutputFiles", "battle")
+    DEFAULT_DELING_PATH = os.path.join("fs", "DelingCli")
 
-    def __init__(self):
-        pass
+    def __init__(self, deling_path=None):
+        if deling_path:
+            self.__deling_path = deling_path
+        else:
+            self.__deling_path = self.DEFAULT_DELING_PATH
 
-    def unpack(self, source_path, dest_path):
-        os.makedirs(dest_path, exist_ok=True)
-        subprocess.run([os.path.join(self.DELING_PATH, "deling-cli.exe"), "export", os.path.join(source_path, "battle.fs"), dest_path])
+    def unpack(self, fs_path, folder_dest_path, recursive=True):
+        os.makedirs(folder_dest_path, exist_ok=True)
+        if recursive:
+            recursive_str = "-r"
+        else:
+            recursive_str = ""
+        subprocess.run([os.path.join(self.__deling_path, "deling-cli.exe"), "unpack", recursive_str, fs_path, folder_dest_path])
 
 
-    def pack(self, source_path, dest_path, lang="eng"):
-        """The deling-cli.exe create the .fl by taking the relative path of where the file is executed,
-        which is not good for the "official" .fl file."""
-        os.makedirs(dest_path, exist_ok=True)
-        subprocess.run([os.path.join(self.DELING_PATH, "deling-cli.exe"), "import", "-c", "lzs", source_path, os.path.join(dest_path,"battle.fs"), "-f", "--prefix", 'c:\\ff8\\data\\'+lang+'\\battle\\'])
+    def pack(self, fs_path, folder_dest_path):
+        os.makedirs(folder_dest_path, exist_ok=True)
+        subprocess.run([os.path.join(self.__deling_path, "deling-cli.exe"), "pack", fs_path, folder_dest_path])
+
+    def export_csv(self, fs_path, csv_path):
+        subprocess.run([os.path.join(self.__deling_path, "deling-cli.exe"), "export-texts", fs_path, csv_path])
+
+    def import_csv(self, fs_path, csv_path):
+        subprocess.run([os.path.join(self.__deling_path, "deling-cli.exe"), "import-texts", fs_path, csv_path])

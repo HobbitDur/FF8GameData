@@ -33,7 +33,7 @@ class ListFF8Text(Section):
                 if next_offset == 0:# If end not found, let's try to make it work with end of data
                     next_offset = len(self._data_hex)
             else:
-                next_offset = offset_list[i + 1]
+                next_offset = offset_list[i + 1] # Default value
                 for j in range(i + 1, len(offset_list)):  # We are searching the next valid offset
                     if offset_list[j] != 0xFFFF:  # Unused data:
                         next_offset = offset_list[j]

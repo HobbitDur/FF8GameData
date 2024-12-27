@@ -9,7 +9,8 @@ class Mngrp(Section):
     def __init__(self, game_data: GameData, data_hex: bytearray, header_entry_list: [MngrphdEntry] = ()):
         Section.__init__(self, game_data=game_data, data_hex=data_hex, id=0, own_offset=0, name="mngrp")
         self._section_list = []
-        self._game_data.load_mngrp_data()
+        if not self._game_data.mngrp_data_json:
+            self._game_data.load_mngrp_data()
         self.header_entry_list = header_entry_list
         # If not entry list given, use the default one
         if not header_entry_list:
@@ -25,16 +26,14 @@ class Mngrp(Section):
         else:
             current_id_section = 0
             for index_section, entry in enumerate(header_entry_list):
-                section_hex = self._data_hex[entry.seek: entry.seek + entry.size]
                 if entry.invalid_value:
                     id_section = -1
-                    offset = entry.seek
                 else:
                     id_section = current_id_section
-                    offset = entry.seek + 1
                     current_id_section += 1
+                section_hex = self._data_hex[entry.seek: entry.seek + entry.size]
                 new_section = Section(game_data=self._game_data, data_hex=section_hex, id=id_section,
-                                      own_offset=offset, name="")
+                                      own_offset=entry.seek, name="")
                 self._section_list.append(new_section)
 
     def __str__(self):

@@ -27,6 +27,7 @@ class FileType(Enum):
     EXE = 5
     DAT = 6
     REMASTER_DAT = 7
+    FIELD_FS = 8
 
 
 class SectionType(Enum):
