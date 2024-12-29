@@ -3,11 +3,11 @@ from FF8GameData.gamedata import GameData, SectionType
 
 
 class FF8Text(Section):
-    def __init__(self, game_data: GameData, own_offset: int, data_hex: bytearray, id: int, cursor_location_size=2):
+    def __init__(self, game_data: GameData, own_offset: int, data_hex: bytearray, id: int, cursor_location_size=2, first_zero_as_new_page=False):
         Section.__init__(self, game_data=game_data, own_offset=own_offset, data_hex=data_hex, id=id, name="")
         self._cursor_location_size = cursor_location_size
         self._text_str = self._game_data.translate_hex_to_str(self._data_hex,
-                                                              cursor_location_size=self._cursor_location_size)
+                                                              cursor_location_size=self._cursor_location_size, first_zero_as_new_page=first_zero_as_new_page)
         self.set_str(self._text_str)  # To remove unwanted 0 for example
         self.type = SectionType.FF8_TEXT
 

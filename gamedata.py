@@ -471,7 +471,7 @@ class GameData:
             # Jp ?
         return encode_list
 
-    def translate_hex_to_str(self, hex_list, zero_as_slash_n=False, cursor_location_size=2):
+    def translate_hex_to_str(self, hex_list, zero_as_slash_n=False,  first_zero_as_new_page=False, cursor_location_size=2):
         build_str = ""
         i = 0
         hex_size = len(hex_list)
@@ -481,6 +481,8 @@ class GameData:
             if hex_val == 0x00:
                 if zero_as_slash_n:
                     build_str += "\n"
+                if first_zero_as_new_page and i == 0:
+                    build_str += "{NewPage}"
                 else:
                     pass
             elif hex_val in [0x01, 0x02]:

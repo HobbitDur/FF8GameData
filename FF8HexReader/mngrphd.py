@@ -59,7 +59,6 @@ class Mngrphd(Section):
                 self._mngprhd_entry_valid_list.append(new_entry)
 
     def update_data_hex(self):
-        print("Updating data hex")
         data_valid_hex = bytearray()
         for entry in self._mngprhd_entry_list:
             entry_hex = bytearray()
