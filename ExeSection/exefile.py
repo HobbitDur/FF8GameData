@@ -26,12 +26,12 @@ class SectionExeFile(Section):
         msd_offset_size = 4
         msd_data = bytearray()
         if msd_type == MsdType.CARD_NAME:
-            id = 3
+            id = 5
         elif msd_type == MsdType.SCAN_TEXT:
-            id = 4
+            id = 6
         else:
             print("Unknown msd type")
-            id = 4
+            id = 5
         index = [i for i in range(len(self._section_list)) if self._section_list[i].id == id][0]
         self._section_list[index].update_data_hex()
         offset_list = self._section_list[index].get_offset_section().get_all_offset()
@@ -49,13 +49,24 @@ class SectionExeFile(Section):
         msd_data.extend(self._section_list[index].get_text_section().get_data_hex())
         return msd_data
 
-    def produce_remaster_file(self, remaster_type:RemasterCardType):
+    # TODO Change the index by a value in a json file
+    def get_section_card_name(self) -> SectionSizeAndOffsetAndText:
+        return self._section_list[5]
+
+    # TODO Change the index by a value in a json file
+    def get_section_scan_text(self) -> SectionOffsetAndText:
+        return self._section_list[6]
+    # TODO Change the index by a value in a json file
+    def get_section_card_misc_text(self) -> SectionSizeAndOffsetAndText:
+        return self._section_list[3]
+
+    def produce_remaster_file(self, remaster_type: RemasterCardType):
         if remaster_type == RemasterCardType.CARD_NAME:
             return self._section_list[3].get_data_hex()
         else:
             return self._section_list[3].get_data_hex()
 
-    def produce_str_hext(self, card_name=False):
+    def produce_str_hext(self):
         """Deprecated and bugged, msd is better for text"""
         hext_str = "# File produced by ShumiTranslator or CC-Group tool, made by HobbitDur\n"
         hext_str += "# You can support HobbitDur on Patreon: https://www.patreon.com/HobbitMods\n\n"
@@ -66,27 +77,27 @@ class SectionExeFile(Section):
         hext_str += "#Offset to dynamic data\n"
         hext_str += "+{:X}\n\n".format(self.GENERAL_OFFSET)
 
-        card_name_start = self._game_data.card_data_json["card_data_offset"]["eng_name_section_start"] + 2
-        if card_name:
-            hext_str += "#Card name start at {:X}, so we just move the pointer of 0x{:X}+0x{:X}=0x{:X}\n".format(card_name_start,
-                                                                                                                 self.GENERAL_OFFSET,
-                                                                                                                 card_name_start,
-                                                                                                                 self.GENERAL_OFFSET + card_name_start)
-            hext_str += "+{:X}\n\n".format(self.GENERAL_OFFSET + card_name_start)
-            text_section = self._section_list[3].get_text_section()
-            for index_card, card_text in enumerate(text_section.get_text_list()):
-                hext_str += f"#Changing name of card from {self._game_data.card_data_json["card_info"][index_card]["name"]} to {card_text.get_str()}\n"
-                hext_str += "{:X} = ".format(index_card * self.OFFSET_SIZE)
-                hext_str += "{}\n".format(card_text.get_data_hex().hex(sep=" "))
+        card_misc_text_start = self._game_data.exe_data_json["card_data_offset"]["eng_card_misc_text_start"] + 2
+
+
+        hext_str += "#Card misc text start at {:X}, so we just move the pointer of 0x{:X}+0x{:X}=0x{:X}\n".format(card_misc_text_start,
+                                                                                                             self.GENERAL_OFFSET,
+                                                                                                             card_misc_text_start,
+                                                                                                             self.GENERAL_OFFSET + card_misc_text_start)
+        hext_str += "+{:X}\n\n".format(self.GENERAL_OFFSET + card_misc_text_start)
+        text_section = self.get_section_card_misc_text()
+
+        all_offset = text_section.get_offset_section().get_all_offset()
+        current_text_index = 0
+        for index_card, card_text in enumerate(text_section.get_text_section().get_text_list()):
+            hext_str += "#Offset values:\n"
+            hext_str += "{:X} = {:X}\n".format(index_card, all_offset[index_card])
+            hext_str += f"#Changing text to \"{card_text.get_str()}\"\n"
+            hext_str += "{:X} = ".format(len(all_offset)*self.OFFSET_SIZE + current_text_index)
+            hext_str += "{}\n".format(card_text.get_data_hex().hex(sep=" "))
+            current_text_index+=len(card_text)
         return hext_str
 
-    # TODO Change the index 3 by a value in a json file
-    def get_section_card_name(self) -> SectionSizeAndOffsetAndText:
-        return self._section_list[3]
-
-    # TODO Change the index 4 by a value in a json file
-    def get_section_scan_text(self) -> SectionOffsetAndText:
-        return self._section_list[4]
 
     def get_lang(self):
         return self._lang
@@ -103,51 +114,53 @@ class SectionExeFile(Section):
         menu_offset = self._game_data.exe_data_json["card_data_offset"]["eng_menu"]
         menu_offset += self.__get_lang_card_offset()
 
-        #1st section
-        self._section_list.append(
-            Section(self._game_data, self._data_hex[0:menu_offset], id=0, own_offset=0, name="Ignored start data"))
+        # 1st section - ignored data: start (0x00) -> start card menu data (0x796508)
+        self._section_list.append(Section(self._game_data, self._data_hex[0:menu_offset], id=0, own_offset=0, name="Ignored start data"))
 
-        #2nd section
+        # 2nd section - start card menu data (0x796508) -> end of card menu data
         next_offset = menu_offset + nb_card * card_data_size
-        self._section_list.append(
-            Section(self._game_data, self._data_hex[menu_offset:next_offset], id=1, own_offset=0, name="Card menu data"))
+        self._section_list.append(Section(self._game_data, self._data_hex[menu_offset:next_offset], id=1, own_offset=0, name="Card menu data"))
 
-        #3rd section
+        # 3rd section - ignored data: end of card menu data -> card_misc_text_start (0x874b5a)
         offset = next_offset
-        card_generic_text_offset = self._game_data.exe_data_json["card_data_offset"]["eng_card_generic_text_start"]
-        card_generic_text_offset += self.__get_lang_card_offset()
-        self._section_list.append(
-            Section(self._game_data, self._data_hex[offset:card_generic_text_offset], id=2, own_offset=0, name="Ignored data"))
+        card_misc_text_offset = self._game_data.exe_data_json["card_data_offset"]["eng_card_misc_text_start"]
+        card_misc_text_offset += self.__get_lang_card_offset()
+        self._section_list.append(Section(self._game_data, self._data_hex[offset:card_misc_text_offset], id=2, own_offset=0, name="Ignored data"))
 
+        # 4rd section: card_misc_text_start (0x874b5a) -> end of misc (computed after so taking till eng_game_data, 0x874D00)
+        offset = card_misc_text_offset
+        eng_game_data_offset = self._game_data.exe_data_json["card_data_offset"]["eng_game_data"]
+        eng_game_data_offset += self.__get_lang_card_offset()
+        card_misc_text_section = SectionSizeAndOffsetAndText(self._game_data, self._data_hex[offset:eng_game_data_offset], id=3,
+                                                        own_offset=offset, name="Card misc text data", offset_size=2,
+                                                        ignore_empty_offset=False)
+        card_misc_text_section.update_data_hex()
+        self._section_list.append(card_misc_text_section)
+        # 5rd section: eng_game_data (0x874D00) -> end of eng game data (computed after so taking till eng_name_section_start, 0x875074)
+        offset = eng_game_data_offset
+        eng_name_section_start = self._game_data.exe_data_json["card_data_offset"]["eng_name_section_start"]
+        eng_name_section_start += self.__get_lang_card_offset()
+        self._section_list.append(Section(self._game_data, self._data_hex[offset:eng_name_section_start], id=4, own_offset=0, name="Card game data"))
 
-        #4rd section
-        next_offset = None
-        self._section_list.append(
-            Section(self._game_data, self._data_hex[card_generic_text_offset:card_generic_text_offset], id=2, own_offset=0, name="Ignored data"))
-
-
-        name_offset = self._game_data.exe_data_json["card_data_offset"][
-                          "eng_name_section_start"] + self.__get_lang_card_offset()
-        self._section_list.append(
-            Section(self._game_data, self._data_hex[next_offset:name_offset], id=2, own_offset=0,
-                    name="Ignored after card data"))
-        card_name_section = SectionSizeAndOffsetAndText(self._game_data, self._data_hex[name_offset:], id=3,
-                                                        own_offset=name_offset, name="Card name", offset_size=2,
+        # 6rd section:  eng_name_section_start (0x874D00) -> end of name section (taking till the end)
+        card_name_section = SectionSizeAndOffsetAndText(self._game_data, self._data_hex[eng_name_section_start:], id=5,
+                                                        own_offset=eng_name_section_start, name="Card name", offset_size=2,
                                                         ignore_empty_offset=False)
         card_name_section.update_data_hex()
         self._section_list.append(card_name_section)
 
+        # 7rd section: Scan text
         scan_offset_start = self._game_data.exe_data_json["scan_data_offset"]["eng_section_start"] + self.__get_lang_scan_offset()
         scan_nb_offset = self._game_data.exe_data_json["scan_data_offset"]["nb_offset"]
         scan_offset_size = self._game_data.exe_data_json["scan_data_offset"]["offset_size"]
-        scan_section = SectionOffsetAndText(self._game_data, self._data_hex[scan_offset_start:], id=4,
-                                            own_offset=name_offset, name="Scan text", offset_size=scan_offset_size, nb_offset=scan_nb_offset,
+        scan_section = SectionOffsetAndText(self._game_data, self._data_hex[scan_offset_start:], id=6,
+                                            own_offset=scan_offset_start, name="Scan text", offset_size=scan_offset_size, nb_offset=scan_nb_offset,
                                             ignore_empty_offset=False, nb_byte_shift=0, text_offset_start_0=True)
         scan_section.update_data_hex()
         self._section_list.append(scan_section)
 
-        self._section_list.append(Section(self._game_data, self._data_hex[name_offset + len(card_name_section):], id=5,
-                                          own_offset=name_offset + len(card_name_section), name="Ignored end data"))
+        # self._section_list.append(Section(self._game_data, self._data_hex[name_offset + len(card_name_section):], id=8,
+        #                                  own_offset=name_offset + len(card_name_section), name="Ignored end data"))
 
     def __analyse_lang(self):
         if self._data_hex[self._game_data.exe_data_json["lang"]["offset"]] == self._game_data.exe_data_json["lang"]["english_value"]:

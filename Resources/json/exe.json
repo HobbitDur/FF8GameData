@@ -11,7 +11,7 @@
   "card_data_offset":{
     "card_data_size":        "0x08",
     "eng_menu":              "0x796508",
-    "eng_card_generic_text_start": "0x874b5a",
+    "eng_card_misc_text_start": "0x874b58",
     "eng_game_data":         "0x874D00",
     "eng_name_section_start":"0x875074",
     "eng_name_section_end":  "0x87551f",
