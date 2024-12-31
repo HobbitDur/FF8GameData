@@ -103,11 +103,29 @@ class SectionExeFile(Section):
         menu_offset = self._game_data.exe_data_json["card_data_offset"]["eng_menu"]
         menu_offset += self.__get_lang_card_offset()
 
+        #1st section
         self._section_list.append(
             Section(self._game_data, self._data_hex[0:menu_offset], id=0, own_offset=0, name="Ignored start data"))
+
+        #2nd section
         next_offset = menu_offset + nb_card * card_data_size
         self._section_list.append(
-            Section(self._game_data, self._data_hex[menu_offset:next_offset], id=1, own_offset=0, name="Card data"))
+            Section(self._game_data, self._data_hex[menu_offset:next_offset], id=1, own_offset=0, name="Card menu data"))
+
+        #3rd section
+        offset = next_offset
+        card_generic_text_offset = self._game_data.exe_data_json["card_data_offset"]["eng_card_generic_text_start"]
+        card_generic_text_offset += self.__get_lang_card_offset()
+        self._section_list.append(
+            Section(self._game_data, self._data_hex[offset:card_generic_text_offset], id=2, own_offset=0, name="Ignored data"))
+
+
+        #4rd section
+        next_offset = None
+        self._section_list.append(
+            Section(self._game_data, self._data_hex[card_generic_text_offset:card_generic_text_offset], id=2, own_offset=0, name="Ignored data"))
+
+
         name_offset = self._game_data.exe_data_json["card_data_offset"][
                           "eng_name_section_start"] + self.__get_lang_card_offset()
         self._section_list.append(
