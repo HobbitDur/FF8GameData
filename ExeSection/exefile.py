@@ -198,11 +198,11 @@ class SectionExeFile(Section):
         elif self._lang == LangType.FRENCH:
             return self._game_data.exe_data_json["card_data_offset"]["card_misc_text_fr_offset"]
         elif self._lang == LangType.ITALIAN:
-            return self._game_data.exe_data_json["card_data_offset"]["it_offset"]
+            return self._game_data.exe_data_json["card_data_offset"]["card_misc_text_it_offset"]
         elif self._lang == LangType.GERMAN:
-            return self._game_data.exe_data_json["card_data_offset"]["de_offset"]
+            return self._game_data.exe_data_json["card_data_offset"]["card_misc_text_de_offset"]
         elif self._lang == LangType.SPANISH:
-            return self._game_data.exe_data_json["card_data_offset"]["es_offset"]
+            return self._game_data.exe_data_json["card_data_offset"]["card_misc_text_es_offset"]
         else:
             print("Unknown Language")
             return 0
