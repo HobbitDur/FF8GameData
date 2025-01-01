@@ -10,7 +10,7 @@ class SectionOffsetAndText(Section):
 
     def __init__(self, game_data: GameData, data_hex, id=0, own_offset=0, name="", offset_size=2, nb_offset=1, ignore_empty_offset=True, nb_byte_shift=0,
                  text_offset_start_0=False):
-        """text_offset_start_0 means that the first offset of the list is equal to zero as it is the offset from the text ssection itself.
+        """text_offset_start_0 means that the first offset of the list is equal to zero as it is the offset from the text section itself.
         Usually, the offset is from the start of the file or the section containing the offset itself, so it doesn't start at 0"""
         Section.__init__(self, game_data=game_data, data_hex=data_hex, id=id, own_offset=own_offset, name=name)
         self._offset_size = offset_size
