@@ -617,6 +617,9 @@ class GameData:
                     character = "{{x{:02x}}}".format(hex_val)
                 build_str += character
             i += 1
+            if i%1000 == 0:
+                print(i)
+
         return build_str
 
     def load_all(self):
@@ -639,7 +642,7 @@ class GameData:
 
 if __name__ == "__main__":
     # To be able to read a file and write back in a file
-    file_to_load = "mngrp.bin"  # Fill with the file you want. use os.path.join if it is in folder
+    file_to_load = "FF8_EN.exe"  # Fill with the file you want. use os.path.join if it is in folder
     file_export = "export.txt"  # The file to write the final string back
     print("Loading core data engine")
     game_data = GameData()
@@ -666,18 +669,21 @@ if __name__ == "__main__":
     zero_as_slash_n_param = True
     print(f"Transforming the byte data into ff8 string and considering byte 0 (end of string) as a \\n: {zero_as_slash_n_param}")
     ff8_string = game_data.translate_hex_to_str(current_file_data, zero_as_slash_n_param)
+    print("File translated")
     # line_break = 200 # To define how often we return to line (for increase readability)
     # print(f"Now breaking the line every {line_break} characters")
     # ff8_string = '\n'.join(ff8_string[i:i + line_break] for i in range(0, len(ff8_string), line_break))
-
+    # print("Now removing the multiple \\n")
     # Now removing the multiple following \n
-    new_string = ""
-    for index, char in enumerate(ff8_string):
-        if index < len(ff8_string) - 1:
-            if char == '\n' and ff8_string[index + 1] == '\n':
-                continue
-        new_string += char
-    ff8_string = new_string
+    # new_string = ""
+    # for index, char in enumerate(ff8_string):
+    #     if index % 1000 == 0:
+    #         print(index)
+    #     if index < len(ff8_string) - 1:
+    #         if char == '\n' and ff8_string[index + 1] == '\n':
+    #             continue
+    #     new_string += char
+    # ff8_string = new_string
 
     print(f"Now writing in export file: {file_export}")
     with open(file_export, "w", encoding="utf-8") as in_file:
