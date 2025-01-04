@@ -44,7 +44,7 @@ class SectionOffsetAndText(Section):
 
     def update_data_hex(self):
         self._text_section.update_data_hex()
-        self._offset_section.set_all_offset_by_text_list(self._text_section.get_text_list(), shift=self.HEADER_SIZE + self.OFFSET_SIZE * self._nb_offset)
+        self._offset_section.set_all_offset_by_text_list(self._text_section.get_text_list(), shift=self.OFFSET_SIZE * self._nb_offset)
         self._offset_section.update_data_hex()
 
         self._data_hex = bytearray()

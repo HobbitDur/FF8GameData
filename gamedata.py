@@ -283,6 +283,8 @@ class GameData:
             self.exe_data_json["card_data_offset"][key] = int(self.exe_data_json["card_data_offset"][key], 16)
         for key in self.exe_data_json["scan_data_offset"]:
             self.exe_data_json["scan_data_offset"][key] = int(self.exe_data_json["scan_data_offset"][key], 16)
+        for key in self.exe_data_json["draw_text_offset"]:
+            self.exe_data_json["draw_text_offset"][key] = int(self.exe_data_json["draw_text_offset"][key], 16)
 
     def load_mngrp_data(self):
         file_path = os.path.join(self.resource_folder_json, "mngrp_bin_data.json")
@@ -617,8 +619,6 @@ class GameData:
                     character = "{{x{:02x}}}".format(hex_val)
                 build_str += character
             i += 1
-            if i%1000 == 0:
-                print(i)
 
         return build_str
 
