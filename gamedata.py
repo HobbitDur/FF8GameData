@@ -4,19 +4,24 @@ from enum import Enum
 
 from PIL import Image
 
+
 class LangType(Enum):
     ENGLISH = 0
     SPANISH = 1
     FRENCH = 2
     ITALIAN = 3
     GERMAN = 4
+
+
 class MsdType(Enum):
     CARD_NAME = 0
     SCAN_TEXT = 1
 
+
 class RemasterCardType(Enum):
     CARD_NAME = 0
     CARD_NAME2 = 1
+
 
 class FileType(Enum):
     NONE = 0
@@ -42,6 +47,7 @@ class SectionType(Enum):
     MNGRP_M00MSG = 9
     OFFSET_AND_TEXT = 10
     SIZE_AND_OFFSET_AND_TEXT = 11
+
 
 class AIData:
     SECTION_HEADER_NB_SECTION = {'offset': 0, 'size': 4, 'byteorder': 'little', 'name': 'nb_section', 'pretty_name': 'Number section'}
@@ -171,11 +177,13 @@ class AIData:
     AI_SECTION_LIST = ['Init code', 'Enemy turn', 'Counter-attack', 'Death', 'Before dying or taking a hit']
     COLOR = "#0055ff"
 
+
 class GameData:
     AIData = AIData()
+
     def __init__(self, game_data_submodule_path=""):
-        self.resource_folder_json = os.path.join(game_data_submodule_path,  "Resources", "json")
-        self.resource_folder_image = os.path.join(game_data_submodule_path,  "Resources", "image")
+        self.resource_folder_json = os.path.join(game_data_submodule_path, "Resources", "json")
+        self.resource_folder_image = os.path.join(game_data_submodule_path, "Resources", "image")
         self.resource_folder = os.path.join(game_data_submodule_path, "Resources")
         self.devour_data_json = {}
         self.magic_data_json = {}
@@ -204,6 +212,7 @@ class GameData:
                 self.translate_hex_to_str_table[i] = self.translate_hex_to_str_table[i].replace(';;;', ',')
                 if self.translate_hex_to_str_table[i].count('"') == 2:
                     self.translate_hex_to_str_table[i] = self.translate_hex_to_str_table[i].replace('"', '')
+
     @staticmethod
     def find_delimiter_from_csv_file(csv_file):
         with open(csv_file, newline='', encoding="utf-8") as text_file:
@@ -473,20 +482,18 @@ class GameData:
             # Jp ?
         return encode_list
 
-    def translate_hex_to_str(self, hex_list, zero_as_slash_n=False,  first_zero_as_new_page=False, cursor_location_size=2):
+    def translate_hex_to_str(self, hex_list, zero_as_slash_n=False, first_hex_literal=False, cursor_location_size=2):
         build_str = ""
         i = 0
         hex_size = len(hex_list)
         while i < hex_size:
             hex_val = hex_list[i]
-
-            if hex_val == 0x00:
-                if zero_as_slash_n:
-                    build_str += "\n"
-                if first_zero_as_new_page and i == 0:
-                    build_str += "{NewPage}"
-                else:
-                    pass
+            if i == 0 and first_hex_literal:
+                build_str += "{{x{:02x}}}".format(hex_val)
+            elif hex_val == 0x00 and zero_as_slash_n:
+                build_str += "\n"
+            elif hex_val == 0x00:
+                pass
             elif hex_val in [0x01, 0x02]:
                 build_str += self.translate_hex_to_str_table[hex_val]
             elif hex_val == 0x03:  # {Name}
@@ -642,7 +649,7 @@ class GameData:
 
 if __name__ == "__main__":
     # To be able to read a file and write back in a file
-    file_to_load = "FF8_EN.exe"  # Fill with the file you want. use os.path.join if it is in folder
+    file_to_load = "r0win.dat"  # Fill with the file you want. use os.path.join if it is in folder
     file_export = "export.txt"  # The file to write the final string back
     print("Loading core data engine")
     game_data = GameData()

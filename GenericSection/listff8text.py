@@ -49,10 +49,10 @@ class ListFF8Text(Section):
             offset = 0
             id = 0
         if "Test seed" in self.name:
-            first_zero_as_new_page_bool = True
+            first_hex_literal = True
         else:
-            first_zero_as_new_page_bool = False
-        self._text_list.append(FF8Text(game_data=self._game_data, data_hex=text_hex, own_offset=offset, id=id, cursor_location_size=self.cursor_location_size, first_zero_as_new_page=first_zero_as_new_page_bool))
+            first_hex_literal = False
+        self._text_list.append(FF8Text(game_data=self._game_data, data_hex=text_hex, own_offset=offset, id=id, cursor_location_size=self.cursor_location_size, first_hex_literal=first_hex_literal))
 
     def get_text_list(self):
         return self._text_list
