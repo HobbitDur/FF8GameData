@@ -1,17 +1,17 @@
 {
 "list_var": [
   {"op_code": 20,  "var_name": "Unknown20"},
-  {"op_code": 81,  "var_name": "TomberryDefeated"},
-  {"op_code": 82,  "var_name": "TomberrySrIsDefeated"},
+  {"op_code": 81,  "var_name": "TonberryDefeated"},
+  {"op_code": 82,  "var_name": "TonberrySrIsDefeated"},
   {"op_code": 83,  "var_name": "UfoIsDefeated"},
   {"op_code": 84,  "var_name": "FirstBugSeen [savemap]"},
   {"op_code": 85,  "var_name": "FirstBombSeen"},
   {"op_code": 86,  "var_name": "FirstT-RexaurSeen"},
   {"op_code": 87,  "var_name": "LimitBreakIrvine"},
-  {"op_code": 96,  "var_name": "SetupRandomness96"},
+  {"op_code": 96,  "var_name": "WedgeAppeared?"},
   {"op_code": 97,  "var_name": "SetupRandomness97"},
-  {"op_code": 98,  "var_name": "SetupRandomness98"},
-  {"op_code": 102, "var_name": "FirstBugSeen [global]"},
+  {"op_code": 98,  "var_name": "ElvoretAppeared?"},
+  {"op_code": 102, "var_name": "FirstBugSeen"},
   {"op_code": 220, "var_name": "varA"},
   {"op_code": 221, "var_name": "varB"},
   {"op_code": 222, "var_name": "varC"},
@@ -105,7 +105,7 @@
 
   ],
    "subject_left_10":[
-   {"param_id": 0, "text": ["ATTACKER DAMAGE TYPE IS"]},
+   {"param_id": 0, "text": ["ATTACK DAMAGE TYPE IS"]},
    {"param_id": 1, "text": ["ATTACKER IS"]},
    {"param_id": 3, "text": ["LAST ATTACKER USED COMMAND TYPE"]},
    {"param_id": 4, "text": ["LAST GFORCE LAUNCH WAS","LAST ACTION LAUNCH WAS"]},
