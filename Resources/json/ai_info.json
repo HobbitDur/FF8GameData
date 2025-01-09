@@ -105,22 +105,23 @@
 
   ],
    "subject_left_10":[
-   {"param_id": 0, "text": ["ATTACKER WAS TEAM MEMBER N°"]},
+   {"param_id": 0, "text": ["ATTACKER DAMAGE TYPE IS"]},
    {"param_id": 1, "text": ["ATTACKER IS"]},
-   {"param_id": 3, "text": ["LAST ATTACKER WAS OF TYPE"]},
+   {"param_id": 3, "text": ["LAST ATTACKER USED COMMAND TYPE"]},
    {"param_id": 4, "text": ["LAST GFORCE LAUNCH WAS","LAST ACTION LAUNCH WAS"]},
    {"param_id": 5, "text": ["LAST ATTACK WAS OF ELEMENT"]}
   ],
   "target_special": [
     {"param_id": 200, "text": "{}", "param_type": "reverse", "comment":  ""},
     {"param_id": 201, "text": "RANDOM ENNEMY", "param_type": "", "comment":  ""},
-    {"param_id": 202, "text": "LAST ENNEMY TO HAVE ATTACK", "param_type": "", "comment":  ""},
-    {"param_id": 203, "text": "ALL ENNEMY", "param_type": "", "comment":  ""},
-    {"param_id": 204, "text": "ALL ALLY", "param_type": "", "comment":  ""},
-    {"param_id": 205, "text": "UNKNOWN", "param_type": "", "comment":  ""},
-    {"param_id": 206, "text": "ALLY OR {} RANDOMLY", "param_type": "monster_name", "comment":  "Arconada"},
-    {"param_id": 207, "text": "RANDOM ENNEMY", "param_type": "", "comment":  "Marsupial with meteor"},
-    {"param_id": 208, "text": "NEW ALLY", "param_type": "", "comment":  "Shiva"}
+    {"param_id": 202, "text": "RANDOM ALLY", "param_type": "", "comment":  ""},
+    {"param_id": 203, "text": "LAST ENNEMY TO HAVE ATTACK", "param_type": "", "comment":  ""},
+    {"param_id": 204, "text": "ALL ENNEMY", "param_type": "", "comment":  ""},
+    {"param_id": 205, "text": "ALL ALLY", "param_type": "", "comment":  ""},
+    {"param_id": 206, "text": "UNKNOWN", "param_type": "", "comment":  ""},
+    {"param_id": 207, "text": "ALLY OR {} RANDOMLY", "param_type": "monster_name", "comment":  "Arconada"},
+    {"param_id": 208, "text": "RANDOM ENNEMY", "param_type": "", "comment":  "Marsupial with meteor"},
+    {"param_id": 209, "text": "NEW ALLY", "param_type": "", "comment":  "Shiva"}
   ],
     "aptitude_list": [
     {"aptitude_id": 0, "text": "Strength"},
