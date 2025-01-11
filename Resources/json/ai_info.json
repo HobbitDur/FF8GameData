@@ -9,7 +9,7 @@
   {"op_code": 86,  "var_name": "FirstT-RexaurSeen"},
   {"op_code": 87,  "var_name": "LimitBreakIrvine"},
   {"op_code": 96,  "var_name": "WedgeAppeared?"},
-  {"op_code": 97,  "var_name": "SetupRandomness97"},
+  {"op_code": 97,  "var_name": "BattleVar97"},
   {"op_code": 98,  "var_name": "ElvoretAppeared?"},
   {"op_code": 102, "var_name": "FirstBugSeen"},
   {"op_code": 220, "var_name": "varA"},
