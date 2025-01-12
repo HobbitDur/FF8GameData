@@ -124,8 +124,17 @@
     {"param_id": 208, "text": "RANDOM ENNEMY", "param_type": "", "comment":  "Marsupial with meteor"},
     {"param_id": 209, "text": "NEW ALLY", "param_type": "", "comment":  "Shiva"}
   ],
-  "target_special_advanced": [
-    {"param_id": 200, "text": "ENNEMY", "param_type": "", "comment":  ""}
+  "target_special_reversed": [
+    {"param_id": 200, "text": "RANDOM ENNEMY", "param_type": "", "comment":  ""},
+    {"param_id": 201, "text": "RANDOM ALLY", "param_type": "", "comment":  ""},
+    {"param_id": 202, "text": "RANDOM ENNEMY (TBT)", "param_type": "", "comment":  ""},
+    {"param_id": 203, "text": "LAST ALLY TO HAVE ATTACK (TBT)", "param_type": "", "comment":  ""},
+    {"param_id": 204, "text": "ALL ALLY (TBT)", "param_type": "", "comment":  ""},
+    {"param_id": 205, "text": "ALL ENNEMY (TBT)", "param_type": "", "comment":  ""},
+    {"param_id": 206, "text": "UNKNOWN", "param_type": "", "comment":  ""},
+    {"param_id": 207, "text": "TO BE TESTED", "param_type": "", "comment":  ""},
+    {"param_id": 208, "text": "TO BE TESTED", "param_type": "", "comment":  ""},
+    {"param_id": 209, "text": "NEW ALLY", "param_type": "", "comment":  ""}
   ],
     "aptitude_list": [
     {"aptitude_id": 0, "text": "Strength"},
