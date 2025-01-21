@@ -28,7 +28,7 @@
 "op_code_info":[
     {"op_code": 0,   "size": 0, "func_name":"return", "short_text":"Stop" ,"text": "STOP", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Stop"},
     {"op_code": 1,   "size": 1, "func_name":"print", "short_text":"Show text" ,"text": "", "param_index": [0], "complexity": "complex", "param_type":  ["battle_text"], "param_list":  [], "comment":  "Show battle text"},
-    {"op_code": 2,   "size": 7, "func_name":"if", "short_text":"If" ,"text": "", "param_index": [0], "complexity": "complex", "param_type":  [], "param_list":  [], "comment":  "IF condition"},
+    {"op_code": 2,   "size": 7, "func_name":"if", "short_text":"If" ,"text": "", "param_index": [], "complexity": "complex", "param_type":  [], "param_list":  [], "comment":  "IF condition"},
     {"op_code": 3,   "size": 0, "func_name":"unused3", "short_text":"3:Unused" ,"text": "UNKNOWN/UNUSED3", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Unknown/unused"},
     {"op_code": 4,   "size": 1, "func_name":"target", "short_text":"Target" ,"text": "TARGET {}", "param_index": [0], "complexity": "simple", "param_type":  ["target_basic"], "param_list":  [], "comment":  "Target"},
     {"op_code": 5,   "size": 3, "func_name":"unknown5", "short_text":"5:Unknown" ,"text": "UNKNOWN ACTION5 {}|{}|{}", "param_index": [0,1,2], "complexity": "simple", "param_type":  ["int", "int", "int"], "param_list":  [], "comment":  "Unknown"},
@@ -142,6 +142,6 @@
   ],
   "attack_type": [
     {"id": 0, "type": "Physical"},
-    {"aptitude_id": 1, "text": "Magical"}
+    {"id": 1, "type": "Magical"}
   ]
 }
