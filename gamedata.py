@@ -189,6 +189,7 @@ class GameData:
         self.resource_folder = os.path.join(game_data_submodule_path, "Resources")
         self.devour_data_json = {}
         self.magic_data_json = {}
+        self.enemy_abilities_data_json = {}
         self.gforce_data_json = {}
         self.item_data_json = {}
         self.special_action_data_json = {}
