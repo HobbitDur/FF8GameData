@@ -29,6 +29,10 @@ class SectionExeFile(Section):
             id = 6
         elif msd_type == MsdType.SCAN_TEXT:
             id = 7
+        elif msd_type == MsdType.CARD_TEXT:
+            id = 4
+        elif msd_type == MsdType.DRAW_POINT:
+            id = 1
         else:
             print("Unknown msd type")
             id = 6
@@ -37,14 +41,16 @@ class SectionExeFile(Section):
         offset_list = self._section_list[index].get_offset_section().get_all_offset()
         text_list = self._section_list[index].get_text_section().get_text_list()
         if len(text_list) != len(offset_list):
-            print(f"Unexpected diff size between offset list (size:{len(offset_list)}) and text list (size:{len(text_list)})")
+            print(f"Unexpected diff size between offset list (size:{len(offset_list)}) and text list (size:{len(text_list)}) for msd type: {msd_type}")
         first_offset = offset_list[0]
         # As the offset from .exe vary from the one use in msd, shift them !
         for i in range(len(offset_list)):
+            if offset_list[i] == 0:
+                continue
             # First remove the original offset
             offset_list[i] -= first_offset
             # Then add the start of the first one for msd
-            offset_list[i] += len(offset_list) * msd_offset_size
+            offset_list[i] += len(text_list) * msd_offset_size
             msd_data.extend(offset_list[i].to_bytes(length=msd_offset_size, byteorder="little"))
         msd_data.extend(self._section_list[index].get_text_section().get_data_hex())
         return msd_data

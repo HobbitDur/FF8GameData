@@ -16,6 +16,8 @@ class LangType(Enum):
 class MsdType(Enum):
     CARD_NAME = 0
     SCAN_TEXT = 1
+    CARD_TEXT = 2
+    DRAW_POINT = 3
 
 
 class RemasterCardType(Enum):
