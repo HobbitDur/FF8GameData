@@ -1,17 +1,17 @@
 {
 "list_var": [
   {"op_code": 20,  "var_name": "Unknown20"},
-  {"op_code": 81,  "var_name": "TonberryDefeated"},
-  {"op_code": 82,  "var_name": "TonberrySrIsDefeated"},
-  {"op_code": 83,  "var_name": "UfoIsDefeated"},
-  {"op_code": 84,  "var_name": "FirstBugSeen"},
-  {"op_code": 85,  "var_name": "FirstBombSeen"},
-  {"op_code": 86,  "var_name": "FirstT-RexaurSeen"},
-  {"op_code": 87,  "var_name": "LimitBreakIrvine"},
-  {"op_code": 96,  "var_name": "WedgeAppeared?"},
-  {"op_code": 97,  "var_name": "BattleVar97"},
-  {"op_code": 98,  "var_name": "ElvoretAppeared?"},
-  {"op_code": 102, "var_name": "FirstBugSeen"},
+  {"op_code": 81,  "var_name": "battleVar81",  "used_in":  "TonberryDefeated"},
+  {"op_code": 82,  "var_name": "battleVar82",  "used_in":  "TonberrySrIsDefeated"},
+  {"op_code": 83,  "var_name": "battleVar83",  "used_in":  "UfoIsDefeated"},
+  {"op_code": 84,  "var_name": "battleVar84",  "used_in":  "FirstBugSeen"},
+  {"op_code": 85,  "var_name": "battleVar85",  "used_in":  "FirstBombSeen"},
+  {"op_code": 86,  "var_name": "battleVar86",  "used_in":  "FirstT-RexaurSeen"},
+  {"op_code": 87,  "var_name": "battleVar87",  "used_in":  "LimitBreakIrvine"},
+  {"op_code": 96,  "var_name": "battleVar96",  "used_in":  "WedgeAppeared"},
+  {"op_code": 97,  "var_name": "BattleVar97",  "used_in":  ""},
+  {"op_code": 98,  "var_name": "battleVar98",  "used_in":  "ElvoretAppeared"},
+  {"op_code": 102, "var_name": "battleVar102", "used_in":  "FirstBugSeen"},
   {"op_code": 220, "var_name": "varA"},
   {"op_code": 221, "var_name": "varB"},
   {"op_code": 222, "var_name": "varC"},
@@ -96,7 +96,7 @@
    {"subject_id": 5,  "short_text": "STATUS OF GENERIC TARGET",   "left_text": "STATUS_GEN OF {}",                          "complexity": "simple",  "right_text":"",     "param_left_type": "target_advanced_generic" , "param_right_type":"status_ai"},
    {"subject_id": 6,  "short_text": "NUMBER OF MEMBER",           "left_text": "NUMBER OF MEMBER OF {}",                    "complexity": "simple",  "right_text":"",     "param_left_type": "target_advanced_generic" , "param_right_type":"int"},
    {"subject_id": 9,  "short_text": "ALIVE",                      "left_text": "ALIVE",                                     "complexity": "simple",  "right_text":"",     "param_left_type": ""                        , "param_right_type":"target_advanced_specific"},
-   {"subject_id": 10, "short_text": "ATTACKER",                   "left_text": "ATTACKER",                                  "complexity": "simple",  "right_text":"",     "param_left_type": ""                        , "param_right_type":"complex"},
+   {"subject_id": 10, "short_text": "ATTACKER",                   "left_text": "ATTACKER",                                  "complexity": "simple",  "right_text":"",     "param_left_type": "subject10"               , "param_right_type":"complex"},
    {"subject_id": 14, "short_text": "GROUP LEVEL",                "left_text": "GROUP LEVEL OF {}",                         "complexity": "simple",  "right_text":"",     "param_left_type": "target_advanced_generic" , "param_right_type":"int"},
    {"subject_id": 15, "short_text": "ALIVE IN SLOT",              "left_text": "ALLY IN SLOT {}",                           "complexity": "complex", "right_text":"ALIVE","param_left_type": "int_right"               , "param_right_type":"text"},
    {"subject_id": 17, "short_text": "GFORCE POSSESSED",           "left_text": "{} POSSESS GFORCE",                         "complexity": "simple",  "right_text":"",     "param_left_type": "target_advanced_generic" , "param_right_type":"int"},
@@ -143,5 +143,11 @@
   "attack_type": [
     {"id": 0, "type": "Physical"},
     {"id": 1, "type": "Magical"}
+  ],
+  "command_type": [
+    {"id": 1, "data": "Physical damage"},
+    {"id": 2, "data": "Magical damage"},
+    {"id": 4, "data": "Item"},
+    {"id": 254, "data": "G-Force"}
   ]
 }
