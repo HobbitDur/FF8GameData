@@ -652,7 +652,7 @@ class GameData:
 
 if __name__ == "__main__":
     # To be able to read a file and write back in a file
-    file_to_load = "r0win.dat"  # Fill with the file you want. use os.path.join if it is in folder
+    file_to_load = "FF8_EN.exe"  # Fill with the file you want. use os.path.join if it is in folder
     file_export = "export.txt"  # The file to write the final string back
     print("Loading core data engine")
     game_data = GameData()
