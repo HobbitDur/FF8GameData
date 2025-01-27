@@ -1,4 +1,4 @@
-from FF8GameData.gamedata import GameData, SectionType
+from ..gamedata import GameData, SectionType
 
 
 class Section:
