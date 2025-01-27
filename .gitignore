@@ -3,7 +3,6 @@
 **/release/**
 **/OriginalFiles
 **/csv/**
-*.txt
 *.bin
 **/Resources/FFNxTripod/**
 *.fs
