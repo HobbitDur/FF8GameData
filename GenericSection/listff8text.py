@@ -1,6 +1,6 @@
-from FF8GameData.GenericSection.section import Section
-from FF8GameData.gamedata import GameData, SectionType
-from FF8GameData.GenericSection.ff8text import FF8Text
+from .section import Section
+from ..gamedata import GameData, SectionType
+from.ff8text import FF8Text
 
 
 class ListFF8Text(Section):

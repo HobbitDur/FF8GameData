@@ -1,10 +1,9 @@
 from sys import byteorder
 
-from FF8GameData.GenericSection.offsetandtext import SectionOffsetAndText
-from FF8GameData.GenericSection.section import Section
-from FF8GameData.gamedata import GameData, SectionType
-from FF8GameData.GenericSection.listff8text import ListFF8Text
-from model.mngrp.sectiondata import SectionData
+from .offsetandtext import SectionOffsetAndText
+from .section import Section
+from ..gamedata import GameData, SectionType
+from .listff8text import ListFF8Text
 
 
 class SectionSizeAndOffsetAndText(Section):
@@ -42,5 +41,5 @@ class SectionSizeAndOffsetAndText(Section):
     def get_text_section(self) -> ListFF8Text:
         return self._section.get_text_section()
 
-    def get_offset_section(self) -> SectionData:
+    def get_offset_section(self):
         return self._section.get_offset_section()
