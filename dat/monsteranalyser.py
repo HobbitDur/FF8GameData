@@ -99,11 +99,9 @@ class MonsterAnalyser:
         raw_data_to_write[start_animation:end_animation] = self.model_animation_data['nb_animation'].to_bytes(
             byteorder=AIData.SECTION_MODEL_ANIM_NB_MODEL['byteorder'], length=AIData.SECTION_MODEL_ANIM_NB_MODEL['size'])
 
-        print("Starting info stat data")
         section_position = 7
         self.section_raw_data[section_position] = bytearray()
         for param_name, value in self.info_stat_data.items():
-            print(f"param_name: {param_name}, value: {value}")
             property_elem = [x for ind, x in enumerate(AIData.SECTION_INFO_STAT_LIST_DATA) if x['name'] == param_name][0]
             if param_name in ([x['name'] for x in game_data.stat_data_json['stat']] + ['card', 'devour']):  # List of 1 byte value
                 value_to_set = bytes(value)
@@ -152,7 +150,6 @@ class MonsterAnalyser:
                 print("Data not taken into account !")
                 continue
             if value_to_set:
-                print(f"Value_to_set: {value_to_set.hex(sep=" ")}")
                 self.section_raw_data[section_position].extend(value_to_set)
                 # self.file_raw_data[self.header_data['section_pos'][section_position] + property_elem['offset']:
                 #                    self.header_data['section_pos'][section_position] + property_elem['offset'] + property_elem['size']] = value_to_set
@@ -191,13 +188,10 @@ class MonsterAnalyser:
         raw_text_section = bytearray()
         raw_text_offset = bytearray()
         len_battle_text_sum = 0
-        print(f"Battle text before writing: {self.battle_script_data['battle_text']}")
         for battle_text in self.battle_script_data['battle_text']:
             raw_text_offset.extend(int(len_battle_text_sum).to_bytes(length=2, byteorder="little"))
             len_battle_text_sum += battle_text.get_size()
             raw_text_section.extend(battle_text.get_data_hex())
-        print(f"Raw text offset: {raw_text_offset}")
-        print(f"Raw text section: {raw_text_section}")
 
         # Now computing offset
         # Number of subsection doesn't change, neither the offset to AI-sub-section
@@ -351,8 +345,6 @@ class MonsterAnalyser:
                 print("Unexpected name while analyzing info stat: {}".format(el['name']))
 
             self.info_stat_data[el['name']] = value
-        print("End analyse info stat")
-        print(self.info_stat_data)
 
     def __analyze_battle_script_section(self, game_data: GameData):
         SECTION_NUMBER = 8
@@ -395,7 +387,6 @@ class MonsterAnalyser:
                 self.battle_script_data['battle_text'].append(FF8Text(game_data=game_data, own_offset=0, data_hex=combat_text_raw_data, id=0))
             else:
                 self.battle_script_data['battle_text'] = []
-        print(f"Battle script analyzing dat: {self.battle_script_data['battle_text']}")
 
         # Reading AI subsection
 
