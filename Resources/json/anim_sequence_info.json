@@ -1,0 +1,21 @@
+{
+"op_code_info":[
+  {"op_code": "0x1e",   "size": 0,"text": "TextRef", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  ""},
+  {"op_code": "0x91",   "size": 0,"text": "Text", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  ""},
+  {"op_code": "0xa0",   "size": 1,"text": "Loop anim {}", "param_index": [0], "complexity": "simple", "param_type":  ["anim_id"], "param_list":  [], "comment":  ""},
+  {"op_code": "0xa2",   "size": 0,"text": "Resume battle", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  ""},
+  {"op_code": "0xa3",   "size": 3,"text": "Setup animation with ID {} for all next end of anim seq", "param_index": [0], "complexity": "simple", "param_type":  ["anim_id"], "param_list":  [], "comment":  ""},
+  {"op_code": "0xa5",   "size": 2,"text": "Aura ID {}", "param_index": [0], "complexity": "simple", "param_type":  ["aura_id"], "param_list":  [], "comment":  ""},
+  {"op_code": "0xa7",   "size": 1,"text": "Call sequence ID {}", "param_index": [0], "complexity": "simple", "param_type":  ["seq_id"], "param_list":  [], "comment":  ""},
+  {"op_code": "0xa8",   "size": 1,"text": "Visibility is {}", "param_index": [0], "complexity": "simple", "param_type":  ["visibility"], "param_list":  [], "comment":  ""},
+  {"op_code": "0xa9",   "size": 0,"text": "Normal quit", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  ""},
+  {"op_code": "0xb4",   "size": 2,"text": "Attack sequence effect ID {}", "param_index": [0], "complexity": "simple", "param_type":  ["effect_id"], "param_list":  [], "comment":  ""},
+  {"op_code": "0xb5",   "size": 2,"text": "Play local sound with ID {}", "param_index": [0], "complexity": "simple", "param_type":  ["local_sound_id"], "param_list":  [], "comment":  ""},
+  {"op_code": "0xb8",   "size": 2,"text": "Play general sound with ID {}", "param_index": [0], "complexity": "simple", "param_type":  ["general_sound_id"], "param_list":  [], "comment":  ""},
+  {"op_code": "0xbb",   "size": 2,"text": "Play effect/stat anim ? {}", "param_index": [0], "complexity": "simple", "param_type":  ["start_anim_id"], "param_list":  [], "comment":  ""},
+  {"op_code": "0xc1",   "size": 0,"text": "Repeat X time anim or return home location", "param_index": [], "complexity": "complex", "param_type":  [], "param_list":  [], "comment":  ""},
+  {"op_code": "0xc3",   "size": 0,"text": "Special cases", "param_index": [], "complexity": "complex", "param_type":  [], "param_list":  [], "comment":  ""}
+
+
+  ]
+}

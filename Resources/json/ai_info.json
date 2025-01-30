@@ -148,6 +148,7 @@
     {"id": 1, "data": "Physical damage"},
     {"id": 2, "data": "Magical damage"},
     {"id": 4, "data": "Item"},
+    {"id": 6, "data": "Draw"},
     {"id": 254, "data": "G-Force"}
   ]
 }

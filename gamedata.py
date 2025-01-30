@@ -58,11 +58,17 @@ class AIData:
     SECTION_HEADER_FILE_SIZE = {'offset': 0x30, 'size': 4, 'byteorder': 'little', 'name': 'file_size', 'pretty_name': 'File size'}  # offset: 4 + nbSections * 4
     SECTION_HEADER_DICT = {'nb_section': 0, 'section_pos': [], 'file_size': 0}
 
-    # Animation section
-    SECTION_MODEL_ANIM_NB_MODEL = {'offset': 0x00, 'size': 4, 'byteorder': 'little', 'name': 'nb_animation', 'pretty_name': 'Number model animation'}
-    SECTION_MODEL_ANIM_DICT = {'nb_animation': 0}
-    SECTION_MODEL_ANIM_LIST_DATA = [SECTION_MODEL_ANIM_NB_MODEL]
-    # Info & stat section
+    # Section 3: Animation section
+    SECTION_MODEL_ANIM_NB_MODEL = {'offset': 0x00, 'size': 4, 'byteorder': 'little', 'name': 'nb_anim', 'pretty_name': 'Number model animation'}
+    SECTION_MODEL_ANIM_OFFSET = {'offset': 0x04, 'size': 4, 'byteorder': 'little', 'name': 'anim_offset', 'pretty_name': 'Animation offset'}
+    SECTION_MODEL_ANIM_DICT = {'nb_animation': 0, 'animation_offset':[]}
+    SECTION_MODEL_ANIM_LIST_DATA = [SECTION_MODEL_ANIM_NB_MODEL, SECTION_MODEL_ANIM_OFFSET]
+    # Section 5: Sequence Animation section
+    SECTION_MODEL_SEQ_ANIM_NB_SEQ = {'offset': 0x00, 'size': 2, 'byteorder': 'little', 'name': 'nb_anim_seq', 'pretty_name': 'Number model animation'}
+    SECTION_MODEL_SEQ_ANIM_OFFSET = {'offset': 0x02, 'size': 2, 'byteorder': 'little', 'name': 'seq_anim_offset', 'pretty_name': 'Sequence animation offset'}
+    SECTION_MODEL_SEQ_ANIM_DICT = {'nb_anim_seq': 0, 'seq_anim_offset':[]}
+    SECTION_MODEL_SEQ_ANIM_LIST_DATA = [SECTION_MODEL_SEQ_ANIM_NB_SEQ, SECTION_MODEL_SEQ_ANIM_OFFSET]
+    # Section 7: Info & stat section
     SECTION_INFO_STAT_NAME_DATA = {'offset': 0x00, 'size': 24, 'byteorder': 'big', 'name': 'monster_name', 'pretty_name': 'Monster name'}
     NAME_DATA = {'offset': 0x00, 'size': 24, 'byteorder': 'big', 'name': 'name', 'pretty_name': 'Name'}
     HP_DATA = {'offset': 0x18, 'size': 4, 'byteorder': 'big', 'name': 'hp', 'pretty_name': 'HP'}
@@ -204,6 +210,7 @@ class GameData:
         self.mngrp_data_json = {}
         self.exe_data_json = {}
         self.ai_data_json = {}
+        self.anim_sequence_data_json = {}
         self.game_info_test = {}  # Temp for xlsx
         self.__init_hex_to_str_table()
 
@@ -301,6 +308,14 @@ class GameData:
             self.exe_data_json["scan_data_offset"][key] = int(self.exe_data_json["scan_data_offset"][key], 16)
         for key in self.exe_data_json["draw_text_offset"]:
             self.exe_data_json["draw_text_offset"][key] = int(self.exe_data_json["draw_text_offset"][key], 16)
+
+    def load_anim_sequence_data(self):
+        file_path = os.path.join(self.resource_folder_json, "anim_sequence_info.json")
+        with open(file_path, encoding="utf8") as f:
+            self.anim_sequence_data_json = json.load(f)
+        for i, el in enumerate(self.anim_sequence_data_json["op_code_info"]):
+            if el["op_code"]:
+                self.anim_sequence_data_json["op_code_info"][i]["op_code"] = int(self.anim_sequence_data_json["op_code_info"][i]["op_code"], 16)
 
     def load_mngrp_data(self):
         file_path = os.path.join(self.resource_folder_json, "mngrp_bin_data.json")
@@ -652,6 +667,7 @@ class GameData:
         self.load_magic_data()
         self.load_enemy_abilities_data()
         self.load_special_action_data()
+        self.load_anim_sequence_data()
 
 
 if __name__ == "__main__":

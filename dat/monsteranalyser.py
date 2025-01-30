@@ -2,6 +2,7 @@ import copy
 import os
 from math import floor
 
+from .sequenceanalyser import SequenceAnalyser
 from ..GenericSection.ff8text import FF8Text
 from ..gamedata import GameData, AIData
 from .commandanalyser import CommandAnalyser
@@ -26,6 +27,7 @@ class MonsterAnalyser:
         self.section_raw_data = [bytearray()] * self.NUMBER_SECTION
         self.header_data = copy.deepcopy(game_data.AIData.SECTION_HEADER_DICT)
         self.model_animation_data = copy.deepcopy(game_data.AIData.SECTION_MODEL_ANIM_DICT)
+        self.seq_animation_data = copy.deepcopy(game_data.AIData.SECTION_MODEL_SEQ_ANIM_DICT)
         self.info_stat_data = copy.deepcopy(game_data.AIData.SECTION_INFO_STAT_DICT)
         self.battle_script_data = copy.deepcopy(game_data.AIData.SECTION_BATTLE_SCRIPT_DICT)
         self.sound_data = bytes()  # Section 9
@@ -68,6 +70,7 @@ class MonsterAnalyser:
             self.__analyze_model_animation(game_data)
             # No need to analyze Section 4 : Unknown
             # No need to analyze Section 5 : Unknown
+            #self.__analyze_sequence_animation(game_data)
             # No need to analyze Section 6 : Unknown
             # Analyzing Section 7 : Informations & stats
             self.__analyze_info_stat(game_data)
@@ -204,9 +207,11 @@ class MonsterAnalyser:
 
         current_offset_section_compute += len(raw_ai_offset)
         current_offset_section_compute += len(raw_ai_section)
-        self.section_raw_data[8].extend(current_offset_section_compute.to_bytes(game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_OFFSET_TEXT_OFFSET_SUB['size'], "little"))
+        self.section_raw_data[8].extend(
+            current_offset_section_compute.to_bytes(game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_OFFSET_TEXT_OFFSET_SUB['size'], "little"))
         current_offset_section_compute += len(raw_text_offset)
-        self.section_raw_data[8].extend(current_offset_section_compute.to_bytes(game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_OFFSET_TEXT_SUB['size'], "little"))
+        self.section_raw_data[8].extend(
+            current_offset_section_compute.to_bytes(game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_OFFSET_TEXT_SUB['size'], "little"))
         current_offset_section_compute += len(raw_text_section)
 
         # Now adding the data
@@ -285,8 +290,82 @@ class MonsterAnalyser:
             game_data.AIData.SECTION_HEADER_FILE_SIZE['byteorder'])
 
     def __analyze_model_animation(self, game_data: GameData):
+        #print("__analyze_model_animation")
         SECTION_NUMBER = 3
-        self.model_animation_data['nb_animation'] = self.__get_int_value_from_info(AIData.SECTION_MODEL_ANIM_NB_MODEL, SECTION_NUMBER)
+
+        self.model_animation_data['nb_animation'] = self.__get_int_value_from_info(game_data.AIData.SECTION_MODEL_ANIM_NB_MODEL, SECTION_NUMBER)
+        list_anim_offset = []
+        offset_size = game_data.AIData.SECTION_MODEL_ANIM_OFFSET['size']
+        start_offset = game_data.AIData.SECTION_MODEL_ANIM_NB_MODEL['size']
+        for index_offset in range(self.model_animation_data['nb_animation']):
+            list_anim_offset.append(
+                int.from_bytes(self.section_raw_data[SECTION_NUMBER][start_offset + index_offset * offset_size:start_offset + (index_offset + 1) * offset_size],
+                               byteorder="little"))
+        #print(list_anim_offset)
+
+        animation_list = []
+        start_anim = start_offset + len(list_anim_offset) * offset_size
+
+        for index, anim_offset in enumerate(list_anim_offset):
+            #print(f"Start anim: {start_anim}")
+            #print(f"index: {index}, anim_offset: {anim_offset}")
+            if index == len(list_anim_offset) - 1:
+                end_anim = len(self.section_raw_data[SECTION_NUMBER])
+            else:
+                end_anim = list_anim_offset[index + 1]
+            #print(f"end_anim: {end_anim}")
+            animation_list.append({'nb_frame': int(self.section_raw_data[SECTION_NUMBER][start_anim]),
+                                   'unk': self.section_raw_data[SECTION_NUMBER][start_anim + 1: end_anim].hex(sep=" ")})
+            start_anim = end_anim
+        #print(animation_list)
+        #for i, el in enumerate(animation_list):
+        #    print(f"Index animation: {i}, Nb frame: {el['nb_frame']}, len_animation: {len(el['unk'])}")
+
+
+
+    def __analyze_sequence_animation(self, game_data: GameData):
+        print("__analyze_sequence_animation")
+        SECTION_NUMBER = 5
+        print(f"Len section 5: {self.section_raw_data[SECTION_NUMBER]}")
+        self.seq_animation_data['nb_anim_seq'] = self.__get_int_value_from_info(game_data.AIData.SECTION_MODEL_SEQ_ANIM_NB_SEQ, SECTION_NUMBER)
+        print(f"Nb sequence: {self.seq_animation_data['nb_anim_seq']}")
+        list_seq_anim_offset = []
+        offset_size = game_data.AIData.SECTION_MODEL_SEQ_ANIM_OFFSET['size']
+        start_offset = game_data.AIData.SECTION_MODEL_SEQ_ANIM_NB_SEQ['size']
+        for index_offset in range(self.seq_animation_data['nb_anim_seq']):
+            list_seq_anim_offset.append(
+                int.from_bytes(self.section_raw_data[SECTION_NUMBER][start_offset + index_offset * offset_size:start_offset + (index_offset + 1) * offset_size],
+                               byteorder="little"))
+        print(list_seq_anim_offset)
+
+        animation_seq_list = []
+        start_anim = start_offset + len(list_seq_anim_offset) * offset_size
+
+        for index, anim_offset in enumerate(list_seq_anim_offset):
+            print(f"Start anim: {start_anim}")
+            print(f"index: {index}, anim_offset: {anim_offset}")
+            if index == len(list_seq_anim_offset) - 1:
+                end_anim = len(self.section_raw_data[SECTION_NUMBER])
+            else:
+                end_anim = list_seq_anim_offset[index + 1]
+            print(f"end_anim: {end_anim}")
+            animation_seq_list.append({'unk': self.section_raw_data[SECTION_NUMBER][start_anim: end_anim]})
+            start_anim = end_anim
+        print(animation_seq_list)
+        for i, el in enumerate(animation_seq_list):
+            print(f"Index seq animation: {i},  seq_animation: {len(el['unk'])}")
+        for i, el in enumerate(animation_seq_list):
+            print(f"Seq data {i}: {el['unk'].hex(sep=" ")}")
+
+        # Now analysing the sequence 12
+        print("Analysing seq 11:")
+        print(f"Seq data {11}: {animation_seq_list[11]['unk'].hex(sep=" ")}")
+        sequence_analyser = SequenceAnalyser(game_data=game_data, model_anim_data=self.model_animation_data,sequence=animation_seq_list[11]['unk'])
+        print("End sequence analyser")
+
+
+
+
 
     def __analyze_info_stat(self, game_data: GameData):
         SECTION_NUMBER = 7
@@ -427,9 +506,13 @@ class MonsterAnalyser:
                     op_code_ref = op_code_ref[0]
                     start_param = index_read + 1
                     end_param = index_read + 1 + op_code_ref['size']
+                    if list_result:
+                        previous_command = list_result[-1]
+                    else:
+                        previous_command = None
                     command = CommandAnalyser(code[index_read], code[start_param:end_param], game_data=game_data,
                                               battle_text=self.battle_script_data['battle_text'],
-                                              info_stat_data=self.info_stat_data, color=game_data.AIData.COLOR)
+                                              info_stat_data=self.info_stat_data, color=game_data.AIData.COLOR, previous_command=previous_command)
                     list_result.append(command)
                     index_read += 1 + op_code_ref['size']
             self.battle_script_data['ai_data'].append(list_result)
