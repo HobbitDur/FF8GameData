@@ -192,7 +192,7 @@ class AIData:
 class GameData:
     AIData = AIData()
 
-    def __init__(self, game_data_submodule_path=os.path.dirname(os.path.realpath(__file__))):
+    def __init__(self, game_data_submodule_path="FF8GameData"):
         self.resource_folder_json = os.path.join(game_data_submodule_path, "Resources", "json")
         self.resource_folder_image = os.path.join(game_data_submodule_path, "Resources", "image")
         self.resource_folder = os.path.join(game_data_submodule_path, "Resources")
