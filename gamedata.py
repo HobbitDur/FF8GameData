@@ -675,7 +675,7 @@ if __name__ == "__main__":
     file_to_load = "FF8_EN.exe"  # Fill with the file you want. use os.path.join if it is in folder
     file_export = "export.txt"  # The file to write the final string back
     print("Loading core data engine")
-    game_data = GameData()
+    game_data = GameData(".")
     # game_data.load_all() # This load all data if you want to test further, not just text translation
 
     print(f"Reading the file: {file_to_load}")
