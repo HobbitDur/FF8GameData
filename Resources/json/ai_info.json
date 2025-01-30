@@ -8,7 +8,7 @@
   {"op_code": 85,  "var_name": "battleVar85",  "used_in":  "FirstBombSeen"},
   {"op_code": 86,  "var_name": "battleVar86",  "used_in":  "FirstT-RexaurSeen"},
   {"op_code": 87,  "var_name": "battleVar87",  "used_in":  "LimitBreakIrvine"},
-  {"op_code": 96,  "var_name": "battleVar96",  "used_in":  "WedgeAppeared"},
+  {"op_code": 96,  "var_name": "battleVar96",  "used_in":  "WedgeAppeared, omegaWeaponFightedButNotDefeated"},
   {"op_code": 97,  "var_name": "BattleVar97",  "used_in":  ""},
   {"op_code": 98,  "var_name": "battleVar98",  "used_in":  "ElvoretAppeared"},
   {"op_code": 102, "var_name": "battleVar102", "used_in":  "FirstBugSeen"},
@@ -51,7 +51,7 @@
     {"op_code": 24,  "size": 1, "func_name":"printAlt", "short_text":"Show text debug" ,"text": "", "param_index": [0], "complexity": "complex", "param_type":  ["int"], "param_list":  [], "comment":  "Show battle text with debug ?"},
     {"op_code": 25,  "size": 1, "func_name":"unknown25", "short_text":"25:Unknown" ,"text": "UNKNOWN ACTION25 {}", "param_index": [0], "complexity": "simple", "param_type":  ["int"], "param_list":  [], "comment":  "Unknown"},
     {"op_code": 26,  "size": 1, "func_name":"printAndLock", "short_text":"Show text + lock" ,"text": "", "param_index": [0], "complexity": "complex", "param_type":  ["int"], "param_list":  [], "comment":  "Show battle text + lock"},
-    {"op_code": 27,  "size": 2, "func_name":"joinAlt", "short_text":"Ennemy enter (biggs)" ,"text": "MAKE ENNEMY N°{} ENTER COMBAT? {} UNKNOWN", "param_index": [0,1], "complexity": "simple", "param_type":  ["int","int"], "param_list":  [], "comment":  "Unknown (biggs 1)"},
+    {"op_code": 27,  "size": 2, "func_name":"joinAlt", "short_text":"Ennemy enter (biggs)" ,"text": "MAKE ENNEMY N°{} ENTER COMBAT {} UNKNOWN", "param_index": [0,1], "complexity": "simple", "param_type":  ["int","int"], "param_list":  [], "comment":  "Unknown (biggs 1)"},
     {"op_code": 28,  "size": 1, "func_name":"waitText", "short_text":"Wait text" ,"text": "WAIT {} TEXT", "param_index": [0], "complexity": "simple", "param_type":  ["int"], "param_list":  [], "comment":  "Wait text"},
     {"op_code": 29,  "size": 1, "func_name":"leave", "short_text":"Ennemy leave" ,"text": "MAKE ENNEMY N°{} LEAVE COMBAT", "param_index": [0], "complexity": "simple", "param_type":  ["int"], "param_list":  [], "comment":  "Leave ennemy"},
     {"op_code": 30,  "size": 1, "func_name":"specialAction", "short_text":"Special action" ,"text": "LAUNCH SPECIAL ACTION {}", "param_index": [0], "complexity": "simple", "param_type":  ["special_action"], "param_list":  [], "comment":  "Launch special action"},
@@ -107,7 +107,7 @@
    "subject_left_10":[
    {"param_id": 0, "text": ["LAST ATTACK DAMAGE TYPE IS"]},
    {"param_id": 1, "text": ["LAST ATTACKER IS"]},
-   {"param_id": 2, "text": ["{} TURN COUNTER IS"]},
+   {"param_id": 2, "text": ["SELF TURN COUNTER IS"]},
    {"param_id": 3, "text": ["LAST ATTACKER USED COMMAND TYPE"]},
    {"param_id": 4, "text": ["LAST GFORCE LAUNCH WAS","LAST ACTION LAUNCH WAS"]},
    {"param_id": 5, "text": ["LAST ATTACK WAS OF ELEMENT"]}
