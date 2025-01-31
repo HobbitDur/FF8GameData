@@ -195,10 +195,14 @@ class CommandAnalyser:
             ## Now we want to have only the parameter of the subject, for this we remove data around
             split_text = if_subject_dict['left_text'].split('{}')
             if_subject_left_parameter_text = op_code_list[1].replace(split_text[0], '')
+            temp_int_right = 0 # To handle special cases of subj ID 15 where text and int are inversed
             if len(split_text) > 1:
                 if_subject_left_parameter_text = if_subject_left_parameter_text.replace(split_text[1], '')
             if if_subject_dict['param_left_type'] == "int":
                 op_code_list[1] = int(if_subject_left_parameter_text)
+            elif if_subject_dict['param_left_type'] == "int_right":
+                temp_int_right = if_subject_left_parameter_text
+                op_code_list[1] = 200 #Always ALIVE
             elif if_subject_dict['param_left_type'] == "var":
                 op_code_list[1] = [x['op_code'] for x in self.game_data.ai_data_json['list_var'] if x['var_name'] == if_subject_left_parameter_text][0]
             elif if_subject_dict['param_left_type'] == "subject10":# We don't use if_subject_left_parameter_text
@@ -232,6 +236,8 @@ class CommandAnalyser:
             r_cond = op_code_list[3]
             if if_subject_dict['param_right_type'] == "int":
                 op_code_list[3] = int(r_cond)
+            elif if_subject_dict['param_right_type'] == "alive":
+                op_code_list[3] = int(temp_int_right) + 3
             elif if_subject_dict['param_right_type'] == "percent":
                 op_code_list[3] = int(int(r_cond.replace(' %', '')) / 10)
             elif if_subject_dict['param_right_type'] == "status_ai":
@@ -624,6 +630,8 @@ class CommandAnalyser:
                     list_param_possible_left.extend(self.__get_target_list(advanced=True, specific=True))
                 elif if_subject_left_data['param_left_type'] == "int":
                     param_left = int(op_code_left_condition_param)
+                # elif if_subject_left_data['param_left_type'] == "int_right":
+                #     param_left = int(op_code_right_condition_param) - 3
                 elif if_subject_left_data['param_left_type'] == "subject10":
                     param_left = []
                     if op_code_left_condition_param >= 200: # Basic target
@@ -683,6 +691,8 @@ class CommandAnalyser:
 
             if right_param_type == 'percent':
                 right_subject = {'text': '{} %', 'param': [op_code_right_condition_param * 10]}
+            elif right_param_type == 'alive':
+                right_subject = {'text': 'ALIVE', 'param': []}
             elif right_param_type == 'int':
                 right_subject = {'text': '{}', 'param': [op_code_right_condition_param]}
             elif right_param_type == 'status_ai':
