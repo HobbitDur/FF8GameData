@@ -185,8 +185,11 @@ class MonsterAnalyser:
                     raw_ai_section.extend(command.get_op_code())
                     offset_value_current_ai_section += 1 + len(command.get_op_code())
                 # For reason, each AI section need to be a multiple of 4, so adding Stop till this is the case
-                while len(raw_ai_section) % 4 != 0:
+                while section_size % 4 != 0:
                     raw_ai_section.extend([0x00])
+                    offset_value_current_ai_section +=1
+                    section_size +=1
+
 
         # Now analysing the text part. offset_value_current_ai_section point then to the end of AI sub-section, so the start of text offset
         raw_text_section = bytearray()

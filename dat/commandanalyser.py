@@ -476,7 +476,6 @@ class CommandAnalyser:
                     param_value.append(self.__get_target(self.__op_code[op_index], advanced=True, specific=True))
                     self.param_possible_list.append([x for x in self.__get_target_list(advanced=True, specific=True)])
                 elif type == "target_advanced_generic":
-                    print("target_advanced_generic == type")
                     param_value.append(self.__get_target(self.__op_code[op_index], advanced=True, specific=False))
                     self.param_possible_list.append([x for x in self.__get_target_list(advanced=True, specific=False)])
                 elif type == "target_basic":
@@ -489,7 +488,6 @@ class CommandAnalyser:
                     param_value.append([x['text'] for x in self.game_data.ai_data_json['aptitude_list'] if x['aptitude_id'] == self.__op_code[op_index]][0])
                     self.param_possible_list.append([{"id": x["aptitude_id"], "data": x['text']} for x in self.game_data.ai_data_json['aptitude_list']])
                 else:
-                    print(f"Unknown type {type}, considering a int")
                     param_value.append(self.__op_code[op_index])
             # Now putting the op_list in the correct order for param value (data analysis already in correct order):
             original_param_possible = self.param_possible_list.copy()
@@ -704,7 +702,6 @@ class CommandAnalyser:
             elif right_param_type == 'text':
                 right_subject = {'text': '{}', 'param': [x['right_text'] for x in self.game_data.ai_data_json['if_subject'] if x['subject_id'] == subject_id]}
             elif right_param_type == 'target_advanced_generic':
-                print("right_param_type == target_advanced_generic")
                 right_subject = {'text': '{}', 'param': [self.__get_target(op_code[3], advanced=True, specific=False)]}
                 list_param_possible_right = self.__get_possible_target_advanced_specific()
             elif right_param_type == 'complex' and subject_id == 10:
@@ -714,7 +711,6 @@ class CommandAnalyser:
                     list_param_possible_right.extend([{"id": x['id'], "data": x['type']} for x in self.game_data.ai_data_json['attack_type']])
                     attack_right_condition_param = [self.game_data.ai_data_json['attack_type'][op_code_right_condition_param]['type']]
                 elif op_code[1] == 1:
-                    print("op_code1")
                     attack_right_condition_param = [self.__get_target(op_code_right_condition_param, advanced=True, specific=True)]
                     list_param_possible_right.extend(self.__get_possible_target_advanced_specific())
                 elif op_code[1] == 2: # Turn counter
