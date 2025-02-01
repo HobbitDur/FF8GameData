@@ -29,7 +29,6 @@
     {"op_code": 0,   "size": 0, "func_name":"return", "short_text":"Stop" ,"text": "STOP", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Stop"},
     {"op_code": 1,   "size": 1, "func_name":"print", "short_text":"Show text" ,"text": "", "param_index": [0], "complexity": "complex", "param_type":  ["battle_text"], "param_list":  [], "comment":  "Show battle text"},
     {"op_code": 2,   "size": 7, "func_name":"if", "short_text":"If" ,"text": "", "param_index": [], "complexity": "complex", "param_type":  [], "param_list":  [], "comment":  "IF condition"},
-    {"op_code": 3,   "size": 0, "func_name":"unused3", "short_text":"3:Unused" ,"text": "UNKNOWN/UNUSED3", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Unknown/unused"},
     {"op_code": 4,   "size": 1, "func_name":"target", "short_text":"Target" ,"text": "TARGET {}", "param_index": [0], "complexity": "simple", "param_type":  ["target_basic"], "param_list":  [], "comment":  "Target"},
     {"op_code": 5,   "size": 3, "func_name":"unknown5", "short_text":"5:Unknown" ,"text": "UNKNOWN ACTION5 {}|{}|{}", "param_index": [0,1,2], "complexity": "simple", "param_type":  ["int", "int", "int"], "param_list":  [], "comment":  "Unknown"},
     {"op_code": 6,   "size": 0, "func_name":"unknown6", "short_text":"6:Unknown ultimecia 126" ,"text": "UNKNOWN ACTION6", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Unknown ultimecia 126 ? (maybe not if 0x3A size 1)"},
@@ -74,8 +73,8 @@
     {"op_code": 50,  "size": 0, "func_name":"unknown50", "short_text":"50: Unknown shiva/braham" ,"text": "UNKNOWN ACTION50", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Unknown (shiva/brahman)"},
     {"op_code": 51,  "size": 0, "func_name":"activate", "short_text":"Activate target" ,"text": "ACTIVATE TARGET", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Activate target"},
     {"op_code": 52,  "size": 1, "func_name":"unknown52", "short_text":"52: Unknown shiva" ,"text": "UNKNOWN ACTION52 {}", "param_index": [0], "complexity": "simple", "param_type":  ["int"], "param_list":  [], "comment":  "Unknown (shiva)"},
-    {"op_code": 53,  "size": 1, "func_name":"activateEnemy", "short_text":"Activate ennemy target" ,"text": "ACTIVATE ENNEMY {} AS TARGET", "param_index": [0], "complexity": "simple", "param_type":  ["target_basic"], "param_list":  [], "comment":  "Activate ennemy as target"},
-    {"op_code": 54,  "size": 0, "func_name":"unknown54", "short_text":"54: Unknown seifer 4" ,"text": "UNKNOWN ACTION54", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Seifer 4"},
+    {"op_code": 53,  "size": 1, "func_name":"activateEnemy", "short_text":"Activate ennemy target" ,"text": "ACTIVATE ENNEMY {} AS TARGET", "param_index": [0], "complexity": "simple", "param_type":  ["target_basic"], "param_list":  [], "comment":  "Activate enemy as target"},
+    {"op_code": 54,  "size": 0, "func_name":"gilgamesh", "short_text":"Give gilgamesh" ,"text": "GIVE GILGAMESH", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Seifer 4"},
     {"op_code": 55,  "size": 1, "func_name":"giveCard", "short_text":"Give card" ,"text": "GIVE CARD {}", "param_index": [0], "complexity": "simple", "param_type":  ["card"], "param_list":  [], "comment":  "Give card"},
     {"op_code": 56,  "size": 1, "func_name":"giveItem", "short_text":"Give item" ,"text": "GIVE ITEM {}", "param_index": [0], "complexity": "simple", "param_type":  ["item"], "param_list":  [], "comment":  "Give object"},
     {"op_code": 57,  "size": 0, "func_name":"gameOver", "short_text":"Game over" ,"text": "GAME OVER", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Game over"},
@@ -83,7 +82,6 @@
     {"op_code": 59,  "size": 2, "func_name":"unknown59", "short_text":"59: Unknown ultimecia 124" ,"text": "UNKNOWN ACTION59 {}|{}", "param_index": [0,1], "complexity": "simple", "param_type":  ["int", "int"], "param_list":  [], "comment":  "Unknown (ultimecia 124)"},
     {"op_code": 60,  "size": 1, "func_name":"addMaxHP", "short_text":"Increase HP" ,"text": "INCREASE MAX HP (but not current) BY {}", "param_index": [0], "complexity": "simple", "param_type":  ["int"], "param_list":  [], "comment":  "Increase Max HP"},
     {"op_code": 61,  "size": 0, "func_name":"unknown60", "short_text":"61: Unknown minotaure" ,"text": "UNKNOWN ACTION60", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Unknown Minotaure"},
-    {"op_code": 65,  "size": 0, "func_name":"unused65", "short_text":"65: Unused" ,"text": "UNKNOWN/UNUSED65", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Unknown x-atm092 (unused ?)"},
     {"op_code": 255, "size": 0, "func_name":"unused255", "short_text":"" ,"text": "UNUSED255", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Default unused when op_id doesn't exist"}
 ],
 

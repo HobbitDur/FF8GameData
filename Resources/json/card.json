@@ -120,6 +120,7 @@
     {"id":106, "img_x":26, "img_y": 1, "name": "Rinoa", "name_xylomod":"Rinoa", "type_int": 0 },
     {"id":107, "img_x":27, "img_y": 1, "name": "Edea", "name_xylomod":"Edea", "type_int": 0 },
     {"id":108, "img_x":26, "img_y": 2, "name": "Seifer", "name_xylomod":"Seifer", "type_int": 0 },
-    {"id":109, "img_x":27, "img_y": 2, "name": "Squall", "name_xylomod":"Squall", "type_int": 0 }
+    {"id":109, "img_x":27, "img_y": 2, "name": "Squall", "name_xylomod":"Squall", "type_int": 0 },
+    {"id":255, "img_x":0, "img_y": 0, "name": "Immune", "name_xylomod":"Immune", "type_int": 0 }
   ]
 }
