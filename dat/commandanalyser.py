@@ -251,6 +251,8 @@ class CommandAnalyser:
                 op_code_list[3] = int(r_cond)
             elif if_subject_dict['param_right_type'] == "alive":
                 op_code_list[3] = int(temp_int_right) + 3
+            elif if_subject_dict['param_right_type'] == "gender":
+                op_code_list[3] = [x['id'] for x in self.game_data.ai_data_json['gender_type'] if x['type'] == r_cond][0]
             elif if_subject_dict['param_right_type'] == "percent":
                 op_code_list[3] = int(int(r_cond.replace(' %', '')) / 10)
             elif if_subject_dict['param_right_type'] == "status_ai":
@@ -560,6 +562,9 @@ class CommandAnalyser:
     def __get_possible_status_ai(self):
         return [{'id': val_dict['id'], 'data': val_dict['name']} for id, val_dict in enumerate(self.game_data.status_data_json["status_ai"])]
 
+    def __get_possible_gender(self):
+        return [{'id': val_dict['id'], 'data': val_dict['type']} for id, val_dict in enumerate(self.game_data.ai_data_json["gender_type"])]
+
     def __get_possible_special_action(self):
         return [{'id': val_dict['id'], 'data': val_dict['name']} for id, val_dict in enumerate(self.game_data.special_action_data_json["special_action"])]
 
@@ -714,14 +719,23 @@ class CommandAnalyser:
         if right_param_type:
             right_param_type = right_param_type[0]
 
+
             if right_param_type == 'percent':
                 right_subject = {'text': '{} %', 'param': [op_code_right_condition_param * 10]}
             elif right_param_type == 'alive':
                 right_subject = {'text': 'ALIVE', 'param': []}
+            elif right_param_type == 'gender':
+                param = [x['type'] for x in self.game_data.ai_data_json["gender_type"] if x['id'] == op_code_right_condition_param]
+                if not param:
+                    print(f"Gender {op_code_right_condition_param} not found")
+                right_subject = {'text': '{}', 'param': [param[0]]}
+                list_param_possible_right = self.__get_possible_gender()
             elif right_param_type == 'int':
                 right_subject = {'text': '{}', 'param': [op_code_right_condition_param]}
             elif right_param_type == 'status_ai':
                 param = [x['name'] for x in self.game_data.status_data_json["status_ai"] if x['id'] == op_code_right_condition_param]
+                if not param:
+                    print(f"status_ai {op_code_right_condition_param} not found")
                 right_subject = {'text': '{}', 'param': [param[0]]}
                 list_param_possible_right = self.__get_possible_status_ai()
             elif right_param_type == 'target_advanced_specific':
