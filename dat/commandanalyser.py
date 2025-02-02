@@ -696,8 +696,6 @@ class CommandAnalyser:
                     list_param_possible_left.append({"id": op_code_left_condition_param, "data": "Unused"})
             elif if_subject_left_data["complexity"] == "complex":
                 if if_subject_left_data["subject_id"] == 15:  # ALLY SLOT X IS ALIVE
-                    print("Subject 15")
-                    print(op_code_right_condition_param)
                     param_left = op_code_right_condition_param - 3  # Special case where we take the right condition
                 else:
                     print(f"Unexpected subject_id: {if_subject_left_data["subject_id"]}")
