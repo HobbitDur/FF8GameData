@@ -130,7 +130,6 @@ class CommandAnalyser:
         return op_research
 
     def __analyse_op_data_with_text_param(self):
-        print("__analyse_op_data_with_text_param")
         op_code_list = self.get_op_code()
         op_info = [x for x in self.game_data.ai_data_json['op_code_info'] if x["op_code"] == self.get_id()]
         if op_info:
@@ -215,8 +214,6 @@ class CommandAnalyser:
                 shift = if_subject_dict['param_list'][0]
                 op_code_list[1] = int(if_subject_left_parameter_text) - shift
             elif if_subject_dict['param_left_type'] == "int_right":
-                print("int right !")
-                print(if_subject_left_parameter_text)
                 temp_int_right = if_subject_left_parameter_text
                 op_code_list[1] = 200  # Always ALIVE
             elif if_subject_dict['param_left_type'] == "var":
@@ -253,8 +250,6 @@ class CommandAnalyser:
             if if_subject_dict['param_right_type'] == "int":
                 op_code_list[3] = int(r_cond)
             elif if_subject_dict['param_right_type'] == "alive":
-                print("Alive !")
-                print(temp_int_right)
                 op_code_list[3] = int(temp_int_right) + 3
             elif if_subject_dict['param_right_type'] == "gender":
                 op_code_list[3] = [x['id'] for x in self.game_data.ai_data_json['gender_type'] if x['type'] == r_cond][0]
@@ -365,7 +360,6 @@ class CommandAnalyser:
         self.set_op_code(op_code_list)
 
     def __analyse_op_data(self):
-        print("__analyse_op_data")
         self.reset_data()
         op_info = self.__get_op_code_line_info()
         # Searching for errors in json file
@@ -628,7 +622,6 @@ class CommandAnalyser:
         return [ret, param_return]
 
     def __op_02_analysis(self, op_code):
-        print("__op_02_analysis")
         # op_02 = ['subject_id', 'left condition (target)', 'comparator', 'right condition (value)', 'jump1', 'jump2', 'debug']
         subject_id = op_code[0]
         op_code_left_condition_param = op_code[1]
