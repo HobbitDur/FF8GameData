@@ -7,6 +7,8 @@ from ..GenericSection.ff8text import FF8Text
 from ..gamedata import GameData, AIData
 from .commandanalyser import CommandAnalyser
 
+test = []
+
 
 class GarbageFileError(IndexError):
     pass
@@ -69,9 +71,11 @@ class MonsterAnalyser:
             # No need to analyze Section 3 : Model animation
             self.__analyze_model_animation(game_data)
             # No need to analyze Section 4 : Unknown
-            # No need to analyze Section 5 : Unknown
-            #self.__analyze_sequence_animation(game_data)
+            # self.__analyze_section_4(game_data)
+            # No need to analyze Section 5 : Sequence Animation
+            # self.__analyze_sequence_animation(game_data)
             # No need to analyze Section 6 : Unknown
+            # self.__analyze_section_6(game_data)
             # Analyzing Section 7 : Informations & stats
             self.__analyze_info_stat(game_data)
             # Analyzing Section 8 : Battle scripts/AI
@@ -84,6 +88,18 @@ class MonsterAnalyser:
             raise GarbageFileError
         except Exception as e:
             print(e)
+
+    def __fill_4(self, section):
+        while len(section) % 4 != 0:
+            section.extend([0x00])
+
+    def __remove_and_fill_4(self, section):
+        """To remove all too much 0 and add new one till %4"""
+        # For reason, each AI section need to be a multiple of 4, so adding Stop till this is the case, called rainbow fix
+        # First do it by removing exceeding of stop, then add stop needed
+        while len(section) >= 2 and section[-1] == 0 and section[-2] == 0:
+            section.pop()
+        self.__fill_4(section)
 
     def write_data_to_file(self, game_data: GameData, dat_path):
         print("Writing monster {}".format(self.info_stat_data["monster_name"].get_str()))
@@ -167,37 +183,37 @@ class MonsterAnalyser:
         # First computing raw section (offset will be computed after)
         raw_ai_section = bytearray()
         raw_ai_offset = bytearray()
+        raw_ai_subsection = []
+
+        # first computing ai subsection
+        for index, section in enumerate(self.battle_script_data['ai_data']):
+            if section:  # Ignoring the last section that is empty
+                raw_ai_subsection.append(bytearray())
+                for command in section:
+                    raw_ai_subsection[-1].append(command.get_id())
+                    raw_ai_subsection[-1].extend(command.get_op_code())
+                current_size = len(raw_ai_section)
+                self.__remove_and_fill_4(raw_ai_subsection[-1])
 
         # The offset need to take into account the different offset themselves !
         offset_value_current_ai_section = 0
         for offset in game_data.AIData.SECTION_BATTLE_SCRIPT_AI_OFFSET_LIST_DATA:
             offset_value_current_ai_section += offset['size']
 
-        for index, section in enumerate(self.battle_script_data['ai_data']):
-            if section:  # Ignoring the last section that is empty
-                raw_ai_offset.extend(
-                    self.__get_byte_from_int_from_game_data(offset_value_current_ai_section, game_data.AIData.SECTION_BATTLE_SCRIPT_AI_OFFSET_LIST_DATA[index]))
-
-                section_size = 0
-                for command in section:
-                    section_size += command.get_size()
-                    raw_ai_section.append(command.get_id())
-                    raw_ai_section.extend(command.get_op_code())
-                    offset_value_current_ai_section += 1 + len(command.get_op_code())
-                # For reason, each AI section need to be a multiple of 4, so adding Stop till this is the case
-                while section_size % 4 != 0:
-                    raw_ai_section.extend([0x00])
-                    offset_value_current_ai_section +=1
-                    section_size +=1
-
+        # Now computing AI offset and ai section
+        for index, subsection in enumerate(raw_ai_subsection):
+            raw_ai_offset.extend(
+                self.__get_byte_from_int_from_game_data(offset_value_current_ai_section, game_data.AIData.SECTION_BATTLE_SCRIPT_AI_OFFSET_LIST_DATA[index]))
+            offset_value_current_ai_section += len(subsection)
+            raw_ai_section.extend(subsection)
 
         # Now analysing the text part. offset_value_current_ai_section point then to the end of AI sub-section, so the start of text offset
         raw_text_section = bytearray()
         raw_text_offset = bytearray()
-        len_battle_text_sum = 0
+
         for battle_text in self.battle_script_data['battle_text']:
-            raw_text_offset.extend(int(len_battle_text_sum).to_bytes(length=2, byteorder="little"))
-            len_battle_text_sum += battle_text.get_size()
+            raw_text_offset.extend(int(len(raw_text_section)).to_bytes(length=2, byteorder="little"))
+            battle_text.fill(4)  # Rainbow fix
             raw_text_section.extend(battle_text.get_data_hex())
 
         # Now computing offset
@@ -293,8 +309,23 @@ class MonsterAnalyser:
             self.file_raw_data[file_size_section_offset:file_size_section_offset + game_data.AIData.SECTION_HEADER_FILE_SIZE['size']],
             game_data.AIData.SECTION_HEADER_FILE_SIZE['byteorder'])
 
+    def __analyze_section_4(self, game_data: GameData):
+        SECTION_NUMBER = 4
+        if self.section_raw_data[SECTION_NUMBER]:
+            print("__analyze_section_4")
+            print(self.section_raw_data[SECTION_NUMBER].hex(sep=" "))
+            print(game_data.translate_hex_to_str(self.section_raw_data[SECTION_NUMBER]))
+
+    def __analyze_section_6(self, game_data: GameData):
+        SECTION_NUMBER = 6
+        if self.section_raw_data[SECTION_NUMBER]:
+            print("__analyze_section_6")
+            print(self.section_raw_data[SECTION_NUMBER].hex(sep=" "))
+            print(game_data.translate_hex_to_str(self.section_raw_data[SECTION_NUMBER]))
+        test.append(self.section_raw_data[SECTION_NUMBER].hex(sep=" "))
+
     def __analyze_model_animation(self, game_data: GameData):
-        #print("__analyze_model_animation")
+        # print("__analyze_model_animation")
         SECTION_NUMBER = 3
 
         self.model_animation_data['nb_animation'] = self.__get_int_value_from_info(game_data.AIData.SECTION_MODEL_ANIM_NB_MODEL, SECTION_NUMBER)
@@ -305,27 +336,25 @@ class MonsterAnalyser:
             list_anim_offset.append(
                 int.from_bytes(self.section_raw_data[SECTION_NUMBER][start_offset + index_offset * offset_size:start_offset + (index_offset + 1) * offset_size],
                                byteorder="little"))
-        #print(list_anim_offset)
+        # print(list_anim_offset)
 
         animation_list = []
         start_anim = start_offset + len(list_anim_offset) * offset_size
 
         for index, anim_offset in enumerate(list_anim_offset):
-            #print(f"Start anim: {start_anim}")
-            #print(f"index: {index}, anim_offset: {anim_offset}")
+            # print(f"Start anim: {start_anim}")
+            # print(f"index: {index}, anim_offset: {anim_offset}")
             if index == len(list_anim_offset) - 1:
                 end_anim = len(self.section_raw_data[SECTION_NUMBER])
             else:
                 end_anim = list_anim_offset[index + 1]
-            #print(f"end_anim: {end_anim}")
+            # print(f"end_anim: {end_anim}")
             animation_list.append({'nb_frame': int(self.section_raw_data[SECTION_NUMBER][start_anim]),
                                    'unk': self.section_raw_data[SECTION_NUMBER][start_anim + 1: end_anim].hex(sep=" ")})
             start_anim = end_anim
-        #print(animation_list)
-        #for i, el in enumerate(animation_list):
+        # print(animation_list)
+        # for i, el in enumerate(animation_list):
         #    print(f"Index animation: {i}, Nb frame: {el['nb_frame']}, len_animation: {len(el['unk'])}")
-
-
 
     def __analyze_sequence_animation(self, game_data: GameData):
         print("__analyze_sequence_animation")
@@ -364,12 +393,8 @@ class MonsterAnalyser:
         # Now analysing the sequence 12
         print("Analysing seq 11:")
         print(f"Seq data {11}: {animation_seq_list[11]['unk'].hex(sep=" ")}")
-        sequence_analyser = SequenceAnalyser(game_data=game_data, model_anim_data=self.model_animation_data,sequence=animation_seq_list[11]['unk'])
+        sequence_analyser = SequenceAnalyser(game_data=game_data, model_anim_data=self.model_animation_data, sequence=animation_seq_list[11]['unk'])
         print("End sequence analyser")
-
-
-
-
 
     def __analyze_info_stat(self, game_data: GameData):
         SECTION_NUMBER = 7
