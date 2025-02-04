@@ -1,6 +1,7 @@
 import copy
 import os
 from math import floor
+from typing import List
 
 from .sequenceanalyser import SequenceAnalyser
 from ..GenericSection.ff8text import FF8Text
@@ -89,17 +90,22 @@ class MonsterAnalyser:
         except Exception as e:
             print(e)
 
-    def __fill_4(self, section):
-        while len(section) % 4 != 0:
-            section.extend([0x00])
+    def __update_stop(self, game_data: GameData):
+        """To remove all too much 0 and add new one till %4 for rainbow fix"""
+        for index_section, section in enumerate(self.battle_script_data['ai_data']):
+            if section:
+                # First do it by removing exceeding of stop
+                while len(section) >= 2 and section[-1].get_id() == 0 and section[-2].get_id() == 0:
+                    self.remove_command(index_section, -1)
+                # Now compute the size of all command
+                section_size = 0
+                for command in section:
+                    section_size += command.get_size()
+                new_end = CommandAnalyser(0, [], game_data)
+                while section_size % 4 != 0:
+                    self.append_command(index_section, new_end)
+                    section_size += 1
 
-    def __remove_and_fill_4(self, section):
-        """To remove all too much 0 and add new one till %4"""
-        # For reason, each AI section need to be a multiple of 4, so adding Stop till this is the case, called rainbow fix
-        # First do it by removing exceeding of stop, then add stop needed
-        while len(section) >= 2 and section[-1] == 0 and section[-2] == 0:
-            section.pop()
-        self.__fill_4(section)
 
     def write_data_to_file(self, game_data: GameData, dat_path):
         print("Writing monster {}".format(self.info_stat_data["monster_name"].get_str()))
@@ -185,15 +191,16 @@ class MonsterAnalyser:
         raw_ai_offset = bytearray()
         raw_ai_subsection = []
 
+        # To fix rainbow, remove excess stop then add to fill % 4
+        self.__update_stop(game_data)
         # first computing ai subsection
         for index, section in enumerate(self.battle_script_data['ai_data']):
             if section:  # Ignoring the last section that is empty
+
                 raw_ai_subsection.append(bytearray())
                 for command in section:
                     raw_ai_subsection[-1].append(command.get_id())
                     raw_ai_subsection[-1].extend(command.get_op_code())
-                current_size = len(raw_ai_section)
-                self.__remove_and_fill_4(raw_ai_subsection[-1])
 
         # The offset need to take into account the different offset themselves !
         offset_value_current_ai_section = 0
@@ -549,6 +556,9 @@ class MonsterAnalyser:
 
     def insert_command(self, code_section_id: int, command: CommandAnalyser, index_insertion: int = 0):
         self.battle_script_data['ai_data'][code_section_id].insert(index_insertion, command)
+
+    def append_command(self, code_section_id: int, command: CommandAnalyser):
+        self.battle_script_data['ai_data'][code_section_id].append(command)
 
     def remove_command(self, code_section_id: int, index_removal: int = 0):
         del self.battle_script_data['ai_data'][code_section_id][index_removal]

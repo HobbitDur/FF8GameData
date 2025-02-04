@@ -32,7 +32,7 @@ class CommandAnalyser:
             self.__analyse_op_data()
 
     def __str__(self):
-        return f"ID: {self.__op_id}, op_code: {self.__op_code}, text: {self.get_text()}"
+        return f"Command(ID: {self.__op_id}, op_code: {self.__op_code}, text: {self.get_text()})"
 
     def __repr__(self):
         return self.__str__()
@@ -646,7 +646,7 @@ class CommandAnalyser:
             if_subject_left_data = if_subject_left_data[0]
             if if_subject_left_data["complexity"] == "simple":
                 if if_subject_left_data['param_left_type'] == "target_basic":
-                    param_left = self.__get_target(op_code_left_condition_param, advanced=True)
+                    param_left = self.__get_target(op_code_left_condition_param, advanced=False)
                     list_param_possible_left.extend(self.__get_target_list(advanced=False))
                 elif if_subject_left_data['param_left_type'] == "target_advanced_generic":
                     param_left = self.__get_target(op_code_left_condition_param, advanced=True, specific=False)
