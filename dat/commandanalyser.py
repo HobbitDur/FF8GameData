@@ -206,9 +206,9 @@ class CommandAnalyser:
             if if_subject_dict:
                 if_subject_dict = if_subject_dict[0]
             elif subject_id > 19:  # It's a var
-                if_subject_dict = {"subject_id": subject_id, "short_text": "VAR Subject",
-                                   "left_text": '{}', "complexity": "simple", "param_left_type": "var",
-                                   "param_right_type": "int"}
+                if_subject_dict = {"subject_id": subject_id, "short_text": "VAR Subject",# For a var, subject ID need to be 200 for local var
+                                   "left_text": '{}', "complexity": "simple", "param_left_type": "const",
+                                   "param_right_type": "int", "param_list":[200]}
             ## Now we want to have only the parameter of the subject, for this we remove data around
             split_text = if_subject_dict['left_text'].split('{}')
             if_subject_left_parameter_text = op_code_list[1].replace(split_text[0], '')
@@ -245,6 +245,8 @@ class CommandAnalyser:
                     target_list = self.__get_target_list(advanced=True, specific=False)
                 target_id = [x['id'] for x in target_list if x['data'] == if_subject_left_parameter_text][0]
                 op_code_list[1] = int(target_id)
+            elif if_subject_dict['param_left_type'] == "const":
+                op_code_list[1] = if_subject_dict['param_list'][0]  # Unused
             elif if_subject_dict['param_left_type'] == "":
                 op_code_list[1] = 0  # Unused
             else:
