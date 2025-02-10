@@ -563,12 +563,3 @@ class MonsterAnalyser:
     def remove_command(self, code_section_id: int, index_removal: int = 0):
         del self.battle_script_data['ai_data'][code_section_id][index_removal]
 
-    def __remove_stop_end(self, list_result):
-        id_remove = 0
-        for i in range(len(list_result)):
-            if list_result[i]['id'] == 0x00:  # STOP
-                if i + 1 < len(list_result):
-                    if list_result[i + 1]['id'] == 0x00:
-                        id_remove = i + 1
-                        break
-        return list_result[:id_remove or None]
