@@ -92,7 +92,7 @@ class CommandAnalyser:
 
         if html:
             if for_code:
-                list_comparator_destination = self.game_data.ai_data_json['list_comparator_ifritAI']
+                list_comparator_destination = self.game_data.ai_data_json['list_comparator_ifritAI_html']
             else:
                 list_comparator_destination = self.game_data.ai_data_json['list_comparator_html']
             for i in range(len(list_comparator_destination)):
