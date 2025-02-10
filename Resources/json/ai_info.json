@@ -24,6 +24,7 @@
 ],
 "list_target_char": ["Squall", "Zell", "Irvine", "Quistis", "Rinoa", "Selphie", "Seifer", "Edea", "Laguna", "Kiros", "Ward"],
 "list_comparator_html": ["==", "&lt;", "&gt;", "≠", "≤", "≥"],
+"list_comparator_ifritAI": ["==", "&lt;", "&gt;", "!=", "&lt;=", "&gt;="],
 "list_comparator": ["==", "<", ">", "≠", "≤", "≥"],
 "op_code_info":[
     {"op_code": 0,   "size": 0, "func_name":"return", "short_text":"Stop" ,"text": "STOP", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Stop"},
@@ -49,7 +50,7 @@
     {"op_code": 26,  "size": 1, "func_name":"printAndLock", "short_text":"Show text + lock" ,"text": "SHOW TEXT {} AND LOCK", "param_index": [0], "complexity": "simple", "param_type":  ["battle_text"], "param_list":  [], "comment":  "Show battle text + lock"},
     {"op_code": 27,  "size": 2, "func_name":"joinAlt", "short_text":"Ennemy enter (biggs)" ,"text": "MAKE ENNEMY N°{} ENTER COMBAT {} UNKNOWN", "param_index": [0,1], "complexity": "simple", "param_type":  ["int","int"], "param_list":  [], "comment":  "Unknown (biggs 1)"},
     {"op_code": 28,  "size": 1, "func_name":"waitText", "short_text":"Wait text" ,"text": "WAIT {} TEXT", "param_index": [0], "complexity": "simple", "param_type":  ["int"], "param_list":  [], "comment":  "Wait text"},
-    {"op_code": 29,  "size": 1, "func_name":"leave", "short_text":"Ennemy leave" ,"text": "MAKE ENNEMY N°{} LEAVE COMBAT", "param_index": [0], "complexity": "simple", "param_type":  ["int"], "param_list":  [], "comment":  "Leave ennemy"},
+    {"op_code": 29,  "size": 1, "func_name":"leave", "short_text":"Ennemy leave" ,"text": "MAKE ENNEMY IN SLOT {} LEAVE COMBAT", "param_index": [0], "complexity": "simple", "param_type":  ["target_slot"], "param_list":  [], "comment":  "Leave ennemy"},
     {"op_code": 30,  "size": 1, "func_name":"specialAction", "short_text":"Special action" ,"text": "LAUNCH SPECIAL ACTION {}", "param_index": [0], "complexity": "simple", "param_type":  ["special_action"], "param_list":  [], "comment":  "Launch special action"},
     {"op_code": 31,  "size": 1, "func_name":"join", "short_text":"Ennemy enter" ,"text": "MAKE ENNEMY N°{} ENTER COMBAT", "param_index": [0], "complexity": "simple", "param_type":  ["int"], "param_list":  [], "comment":  "Enter ennemy"},
     {"op_code": 35,  "size": 2, "func_name":"jump", "short_text":"Jump" ,"text": "", "param_index": [0], "complexity": "complex", "param_type":  ["int"], "param_list":  [], "comment":  "Else/Endif"},
@@ -126,6 +127,17 @@
   "target_advanced_generic": [
     {"param_id": 200, "text": "ENNEMY TEAM", "param_type": "", "comment":  ""},
     {"param_id": 201, "text": "ALLY TEAM", "param_type": "", "comment":  ""}
+  ],
+  "target_slot": [
+    {"param_id": 0, "text": "0", "param_type": "", "comment":  ""},
+    {"param_id": 1, "text": "1", "param_type": "", "comment":  ""},
+    {"param_id": 2, "text": "2", "param_type": "", "comment":  ""},
+    {"param_id": 3, "text": "3", "param_type": "", "comment":  ""},
+    {"param_id": 4, "text": "4", "param_type": "", "comment":  ""},
+    {"param_id": 5, "text": "5", "param_type": "", "comment":  ""},
+    {"param_id": 6, "text": "6", "param_type": "", "comment":  ""},
+    {"param_id": 7, "text": "7", "param_type": "", "comment":  ""},
+    {"param_id": 200, "text": "SELF", "param_type": "", "comment":  ""}
   ],
     "aptitude_list": [
     {"aptitude_id": 0, "text": "Strength"},

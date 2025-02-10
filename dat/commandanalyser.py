@@ -90,11 +90,15 @@ class CommandAnalyser:
                 parameters.append('{' + str(parameter) + '}')
 
         if html:
-            for i in range(len(self.game_data.ai_data_json['list_comparator_html'])):
-                text = text.replace(self.game_data.ai_data_json['list_comparator'][i], self.game_data.ai_data_json['list_comparator_html'][i])
+            if for_code:
+                list_comparator_destination = self.game_data.ai_data_json['list_comparator_ifritAI']
+            else:
+                list_comparator_destination = self.game_data.ai_data_json['list_comparator_html']
+            for i in range(len(list_comparator_destination)):
+                text = text.replace(self.game_data.ai_data_json['list_comparator'][i], list_comparator_destination[i])
                 for j in range(len(parameters)):
                     parameters[j] = str(parameters[j]).replace(self.game_data.ai_data_json['list_comparator'][i],
-                                                               self.game_data.ai_data_json['list_comparator_html'][i])
+                                                               list_comparator_destination[i])
             for i in range(len(parameters)):
                 parameters[i] = '<span style="color:' + self.__color_param + ';">' + parameters[i] + '</span>'
 
@@ -168,6 +172,8 @@ class CommandAnalyser:
                     op_code_list[i] = [x['id'] for x in self.game_data.item_data_json['items'] if x['name'] == op_code_list[i]][0]
                 elif param_type == "gforce":
                     op_code_list[i] = [x['id'] for x in self.game_data.gforce_data_json['gforce'] if x['name'] == op_code_list[i]][0]
+                elif param_type == "target_slot":
+                    op_code_list[i] = [x['id'] for x in self.__get_target_list(advanced=True, specific=True, slot=True) if x['data'] == op_code_list[i]][0]
                 elif param_type == "target_advanced_specific":
                     op_code_list[i] = [x['id'] for x in self.__get_target_list(advanced=True, specific=True) if x['data'] == op_code_list[i]][0]
                 elif param_type == "target_advanced_generic":
@@ -506,6 +512,9 @@ class CommandAnalyser:
                 elif type == "target_basic":
                     param_value.append(self.__get_target(self.__op_code[op_index], advanced=False))
                     self.param_possible_list.append([x for x in self.__get_target_list(advanced=False)])
+                elif type == "target_slot":
+                    param_value.append(self.__get_target(self.__op_code[op_index], advanced=False, slot=True))
+                    self.param_possible_list.append([x for x in self.__get_target_list(advanced=False, slot=True)])
                 elif type == "comparator":
                     param_value.append(self.game_data.ai_data_json['list_comparator'][self.__op_code[op_index]])
                     self.param_possible_list.append([{"id": i, "data": x} for i, x in enumerate(self.game_data.ai_data_json['list_comparator'])])
@@ -648,6 +657,9 @@ class CommandAnalyser:
                 if if_subject_left_data['param_left_type'] == "target_basic":
                     param_left = self.__get_target(op_code_left_condition_param, advanced=False)
                     list_param_possible_left.extend(self.__get_target_list(advanced=False))
+                elif if_subject_left_data['param_left_type'] == "target_slot":
+                    param_left = self.__get_target(op_code_left_condition_param, advanced=False, slot=True)
+                    list_param_possible_left.extend(self.__get_target_list(advanced=False, slot=True))
                 elif if_subject_left_data['param_left_type'] == "target_advanced_generic":
                     param_left = self.__get_target(op_code_left_condition_param, advanced=True, specific=False)
                     list_param_possible_left.extend(self.__get_target_list(advanced=True, specific=False))
@@ -873,7 +885,7 @@ class CommandAnalyser:
             var_info_specific = "var" + str(id)
         return var_info_specific
 
-    def __get_target_list(self, advanced=False, specific=False):
+    def __get_target_list(self, advanced=False, specific=False, slot=False):
         list_target = []
         # The target list has 4 different type of target:
         # 1. The characters
@@ -881,17 +893,19 @@ class CommandAnalyser:
         # 3. Special target
         # 4. Target stored in variable
 
-        for i in range(len(self.game_data.ai_data_json['list_target_char'])):
-            list_target.append({"id": i, "data": self.game_data.ai_data_json['list_target_char'][i]})
-        for i in range(0, len(self.game_data.monster_data_json["monster"])):
-            list_target.append({"id": i + 16, "data": self.game_data.monster_data_json["monster"][i]["name"]})
-        number_of_generic_var_read = 0
-        for var_data in self.game_data.ai_data_json['list_var']:
-            if var_data['op_code'] == 220 + number_of_generic_var_read:
-                list_target.append({"id": number_of_generic_var_read + 220, "data": "TARGET CONTAINED IN VAR " + var_data['var_name']})
-                number_of_generic_var_read += 1
-
-        if advanced:
+        if not slot:
+            for i in range(len(self.game_data.ai_data_json['list_target_char'])):
+                list_target.append({"id": i, "data": self.game_data.ai_data_json['list_target_char'][i]})
+            for i in range(0, len(self.game_data.monster_data_json["monster"])):
+                list_target.append({"id": i + 16, "data": self.game_data.monster_data_json["monster"][i]["name"]})
+            number_of_generic_var_read = 0
+            for var_data in self.game_data.ai_data_json['list_var']:
+                if var_data['op_code'] == 220 + number_of_generic_var_read:
+                    list_target.append({"id": number_of_generic_var_read + 220, "data": "TARGET CONTAINED IN VAR " + var_data['var_name']})
+                    number_of_generic_var_read += 1
+        if slot:
+            list_target_data = self.game_data.ai_data_json['target_slot']
+        elif advanced:
             if specific:
                 list_target_data = self.game_data.ai_data_json['target_advanced_specific']
             else:
@@ -914,8 +928,8 @@ class CommandAnalyser:
             list_target.append({"id": el['param_id'], "data": text})
         return list_target
 
-    def __get_target(self, id, advanced=False, specific=False):
-        target = [x['data'] for x in self.__get_target_list(advanced, specific) if x['id'] == id]
+    def __get_target(self, id, advanced=False, specific=False, slot=False):
+        target = [x['data'] for x in self.__get_target_list(advanced, specific, slot) if x['id'] == id]
         if target:
             return target[0]
         else:
