@@ -2,7 +2,8 @@ from ..gamedata import GameData
 
 
 class CommandAnalyser:
-
+    PARAM_CHAR_LEFT = "["
+    PARAM_CHAR_RIGHT = "]"
     def __init__(self, op_id: int, op_code: list, game_data: GameData, battle_text=(), info_stat_data={},
                  line_index=0, color="#0055ff", text_param=False, previous_command=None):
         self.__op_id = op_id
@@ -87,7 +88,7 @@ class CommandAnalyser:
         if for_code:
             parameters = []
             for parameter in self.__raw_parameters:
-                parameters.append('{' + str(parameter) + '}')
+                parameters.append(self.PARAM_CHAR_LEFT + str(parameter) + self.PARAM_CHAR_RIGHT)
 
         if html:
             if for_code:
@@ -250,7 +251,7 @@ class CommandAnalyser:
                 print(f"Unexpected if_subject_dict['param_left_type']: {if_subject_dict['param_left_type']}")
                 op_code_list[1] = 0
             # Comparison (2)
-            op_code_list[2] = self.game_data.ai_data_json['list_comparator'].index(op_code_list[2])
+            op_code_list[2] = self.game_data.ai_data_json['list_comparator_ifritAI'].index(op_code_list[2])
             # Right condition (3)
             r_cond = op_code_list[3]
             if if_subject_dict['param_right_type'] == "int":

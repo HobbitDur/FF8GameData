@@ -196,7 +196,6 @@ class MonsterAnalyser:
         # first computing ai subsection
         for index, section in enumerate(self.battle_script_data['ai_data']):
             if section:  # Ignoring the last section that is empty
-
                 raw_ai_subsection.append(bytearray())
                 for command in section:
                     raw_ai_subsection[-1].append(command.get_id())
