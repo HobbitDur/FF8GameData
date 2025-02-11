@@ -1,6 +1,5 @@
 {
 "list_var": [
-  {"op_code": 20,  "var_name": "Unknown20"},
   {"op_code": 81,  "var_name": "GlobalVar81",  "used_in":  "TonberryDefeated"},
   {"op_code": 82,  "var_name": "GlobalVar82",  "used_in":  "TonberrySrIsDefeated"},
   {"op_code": 83,  "var_name": "GlobalVar83",  "used_in":  "UfoIsDefeated"},
@@ -30,11 +29,11 @@
 "op_code_info":[
     {"op_code": 0,   "size": 0, "func_name":"return", "short_text":"Stop" ,"text": "Stop", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Stop"},
     {"op_code": 1,   "size": 1, "func_name":"print", "short_text":"Show text" ,"text": "Show text ID {}", "param_index": [0], "complexity": "simple", "param_type":  ["battle_text"], "param_list":  [], "comment":  "Show battle text"},
-    {"op_code": 2,   "size": 7, "func_name":"if", "short_text":"If" ,"text": "", "param_index": [], "complexity": "complex", "param_type":  [], "param_list":  [], "comment":  "IF condition"},
+    {"op_code": 2,   "size": 7, "func_name":"if", "short_text":"If" ,"text": "If with Subject ID {}, {} {} {}  | ELSE jump {} bytes forward", "param_index": [], "complexity": "complex", "param_type":  [], "param_list":  [], "comment":  "IF condition"},
     {"op_code": 4,   "size": 1, "func_name":"target", "short_text":"Target" ,"text": "Target {}", "param_index": [0], "complexity": "simple", "param_type":  ["target_basic"], "param_list":  [], "comment":  "Target"},
     {"op_code": 5,   "size": 1, "func_name":"unknown5", "short_text":"5:Unknown" ,"text": "Unknown action5 {}", "param_index": [0], "complexity": "simple", "param_type":  ["int"], "param_list":  [], "comment":  "122, 124, 126, 11, 12, 91, 109"},
     {"op_code": 6,   "size": 0, "func_name":"unknown6", "short_text":"6:Unknown Omega Weapon" ,"text": "Unknown action6", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "114"},
-    {"op_code": 8,   "size": 0, "func_name":"die", "short_text":"Die" ,"text": "DIE", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "End combat"},
+    {"op_code": 8,   "size": 0, "func_name":"kill", "short_text":"kill" ,"text": "Kill self", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "End combat"},
     {"op_code": 9,   "size": 1, "func_name":"anim", "short_text":"Animation" ,"text": "Change monster animation to n°{}", "param_index": [0], "complexity": "simple", "param_type":  ["int"], "param_list":  [], "comment":  "Change animation"},
     {"op_code": 11,  "size": 3, "func_name":"useRandom", "short_text":"Random ability" ,"text": "Randomly use ability line {} or {} or {}", "param_index": [0,1,2], "complexity": "simple", "param_type":  ["monster_line_ability", "monster_line_ability", "monster_line_ability"], "param_list":  [], "comment":  "Random attack"},
     {"op_code": 12,  "size": 1, "func_name":"use", "short_text":"Execute ability" ,"text": "Execute ability line {}", "param_index": [0], "complexity": "simple", "param_type":  ["monster_line_ability"], "param_list":  [], "comment":  "Attack/animation"},
@@ -57,13 +56,13 @@
     {"op_code": 36,  "size": 0, "func_name":"fillAtb", "short_text":"ATB" ,"text": "Fill atb bar", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Fill ATB bar"},
     {"op_code": 37,  "size": 1, "func_name":"addScan", "short_text":"Add scan" ,"text": "Add description line n°{} in scan", "param_index": [0], "complexity": "simple", "param_type":  ["int"], "param_list":  [], "comment":  "Add Scan"},
     {"op_code": 38,  "size": 4, "func_name":"targetStatus", "short_text":"Target status" ,"text": "Target {} with status {} {} and unknown {}", "param_index": [1, 2, 3, 0], "complexity": "simple", "param_type":  ["target_advanced_generic", "comparator", "status_ai", "int"], "param_list":  [], "comment":  "Target with status"},
-    {"op_code": 39,  "size": 2, "func_name":"autoStatus", "short_text":"Auto status" ,"text": "", "param_index": [0], "complexity": "complex", "param_type":  ["int"], "param_list":  [], "comment":  "Flag set capacity"},
+    {"op_code": 39,  "size": 2, "func_name":"autoStatus", "short_text":"Auto status" ,"text":"{} status {} to self", "param_index":[1, 0], "complexity":"simple", "param_type":["activate","status_ai"], "param_list":[], "comment":"Flag set capacity"},
     {"op_code": 40,  "size": 2, "func_name":"statChange", "short_text":"Stat change" ,"text": "Set {} to {}% of originalL", "param_index": [0, 1], "complexity": "simple", "param_type":  ["aptitude","percent"], "param_list":  [], "comment":  "Change stat"},
     {"op_code": 41,  "size": 0, "func_name":"draw", "short_text":"Draw magic" ,"text": "Draw random magic", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Draw magic"},
     {"op_code": 42,  "size": 0, "func_name":"cast", "short_text":"Cast drawn magic" ,"text": "Cast drawn magic", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Launch magic draw"},
     {"op_code": 43,  "size": 1, "func_name":"targetAllySlot", "short_text":"Target ally in encounter slot" ,"text": "Target ally in encounter slot {}", "param_index": [0], "complexity": "simple", "param_type":  ["int"], "param_list":  [], "comment":  "124, seems to requires assignSlot to work?"},
     {"op_code": 44,  "size": 0, "func_name":"remain", "short_text":"Remain" ,"text": "Remain", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "87, 91"},
-    {"op_code": 45,  "size": 3, "func_name":"elemDmgMod", "short_text":"Change elem damage modifier" ,"text": "", "param_index": [0, 1], "complexity": "complex", "param_type":  ["magic_type","percent_elem"], "param_list":  [], "comment":  "Change elemental damage taken"},
+    {"op_code": 45,  "size": 3, "func_name":"elemDmgMod", "short_text":"Change elem damage modifier" ,"text": "Set damage taken by {} to {}%", "param_index": [0, 1], "complexity": "complex", "param_type":  ["magic_type","percent_elem"], "param_list":  [], "comment":  "Change elemental damage taken"},
     {"op_code": 46,  "size": 0, "func_name":"blowAway", "short_text":"Blow away" ,"text": "Blow away", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "122, 126"},
     {"op_code": 48,  "size": 0, "func_name":"untargetable", "short_text":"Become untargetable" ,"text": "Become untargetable", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "become untargetable"},
     {"op_code": 49,  "size": 1, "func_name":"giveGF", "short_text":"Give gf" ,"text": "Give gforce {}", "param_index": [0], "complexity": "simple", "param_type":  ["gforce"], "param_list":  [], "comment":  "Give gforce (tomberrry)"},
@@ -83,22 +82,22 @@
 ],
 
 "if_subject":[
-   {"subject_id": 0,  "short_text": "HP OF SPECIFIC TARGET",      "left_text": "HP_SPE of {}",                              "complexity": "simple",  "right_text":"",     "param_left_type": "target_advanced_specific", "param_right_type":"percent"},
-   {"subject_id": 1,  "short_text": "HP OF GENERIC TARGET",       "left_text": "HP_GEN of {}",                              "complexity": "simple",  "right_text":"",     "param_left_type": "target_advanced_generic" , "param_right_type":"percent"},
-   {"subject_id": 2,  "short_text": "RANDOM VALUE",               "left_text": "RANDOM VALUE BETWEEN 0 AND {}",             "complexity": "simple", " right_text":"",     "param_left_type": "int_shift"               , "param_right_type":"int", "param_list":  [-1]},
-   {"subject_id": 3,  "short_text": "COMBAT SCENE",               "left_text": "COMBAT SCENE",                              "complexity": "simple",  "right_text":"",     "param_left_type": ""                        , "param_right_type":"int"},
-   {"subject_id": 4,  "short_text": "STATUS OF SPECIFIC TARGET",  "left_text": "STATUS_SPE OF {}",                          "complexity": "simple",  "right_text":"",     "param_left_type": "target_advanced_specific", "param_right_type":"status_ai"},
-   {"subject_id": 5,  "short_text": "STATUS OF GENERIC TARGET",   "left_text": "STATUS_GEN OF {}",                          "complexity": "simple",  "right_text":"",     "param_left_type": "target_advanced_generic" , "param_right_type":"status_ai"},
-   {"subject_id": 6,  "short_text": "NUMBER OF MEMBER",           "left_text": "NUMBER OF MEMBER OF {}",                    "complexity": "simple",  "right_text":"",     "param_left_type": "target_advanced_generic" , "param_right_type":"int"},
-   {"subject_id": 9,  "short_text": "ALIVE",                      "left_text": "ALIVE",                                     "complexity": "simple",  "right_text":"",     "param_left_type": ""                        , "param_right_type":"target_advanced_specific"},
-   {"subject_id": 10, "short_text": "ATTACKER",                   "left_text": "ATTACKER",                                  "complexity": "simple",  "right_text":"",     "param_left_type": "subject10"               , "param_right_type":"complex"},
-   {"subject_id": 14, "short_text": "GROUP LEVEL",                "left_text": "GROUP LEVEL OF {}",                         "complexity": "simple",  "right_text":"",     "param_left_type": "target_advanced_generic" , "param_right_type":"int"},
-   {"subject_id": 15, "short_text": "ALIVE IN SLOT",              "left_text": "ALLY IN SLOT {}",                           "complexity": "complex", "right_text":"ALIVE","param_left_type": "int_right"               , "param_right_type":"alive"},
-   {"subject_id": 16, "short_text": "GENDER CHECK",               "left_text": "AT LEAST ONE ENEMY ALIVE HAS GENDER",       "complexity": "simple", "right_text":"",      "param_left_type": ""                        , "param_right_type":"gender"},
-   {"subject_id": 17, "short_text": "GFORCE NOT OBTAINED",        "left_text": "{} NOT OBTAINED",                           "complexity": "simple",  "right_text":"",     "param_left_type": "target_advanced_generic" , "param_right_type":"int"},
-   {"subject_id": 18, "short_text": "ODIN OBTAINED",              "left_text": "{} POSSESS ODIN",                           "complexity": "simple",  "right_text":"",     "param_left_type": "target_advanced_generic" , "param_right_type":"int"},
-   {"subject_id": 19, "short_text": "COUNTDOWN",                  "left_text": "COUNTDOWN",                                 "complexity": "simple",  "right_text":"",     "param_left_type": ""                        , "param_right_type":"int"},
-   {"subject_id": 20, "short_text": "STATUS OF ALL IN TEAM",      "left_text": "STATUS OF ALL IN TEAM {}",                  "complexity": "simple",  "right_text":"",     "param_left_type": "target_advanced_generic" , "param_right_type":"status_ai"}
+   {"subject_id": 0,  "short_text": "HP OF SPECIFIC TARGET",      "left_text": "HP_SPE of {}",                              "complexity": "simple",  "right_text":"",               "param_left_type": "target_advanced_specific", "param_right_type":"percent"},
+   {"subject_id": 1,  "short_text": "HP OF GENERIC TARGET",       "left_text": "HP_GEN of {}",                              "complexity": "simple",  "right_text":"",               "param_left_type": "target_advanced_generic" , "param_right_type":"percent"},
+   {"subject_id": 2,  "short_text": "RANDOM VALUE",               "left_text": "RANDOM VALUE BETWEEN 0 AND {}",             "complexity": "simple", " right_text":"",               "param_left_type": "int_shift"               , "param_right_type":"int", "param_list":  [-1]},
+   {"subject_id": 3,  "short_text": "COMBAT SCENE",               "left_text": "COMBAT SCENE",                              "complexity": "simple",  "right_text":"",               "param_left_type": ""                        , "param_right_type":"int"},
+   {"subject_id": 4,  "short_text": "STATUS OF SPECIFIC TARGET",  "left_text": "STATUS_SPE OF {}",                          "complexity": "simple",  "right_text":"",               "param_left_type": "target_advanced_specific", "param_right_type":"status_ai"},
+   {"subject_id": 5,  "short_text": "STATUS OF GENERIC TARGET",   "left_text": "STATUS_GEN OF {}",                          "complexity": "simple",  "right_text":"",               "param_left_type": "target_advanced_generic" , "param_right_type":"status_ai"},
+   {"subject_id": 6,  "short_text": "NUMBER OF MEMBER",           "left_text": "NUMBER OF MEMBER OF {}",                    "complexity": "simple",  "right_text":"",               "param_left_type": "target_advanced_generic" , "param_right_type":"int"},
+   {"subject_id": 9,  "short_text": "ALIVE",                      "left_text": "ALIVE",                                     "complexity": "simple",  "right_text":"",               "param_left_type": ""                        , "param_right_type":"target_advanced_specific"},
+   {"subject_id": 10, "short_text": "ATTACKER",                   "left_text": "ATTACKER",                                  "complexity": "simple",  "right_text":"",               "param_left_type": "subject10"               , "param_right_type":"complex"},
+   {"subject_id": 14, "short_text": "GROUP LEVEL",                "left_text": "GROUP LEVEL OF {}",                         "complexity": "simple",  "right_text":"",               "param_left_type": "target_advanced_generic" , "param_right_type":"int"},
+   {"subject_id": 15, "short_text": "ALIVE IN SLOT",              "left_text": "ALLY IN SLOT {}",                           "complexity": "complex", "right_text":"ALIVE",          "param_left_type": "int_right"               , "param_right_type":"alive"},
+   {"subject_id": 16, "short_text": "GENDER CHECK",               "left_text": "AT LEAST ONE ENEMY ALIVE HAS GENDER",       "complexity": "simple",  "right_text":"",               "param_left_type": ""                        , "param_right_type":"gender"},
+   {"subject_id": 17, "short_text": "GFORCE OBTAINED",            "left_text": "Gforce to be stolen",                       "complexity": "simple", "right_text":"Not yet stolen", "param_left_type": "const"                   , "param_right_type":"const", "param_list":  [200, 204]  },
+   {"subject_id": 18, "short_text": "ODIN OBTAINED",              "left_text": "{} POSSESS ODIN",                           "complexity": "simple",  "right_text":"",               "param_left_type": "target_advanced_generic" , "param_right_type":"int"},
+   {"subject_id": 19, "short_text": "COUNTDOWN",                  "left_text": "COUNTDOWN",                                 "complexity": "simple",  "right_text":"",               "param_left_type": ""                        , "param_right_type":"int"},
+   {"subject_id": 20, "short_text": "STATUS OF ALL IN TEAM",      "left_text": "STATUS OF ALL IN {}",                       "complexity": "simple",  "right_text":"",               "param_left_type": "target_advanced_generic" , "param_right_type":"status_ai"}
 
   ],
   "subject_left_10":[
@@ -162,5 +161,9 @@
     {"id": 4, "data": "Item"},
     {"id": 6, "data": "Draw"},
     {"id": 254, "data": "G-Force"}
+  ],
+  "activate_type": [
+    {"id": 0, "name": "DEACTIVATE"},
+    {"id": 1, "name": "ACTIVATE"}
   ]
 }
