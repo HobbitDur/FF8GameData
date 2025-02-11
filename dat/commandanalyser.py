@@ -188,12 +188,10 @@ class CommandAnalyser:
                 elif param_type == "aptitude":
                     op_code_list[i] = [x['aptitude_id'] for x in self.game_data.ai_data_json['aptitude_list'] if x['text'] == op_code_list[i]][0]
                 elif param_type == "battle_text":
-                    index_battle_text_found = [j for j, x in enumerate(self.__battle_text) if x.get_str() == op_code_list[i]]
-                    if index_battle_text_found:
-                        op_code_list[i] = index_battle_text_found[0]
+                    if int(op_code_list[i]) < len(self.__battle_text):
+                        op_code_list[i] = int(op_code_list[i])
                     else:
-                        print(f"Battle text {op_code_list[i]} not found in list : {self.__battle_text}")
-                        op_code_list[i] = 0
+                        print(f"Battle text index {op_code_list[i]} not found in list : {self.__battle_text}")
                 else:
                     print(f"Text data analysis - Unknown type {param_type}, considering a int")
                     op_code_list[i] = int(op_code_list[i])
@@ -389,12 +387,6 @@ class CommandAnalyser:
                 elif type == "percent":
                     param_value.append(str(self.__op_code[op_index] * 10))
                     self.param_possible_list.append([])
-                elif type == "battle_text":
-                    param_value.append(self.__battle_text[self.__op_code[op_index]].get_str())
-                    param_possible_list = []
-                    for i in range(len(self.__battle_text)):
-                        param_possible_list.append({"id": i, "data": self.__battle_text[i].get_str()})
-                    self.param_possible_list.append(param_possible_list)
                 elif type == "bool":
                     param_value.append(str(bool(self.__op_code[op_index])))
                     self.param_possible_list.append([{"id": 0, "data": "True"}, {"id": 1, "data": "False"}])
@@ -465,6 +457,15 @@ class CommandAnalyser:
                     else:
                         possible_ability_values.append({'id': 0, 'data': "None"})  # 253 for None value is often used by monsters.
                     self.param_possible_list.append(possible_ability_values)
+
+                elif type == "battle_text":
+                    if self.__op_code[op_index] < len(self.__battle_text):
+                        battle_text_str = self.__battle_text[self.__op_code[op_index]].get_str()
+                        param_value.append(self.__op_code[op_index])
+                        self.param_possible_list.append(self.__get_possible_battle_text())
+                        self.__raw_text_added.append({"id": len(param_value) - 1, "text": " (" + battle_text_str + " )", "text_html": " (" + battle_text_str + " )"})
+                    else:
+                        param_value.append("UNKNOWN BATTLE TEXT")
                 elif type == "ability":
                     if self.__op_code[op_index] < len(self.game_data.enemy_abilities_data_json["abilities"]):
                         param_value.append(self.game_data.enemy_abilities_data_json["abilities"][self.__op_code[op_index]]['name'])
@@ -582,6 +583,9 @@ class CommandAnalyser:
 
     def __get_possible_ability(self):
         return [{'id': val_dict['id'], 'data': val_dict['name']} for id, val_dict in enumerate(self.game_data.enemy_abilities_data_json["abilities"])]
+
+    def __get_possible_battle_text(self):
+        return [{'id': i, 'data': data.get_str()} for i, data in enumerate(self.__battle_text)]
 
     def __op_24_analysis(self, op_code):
         ret = self.__op_01_analysis(op_code)
