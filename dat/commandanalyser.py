@@ -1,3 +1,4 @@
+from html import escape
 from idlelib.undo import Command
 
 from ..gamedata import GameData
@@ -187,7 +188,7 @@ class CommandAnalyser:
                 elif param_type == "target_basic":
                     op_code_list[i] = [x['id'] for x in self.__get_target_list(advanced=False, specific=False) if x['data'] == op_code_list[i]][0]
                 elif param_type == "comparator":
-                    op_code_list[i] = self.game_data.ai_data_json['list_comparator'].index(op_code_list[i])
+                    op_code_list[i] = self.game_data.ai_data_json['list_comparator_ifritAI'].index(op_code_list[i])
                 elif param_type == "status_ai":
                     op_code_list[i] = [x['id'] for x in self.game_data.status_data_json['status_ai'] if x['name'] == op_code_list[i]][0]
                 elif param_type == "magic_type":
@@ -605,26 +606,25 @@ class CommandAnalyser:
         return [{'id': val_dict['id'], 'data': val_dict['name']} for id, val_dict in enumerate(self.game_data.ai_data_json["activate_type"])]
 
     def __op_35_analysis(self, op_code):
+        op_info = [x for x in self.game_data.ai_data_json['op_code_info'] if x['op_code'] == 35][0]
         jump = int.from_bytes(bytearray([op_code[0], op_code[1]]), byteorder='little')
         self.param_possible_list.append([])
         self.param_possible_list.append([])
         if jump == 0:
-            return ['ENDIF', []]
+            return [op_info['text'][0], []]
         else:
-            return ['JUMP {} bytes forward', [jump]]
+            return [op_info['text'][1], [jump]]
 
     def __op_45_analysis(self, op_code):
         if op_code[0] < len(self.game_data.magic_data_json['magic_type']):
             element = self.game_data.magic_data_json['magic_type'][op_code[0]]['name']
         else:
             element = "UNKNOWN ELEMENT TYPE"
-
         target = op_code[1] + 256 * op_code[2]
         element_val = 900 - target
-        self.param_possible_list.append(self.__get_possible_magic())
+        self.param_possible_list.append(self.__get_possible_magic_type())
         self.param_possible_list.append([])
-        self.param_possible_list.append([])
-        op_info = [x for x in self.game_data.ai_data_json['op_code_info'] if x['id'] == 45][0]
+        op_info = [x for x in self.game_data.ai_data_json['op_code_info'] if x['op_code'] == 45][0]
         return [op_info['text'], [element, element_val]]
 
     def __op_02_analysis(self, op_code):
