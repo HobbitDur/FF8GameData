@@ -587,11 +587,6 @@ class CommandAnalyser:
     def __get_possible_battle_text(self):
         return [{'id': i, 'data': data.get_str()} for i, data in enumerate(self.__battle_text)]
 
-    def __op_24_analysis(self, op_code):
-        ret = self.__op_01_analysis(op_code)
-        ret[0] += ' + unknown action'
-        return [ret[0], ret[1]]
-
     def __op_35_analysis(self, op_code):
         jump = int.from_bytes(bytearray([op_code[0], op_code[1]]), byteorder='little')
         self.param_possible_list.append([])
@@ -618,24 +613,6 @@ class CommandAnalyser:
         self.param_possible_list.append([])
         self.param_possible_list.append([])
         return ['SET DAMAGE TAKEN BY {} to {}%', [element, element_val]]
-
-    def __op_26_analysis(self, op_code):
-        analysis = self.__op_01_analysis(op_code)
-        analysis[0] += ' AND LOCK BATTLE'
-        return analysis
-
-    def __op_01_analysis(self, op_code):
-        if op_code[0] < len(self.__battle_text):
-            ret = 'SHOW BATTLE TEXT: {}'
-            param_return = [self.__battle_text[op_code[0]].get_str()]
-        else:
-            ret = "/!\\SHOW BATTLE BUT NO BATTLE TO SHOW"
-            param_return = []
-        possible_param = []
-        for i in range(len(self.__battle_text)):
-            possible_param.append({'id': i, 'data': self.__battle_text[i].get_str()})
-        self.param_possible_list.append(possible_param)
-        return [ret, param_return]
 
     def __op_02_analysis(self, op_code):
         # op_02 = ['subject_id', 'left condition (target)', 'comparator', 'right condition (value)', 'jump1', 'jump2', 'debug']
