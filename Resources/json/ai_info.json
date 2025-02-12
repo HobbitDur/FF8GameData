@@ -98,7 +98,6 @@
    {"subject_id": 18, "short_text": "ODIN OBTAINED",              "left_text": "{} POSSESS ODIN",                           "complexity": "simple",  "right_text":"",               "param_left_type": "target_advanced_generic" , "param_right_type":"int"},
    {"subject_id": 19, "short_text": "COUNTDOWN",                  "left_text": "COUNTDOWN",                                 "complexity": "simple",  "right_text":"",               "param_left_type": ""                        , "param_right_type":"int"},
    {"subject_id": 20, "short_text": "STATUS OF ALL IN TEAM",      "left_text": "STATUS OF ALL IN {}",                       "complexity": "simple",  "right_text":"",               "param_left_type": "target_advanced_generic" , "param_right_type":"status_ai"}
-
   ],
   "subject_left_10":[
    {"param_id": 0, "text": ["LAST ATTACK DAMAGE TYPE IS"]},
@@ -121,7 +120,7 @@
     {"param_id": 209, "text": "NEW ALLY", "param_type": "", "comment":  "Shiva"}
   ],
   "target_advanced_specific": [
-    {"param_id": 200, "text": "{}", "param_type": "monster_name", "comment":  ""},
+    {"param_id": 200, "text": "SELF", "param_type": "", "comment":  ""},
     {"param_id": 203, "text": "LAST ATTACKER", "param_type": "", "comment":  ""}
   ],
   "target_advanced_generic": [
