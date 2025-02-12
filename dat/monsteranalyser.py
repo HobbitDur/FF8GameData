@@ -6,7 +6,7 @@ from typing import List
 from .sequenceanalyser import SequenceAnalyser
 from ..GenericSection.ff8text import FF8Text
 from ..gamedata import GameData, AIData
-from .commandanalyser import CommandAnalyser
+from .commandanalyser import CommandAnalyser, CurrentIfType
 
 test = []
 
@@ -529,6 +529,7 @@ class MonsterAnalyser:
         list_code = [init_code, ennemy_turn_code, counterattack_code, death_code, before_dying_or_hit_code]
         self.battle_script_data['ai_data'] = []
         for index, code in enumerate(list_code):
+            current_if_type = CurrentIfType.NONE
             index_read = 0
             list_result = []
             while index_read < len(code):
@@ -541,13 +542,10 @@ class MonsterAnalyser:
                     op_code_ref = op_code_ref[0]
                     start_param = index_read + 1
                     end_param = index_read + 1 + op_code_ref['size']
-                    if list_result:
-                        previous_command = list_result[-1]
-                    else:
-                        previous_command = None
                     command = CommandAnalyser(code[index_read], code[start_param:end_param], game_data=game_data,
                                               battle_text=self.battle_script_data['battle_text'],
-                                              info_stat_data=self.info_stat_data, color=game_data.AIData.COLOR, previous_command=previous_command)
+                                              info_stat_data=self.info_stat_data, color=game_data.AIData.COLOR, current_if_type=current_if_type)
+                    current_if_type = command.get_current_if_type()
                     list_result.append(command)
                     index_read += 1 + op_code_ref['size']
             self.battle_script_data['ai_data'].append(list_result)

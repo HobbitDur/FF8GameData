@@ -211,7 +211,6 @@ class GameData:
         self.exe_data_json = {}
         self.ai_data_json = {}
         self.anim_sequence_data_json = {}
-        self.game_info_test = {}  # Temp for xlsx
         self.__init_hex_to_str_table()
 
     def __init_hex_to_str_table(self):
