@@ -36,10 +36,6 @@ class MonsterAnalyser:
         self.sound_data = bytes()  # Section 9
         self.sound_unknown_data = bytes()  # Section 10
         self.sound_texture_data = bytes()  # Section 11
-        self.was_physical = False
-        self.was_magic = False
-        self.was_item = False
-        self.was_gforce = False
 
     def __str__(self):
         return "Name: {} \nData:{}".format(self.info_stat_data['monster_name'],
