@@ -27,7 +27,7 @@
 "list_comparator_ifritAI_html": ["==", "&lt;", "&gt;", "!=", "&lt;=", "&gt;="],
 "list_comparator": ["==", "<", ">", "≠", "≤", "≥"],
 "op_code_info":[
-    {"op_code": 0,   "size": 0, "func_name":"return", "short_text":"Stop" ,"text": "Stop", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Stop"},
+    {"op_code": 0,   "size": 0, "func_name":"stop", "short_text":"Stop" ,"text": "Stop", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Stop"},
     {"op_code": 1,   "size": 1, "func_name":"print", "short_text":"Show text" ,"text": "Show text ID {}", "param_index": [0], "complexity": "simple", "param_type":  ["battle_text"], "param_list":  [], "comment":  "Show battle text"},
     {"op_code": 2,   "size": 7, "func_name":"if", "short_text":"If" ,"text": "If with Subject ID {}, {} {} {}  | ELSE jump {} bytes forward", "param_index": [], "complexity": "complex", "param_type":  [], "param_list":  [], "comment":  "IF condition"},
     {"op_code": 4,   "size": 1, "func_name":"target", "short_text":"Target" ,"text": "Target {}", "param_index": [0], "complexity": "simple", "param_type":  ["target_basic"], "param_list":  [], "comment":  "Target"},
