@@ -102,7 +102,6 @@ class MonsterAnalyser:
                     self.append_command(index_section, new_end)
                     section_size += 1
 
-
     def write_data_to_file(self, game_data: GameData, dat_path):
         print("Writing monster {}".format(self.info_stat_data["monster_name"].get_str()))
         raw_data_to_write = bytearray()
@@ -541,6 +540,11 @@ class MonsterAnalyser:
                     command = CommandAnalyser(code[index_read], code[start_param:end_param], game_data=game_data,
                                               battle_text=self.battle_script_data['battle_text'],
                                               info_stat_data=self.info_stat_data, color=game_data.AIData.COLOR, current_if_type=current_if_type)
+                    # Weird c0m030 case where the jump is longer than section. Replacing with a stop in this case.
+                    if command.get_id() == 35 and int.from_bytes(bytearray([command.get_op_code()[0], command.get_op_code()[1]]), byteorder="little") > len(code):
+                        new_jump_size = len(code) - end_param - 1
+                        command.set_op_code(list(new_jump_size.to_bytes(length=2, byteorder="little")))
+
                     current_if_type = command.get_current_if_type()
                     list_result.append(command)
                     index_read += 1 + op_code_ref['size']
@@ -555,4 +559,3 @@ class MonsterAnalyser:
 
     def remove_command(self, code_section_id: int, index_removal: int = 0):
         del self.battle_script_data['ai_data'][code_section_id][index_removal]
-
