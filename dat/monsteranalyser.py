@@ -541,7 +541,7 @@ class MonsterAnalyser:
                                               battle_text=self.battle_script_data['battle_text'],
                                               info_stat_data=self.info_stat_data, color=game_data.AIData.COLOR, current_if_type=current_if_type)
                     # Weird c0m030 case where the jump is longer than section. Replacing with a stop in this case.
-                    if command.get_id() == 35 and int.from_bytes(bytearray([command.get_op_code()[0], command.get_op_code()[1]]), byteorder="little") > len(code):
+                    if command.get_id() == 35 and int.from_bytes(bytearray([command.get_op_code()[0], command.get_op_code()[1]]), byteorder="little") > len(code) - end_param - 1:
                         new_jump_size = len(code) - end_param - 1
                         command.set_op_code(list(new_jump_size.to_bytes(length=2, byteorder="little")))
 
