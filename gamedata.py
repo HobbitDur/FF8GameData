@@ -35,6 +35,7 @@ class FileType(Enum):
     DAT = 6
     REMASTER_DAT = 7
     FIELD_FS = 8
+    WORLD_FS = 9
 
 
 class SectionType(Enum):
