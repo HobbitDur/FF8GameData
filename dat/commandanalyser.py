@@ -147,7 +147,6 @@ class CommandAnalyser:
         else:
             print(f"Didn't find op id: {self.get_id()}, assuming stop")
             op_info = self.game_data.ai_data_json['op_code_info'][0]
-
         # Analysing simple cases by transforming the text into an integer
         if op_info['complexity'] == "simple":
             # Putting the parameters type in the correct order
@@ -352,6 +351,8 @@ class CommandAnalyser:
                 print("Unexpected magic type for elem id 45")
             op_code_list[1] = int(op_code_list[1])
             op_code_list[2] = int(op_code_list[2])
+        elif op_info['op_code'] == 35:
+            pass
 
         self.reset_data()
         self.__op_code = op_code_list
@@ -600,7 +601,7 @@ class CommandAnalyser:
 
         # Jump backward
         if jump & 0x8000 != 0:
-            jump = self.__twos_complement(jump, 16)
+            jump = self.twos_complement(jump, 16)
         if jump == 0:
             return [op_info['text'][0], []]
         else:
@@ -916,7 +917,7 @@ class CommandAnalyser:
             print("Unexpected target with id: {}".format(id))
             return "UNKNOWN TARGET"
     @staticmethod
-    def __twos_complement(value, bit_length):
+    def twos_complement(value, bit_length):
         """
         Calculate the two's complement of a value with a given bit length.
 
@@ -932,5 +933,13 @@ class CommandAnalyser:
         if value >> (bit_length - 1):
             # Calculate two's complement for negative numbers
             value = value - (1 << bit_length)
-
         return value
+
+    def twos_complement_opposite_16bit(value: int) -> int:
+        """
+        Convert a signed 16-bit integer (-32768 to 32767) into its unsigned 16-bit representation (0-65535).
+
+        :param value: Signed 16-bit integer (-32768 to 32767)
+        :return: Unsigned 16-bit integer (0 to 65535)
+        """
+        return value & 0xFFFF  # Mask to keep only the lower 16 bits
