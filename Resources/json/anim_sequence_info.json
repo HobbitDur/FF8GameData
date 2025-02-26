@@ -7,7 +7,7 @@
   {"op_code": "0xa3",   "size": 3,"text": "Setup animation with ID {} for all next end of anim seq", "param_index": [0], "complexity": "simple", "param_type":  ["anim_id"], "param_list":  [], "comment":  ""},
   {"op_code": "0xa5",   "size": 2,"text": "Aura ID {}", "param_index": [0], "complexity": "simple", "param_type":  ["aura_id"], "param_list":  [], "comment":  ""},
   {"op_code": "0xa7",   "size": 1,"text": "Call sequence ID {}", "param_index": [0], "complexity": "simple", "param_type":  ["seq_id"], "param_list":  [], "comment":  ""},
-  {"op_code": "0xa8",   "size": 1,"text": "Visibility is {}", "param_index": [0], "complexity": "simple", "param_type":  ["visibility"], "param_list":  [], "comment":  ""},
+  {"op_code": "0xa8",   "size": 1,"text": "Visibility is {}", "param_index": [0], "complexity": "simple", "param_type":  ["visibility"], "param_list":  [], "comment":  "A8 03 = disappear, A8 02 = reappear"},
   {"op_code": "0xa9",   "size": 0,"text": "Normal quit", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  ""},
   {"op_code": "0xb4",   "size": 2,"text": "Attack sequence effect ID {}", "param_index": [0], "complexity": "simple", "param_type":  ["effect_id"], "param_list":  [], "comment":  ""},
   {"op_code": "0xb5",   "size": 2,"text": "Play local sound with ID {}", "param_index": [0], "complexity": "simple", "param_type":  ["local_sound_id"], "param_list":  [], "comment":  ""},

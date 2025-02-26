@@ -597,6 +597,10 @@ class CommandAnalyser:
         jump = int.from_bytes(bytearray([op_code[0], op_code[1]]), byteorder='little')
         self.param_possible_list.append([])
         self.param_possible_list.append([])
+
+        # Jump backward
+        if jump & 0x8000 != 0:
+            jump = self.__twos_complement(jump, 16)
         if jump == 0:
             return [op_info['text'][0], []]
         else:
@@ -911,3 +915,22 @@ class CommandAnalyser:
         else:
             print("Unexpected target with id: {}".format(id))
             return "UNKNOWN TARGET"
+    @staticmethod
+    def __twos_complement(value, bit_length):
+        """
+        Calculate the two's complement of a value with a given bit length.
+
+        :param value: The integer value.
+        :param bit_length: The number of bits for the representation.
+        :return: The two's complement value.
+        """
+        # Mask to limit the value to the specified bit length
+        mask = (1 << bit_length) - 1
+        value = value & mask
+
+        # Check if the sign bit is set (negative number)
+        if value >> (bit_length - 1):
+            # Calculate two's complement for negative numbers
+            value = value - (1 << bit_length)
+
+        return value
