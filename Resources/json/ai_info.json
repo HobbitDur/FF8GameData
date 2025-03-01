@@ -1,5 +1,6 @@
 {
 "list_var": [
+  {"op_code": 80,  "var_type":"global",  "var_name": "GlobalVar80",  "used_in":  "TonberryDefeated"},
   {"op_code": 81,  "var_type":"global",  "var_name": "GlobalVar81",  "used_in":  "TonberryDefeated"},
   {"op_code": 82,  "var_type":"global",  "var_name": "TonberrySrIsDefeated",  "used_in":  "TonberrySrIsDefeated"},
   {"op_code": 83,  "var_type":"global",  "var_name": "UfoIsDefeated",  "used_in":  "UfoIsDefeated"},
