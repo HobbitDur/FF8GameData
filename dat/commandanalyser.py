@@ -112,9 +112,9 @@ class CommandAnalyser:
             for text_added in self.__raw_text_added:
                 if text_added['id'] == i:
                     if html:
-                        parameters[i] = parameters[i] + text_added['text_html']
+                        parameters[i] = str(parameters[i]) + text_added['text_html']
                     else:
-                        parameters[i] = parameters[i] + text_added['text']
+                        parameters[i] = str(parameters[i]) + text_added['text']
         if not raw:
             text = text.format(*parameters)
         if with_size:
@@ -593,6 +593,15 @@ class CommandAnalyser:
     def __get_possible_activate(self):
         return [{'id': val_dict['id'], 'data': val_dict['name']} for id, val_dict in enumerate(self.game_data.ai_data_json["activate_type"])]
 
+    def __get_possible_battle_var(self):
+        return [{'id': val_dict['op_code'], 'data': val_dict['var_name']} for id, val_dict in enumerate(self.game_data.ai_data_json["list_var"]) if val_dict['var_type'] == "battle"]
+
+    def __get_possible_local_var(self):
+        return [{'id': val_dict['op_code'], 'data': val_dict['var_name']} for id, val_dict in enumerate(self.game_data.ai_data_json["list_var"]) if val_dict['var_type'] == "local"]
+
+    def __get_possible_global_var(self):
+        return [{'id': val_dict['op_code'], 'data': val_dict['var_name']} for id, val_dict in enumerate(self.game_data.ai_data_json["list_var"]) if val_dict['var_type'] == "global"]
+
     def __op_35_analysis(self, op_code):
         op_info = [x for x in self.game_data.ai_data_json['op_code_info'] if x['op_code'] == 35][0]
         jump = int.from_bytes(bytearray([op_code[0], op_code[1]]), byteorder='little')
@@ -676,7 +685,15 @@ class CommandAnalyser:
                     param_left = int(op_code_right_condition_param) + shift
                 elif if_current_subject['param_left_type'] == "const":
                     param_left = if_current_subject['left_text']
-                    list_param_possible_left.extend([{"id": if_current_subject['param_list'][0], "data": if_current_subject['left_text']}])
+                elif if_current_subject['param_left_type'] == "var":
+                    param_left = [x['op_code'] for x in self.game_data.ai_data_json['list_var'] if x['op_code'] == op_code_left_condition_param][0]
+                    list_param_possible_left.extend([self.__get_possible_var()])
+                elif if_current_subject['param_left_type'] == "battle_var":
+                    param_left = [x['op_code'] for x in self.game_data.ai_data_json['list_var'] if x['op_code'] == op_code_left_condition_param][0]
+                    list_param_possible_left.extend([self.__get_possible_battle_var()])
+                elif if_current_subject['param_left_type'] == "global_var":
+                    param_left = [x['op_code'] for x in self.game_data.ai_data_json['list_var'] if x['op_code'] == op_code_left_condition_param][0]
+                    list_param_possible_left.extend([self.__get_possible_global_var()])
                 elif if_current_subject['param_left_type'] == "subject10":
                     param_left = []
                     if op_code_left_condition_param >= 200:  # Basic target

@@ -83,8 +83,6 @@ class MonsterAnalyser:
         except IndexError as e:
             print(f"Garbage file {self.origin_file_name}")
             raise GarbageFileError
-        except Exception as e:
-            print(e)
 
     def __update_stop(self, game_data: GameData):
         """To remove all too much 0 and add new one till %4 for rainbow fix"""
@@ -211,30 +209,36 @@ class MonsterAnalyser:
         # Now analysing the text part. offset_value_current_ai_section point then to the end of AI sub-section, so the start of text offset
         raw_text_section = bytearray()
         raw_text_offset = bytearray()
-
+        current_offset = 0
         for battle_text in self.battle_script_data['battle_text']:
-            raw_text_offset.extend(int(len(raw_text_section)).to_bytes(length=2, byteorder="little"))
-            battle_text.fill(4)  # Rainbow fix
+            raw_text_offset.extend(current_offset.to_bytes(length=2, byteorder="little"))
+            current_offset += len(battle_text)
+        while len(raw_text_offset) % 4 != 0:
+            raw_text_offset.extend([0x00])
+        for battle_text in self.battle_script_data['battle_text']:
             raw_text_section.extend(battle_text.get_data_hex())
+        while len(raw_text_section) % 4 != 0:
+            raw_text_section.extend([0x00])
+
 
         # Now computing offset
         # Number of subsection doesn't change, neither the offset to AI-sub-section
         self.__add_section_raw_data_from_game_data(8, game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_NB_SUB)
         self.__add_section_raw_data_from_game_data(8, game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_OFFSET_AI_SUB)
+
         # Now adding others offset
         current_offset_section_compute = 0
         for offset_sect in game_data.AIData.SECTION_BATTLE_SCRIPT_BATTLE_SCRIPT_HEADER_LIST_DATA:
             current_offset_section_compute += offset_sect['size']
-
         current_offset_section_compute += len(raw_ai_offset)
         current_offset_section_compute += len(raw_ai_section)
         self.section_raw_data[8].extend(
-            current_offset_section_compute.to_bytes(game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_OFFSET_TEXT_OFFSET_SUB['size'], "little"))
+            current_offset_section_compute.to_bytes(game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_OFFSET_TEXT_OFFSET_SUB['size'], game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_OFFSET_TEXT_OFFSET_SUB['byteorder']))
         current_offset_section_compute += len(raw_text_offset)
         self.section_raw_data[8].extend(
-            current_offset_section_compute.to_bytes(game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_OFFSET_TEXT_SUB['size'], "little"))
-        current_offset_section_compute += len(raw_text_section)
+            current_offset_section_compute.to_bytes(game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_OFFSET_TEXT_SUB['size'], game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_OFFSET_TEXT_SUB['byteorder']))
 
+        current_offset_section_compute += len(raw_text_section)
         # Now adding the data
         self.section_raw_data[8].extend(raw_ai_offset)
         self.section_raw_data[8].extend(raw_ai_section)
@@ -475,8 +479,8 @@ class MonsterAnalyser:
             start_data = section_offset + self.battle_script_data['offset_text_offset'] + i
             end_data = start_data + game_data.AIData.SECTION_BATTLE_SCRIPT_TEXT_OFFSET['size']
             text_list_raw_data = self.file_raw_data[start_data:end_data]
-            # if i > 0 and text_list_raw_data == b'\x00\x00':  # Weird case where there is several pointer by the diff but several are 0 (which point to the same value)
-            #    break
+            if i > 0 and text_list_raw_data == b'\x00\x00':  # Padding added to have %4 size
+                break
             self.battle_script_data['text_offset'].append(
                 int.from_bytes(text_list_raw_data, byteorder=game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_OFFSET_TEXT_OFFSET_SUB['byteorder']))
         # Reading text sub-section
