@@ -686,18 +686,40 @@ class CommandAnalyser:
                 elif if_current_subject['param_left_type'] == "const":
                     param_left = if_current_subject['left_text']
                 elif if_current_subject['param_left_type'] == "var":
-                    param_left = [x['op_code'] for x in self.game_data.ai_data_json['list_var'] if x['op_code'] == op_code_left_condition_param][0]
-                    list_param_possible_left.extend([self.__get_possible_var()])
+                    param_left = [x['var_name'] for x in self.game_data.ai_data_json['list_var'] if x['op_code'] == op_code_left_condition_param]
+                    if param_left:
+                        param_left = param_left[0]
+                    else:
+                        param_left = "Unknown var"
+                        print(f"Unexpected var with code {op_code_left_condition_param}")
+                elif if_current_subject['param_left_type'] == "local_var":
+                    param_left = [x['var_name'] for x in self.game_data.ai_data_json['list_var'] if x['op_code'] == op_code_left_condition_param]
+                    if param_left:
+                        param_left = param_left[0]
+                    else:
+                        param_left = "Unknown var"
+                        print(f"Unexpected local var with code {op_code_left_condition_param}")
+                    list_param_possible_left.extend(self.__get_possible_local_var())
                 elif if_current_subject['param_left_type'] == "battle_var":
-                    param_left = [x['op_code'] for x in self.game_data.ai_data_json['list_var'] if x['op_code'] == op_code_left_condition_param][0]
-                    list_param_possible_left.extend([self.__get_possible_battle_var()])
+                    param_left = [x['var_name'] for x in self.game_data.ai_data_json['list_var'] if x['op_code'] == subject_id]
+                    if param_left:
+                        param_left = param_left[0]
+                    else:
+                        param_left = "Unknown var"
+                        print(f"Unexpected battle var with code {op_code_left_condition_param}")
+                    list_param_possible_left.extend(self.__get_possible_battle_var())
                 elif if_current_subject['param_left_type'] == "global_var":
-                    param_left = [x['op_code'] for x in self.game_data.ai_data_json['list_var'] if x['op_code'] == op_code_left_condition_param][0]
-                    list_param_possible_left.extend([self.__get_possible_global_var()])
+                    param_left = [x['var_name'] for x in self.game_data.ai_data_json['list_var'] if x['op_code'] == subject_id]
+                    if param_left:
+                        param_left = param_left[0]
+                    else:
+                        param_left = "Unknown var"
+                        print(f"Unexpected global var with code {op_code_left_condition_param}")
+                    list_param_possible_left.extend(self.__get_possible_global_var())
                 elif if_current_subject['param_left_type'] == "subject10":
                     param_left = []
                     if op_code_left_condition_param >= 200:  # Basic target
-                        specific_left_text = [x['text'] for x in self.game_data.ai_data_json['target_basic'] if x['param_id'] == op_code_left_condition_param]
+                        specific_left_text = [x['text'] for x in self.game_data.ai_data_json['target_basic'] if x['param_id'] == subject_id]
                         if specific_left_text:
                             specific_left_text = specific_left_text[0]
                         else:
