@@ -229,7 +229,7 @@ class CommandAnalyser:
             elif if_subject_dict['param_left_type'] == "int_right":
                 temp_int_right = if_subject_left_parameter_text
                 op_code_list[1] = 200  # Always ALIVE
-            elif if_subject_dict['param_left_type'] == "var":
+            elif if_subject_dict['param_left_type'] in ("var", "local_var", "battle_var", "global_var"):
                 op_code_list[1] = [x['op_code'] for x in self.game_data.ai_data_json['list_var'] if x['var_name'] == if_subject_left_parameter_text][0]
             elif if_subject_dict['param_left_type'] == "subject10":  # We don't use if_subject_left_parameter_text
                 subject10_list = [x['param_id'] for x in self.game_data.ai_data_json['subject_left_10'] if op_code_list[1] in x['text']]
@@ -272,6 +272,8 @@ class CommandAnalyser:
                 op_code_list[3] = int(int(r_cond.replace(' %', '')) / 10)
             elif if_subject_dict['param_right_type'] == "status_ai":
                 op_code_list[3] = [x['id'] for x in self.game_data.status_data_json['status_ai'] if x['name'] == r_cond][0]
+            elif if_subject_dict['param_right_type'] == "special_byte_check":
+                op_code_list[3] = [x['id'] for x in self.game_data.ai_data_json['special_byte_check'] if x['data'] == r_cond][0]
             elif if_subject_dict['param_right_type'] == "target_advanced_specific":
                 target_list = self.__get_target_list(advanced=True, specific=True)
                 op_code_list[3] = [x['id'] for x in target_list if x['data'] == r_cond][0]
@@ -415,7 +417,7 @@ class CommandAnalyser:
                                 high_text = self.game_data.magic_data_json["magic"][self.info_stat_data['abilities_high'][i]['id']]['name']
                             elif self.info_stat_data['abilities_high'][i]['type'] == 4:  # Item
                                 high_text = self.game_data.item_data_json["items"][self.info_stat_data['abilities_high'][i]['id']]['name']
-                            elif self.info_stat_data['abilities_high'][i]['type'] == 8:  # Ability
+                            elif self.info_stat_data['abilities_high'][i]['type'] in (8, 236):  # Ability
                                 high_text = self.game_data.enemy_abilities_data_json["abilities"][self.info_stat_data['abilities_high'][i]['id']]['name']
                             elif self.info_stat_data['abilities_high'][i]['type'] == 0:  # Emptyness
                                 high_text = "None"
@@ -428,7 +430,7 @@ class CommandAnalyser:
                                 med_text = self.game_data.magic_data_json["magic"][self.info_stat_data['abilities_med'][i]['id']]['name']
                             elif self.info_stat_data['abilities_med'][i]['type'] == 4:  # Item
                                 med_text = self.game_data.item_data_json["items"][self.info_stat_data['abilities_med'][i]['id']]['name']
-                            elif self.info_stat_data['abilities_med'][i]['type'] == 8:  # Ability
+                            elif self.info_stat_data['abilities_med'][i]['type'] in (8, 236):  # Ability
                                 med_text = self.game_data.enemy_abilities_data_json["abilities"][self.info_stat_data['abilities_med'][i]['id']]['name']
                             elif self.info_stat_data['abilities_med'][i]['type'] == 0:  # Emptyness
                                 med_text = "None"
@@ -441,7 +443,7 @@ class CommandAnalyser:
                                 low_text = self.game_data.magic_data_json["magic"][self.info_stat_data['abilities_low'][i]['id']]['name']
                             elif self.info_stat_data['abilities_low'][i]['type'] == 4:  # Item
                                 low_text = self.game_data.item_data_json["items"][self.info_stat_data['abilities_low'][i]['id']]['name']
-                            elif self.info_stat_data['abilities_low'][i]['type'] == 8:  # Ability
+                            elif self.info_stat_data['abilities_low'][i]['type'] in (8, 236):  # Ability
                                 low_text = self.game_data.enemy_abilities_data_json["abilities"][self.info_stat_data['abilities_low'][i]['id']]['name']
                             elif self.info_stat_data['abilities_low'][i]['type'] == 0:  # Emptyness
                                 low_text = "None"
@@ -592,6 +594,9 @@ class CommandAnalyser:
 
     def __get_possible_activate(self):
         return [{'id': val_dict['id'], 'data': val_dict['name']} for id, val_dict in enumerate(self.game_data.ai_data_json["activate_type"])]
+
+    def __get_possible_special_byte_check(self):
+        return [{'id': val_dict['id'], 'data': val_dict['data']} for id, val_dict in enumerate(self.game_data.ai_data_json["special_byte_check"])]
 
     def __get_possible_battle_var(self):
         return [{'id': val_dict['op_code'], 'data': val_dict['var_name']} for id, val_dict in enumerate(self.game_data.ai_data_json["list_var"]) if val_dict['var_type'] == "battle"]
@@ -782,6 +787,15 @@ class CommandAnalyser:
                     list_param_possible_right = self.__get_possible_gender()
                 elif right_param_type == 'int':
                     right_subject = {'text': '{}', 'param': [op_code_right_condition_param]}
+                elif right_param_type == "special_byte_check":
+                    param = [x['data'] for x in self.game_data.ai_data_json['special_byte_check'] if x['id'] == op_code_right_condition_param]
+                    if param:
+                        param = param[0]
+                    else:
+                        param = "Unknown special byte"
+                        print(f"Unexpected special byte with value {op_code_right_condition_param}")
+                    right_subject = {'text': '{}', 'param': [param]}
+                    list_param_possible_right = self.__get_possible_special_byte_check()
                 elif right_param_type == 'status_ai':
                     param = [x['name'] for x in self.game_data.status_data_json["status_ai"] if x['id'] == op_code_right_condition_param]
                     if not param:
