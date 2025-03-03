@@ -149,7 +149,7 @@
     {"param_id": 203, "text": "LAST ATTACKER", "param_type": "", "comment":  ""},
     {"param_id": 204, "text": "ALL ENEMIES", "param_type": "", "comment":  ""},
     {"param_id": 205, "text": "ALL ALLIES", "param_type": "", "comment":  ""},
-    {"param_id": 206, "text": "UNKNOWN", "param_type": "", "comment":  ""},
+    {"param_id": 206, "text": "EVERYONE", "param_type": "", "comment":  ""},
     {"param_id": 207, "text": "RANDOM NONSELF ALLY", "param_type": "", "comment":  "Arconada"},
     {"param_id": 208, "text": "RANDOM ENEMY EACH HIT", "param_type": "", "comment":  "Marsupial with meteor, Omega Weapon with Terra Break"},
     {"param_id": 209, "text": "NEW ALLY", "param_type": "", "comment":  "Shiva"}
@@ -197,6 +197,7 @@
     {"id": 6, "data": "Draw"},
     {"id": 7, "data": "Devour", "comment": "becomes 0 if it fails, but this can't be checked for"},
     {"id": 8, "data": "Monster Attack"},
+    {"id": 12, "data": "Mug"},
     {"id": 14, "data": "Shot", "comment": "becomes 237 on hit, 238 when time expires, but these can't be checked for"},
     {"id": 15, "data": "Blue Magic"},
     {"id": 16, "data": "Slot"},
