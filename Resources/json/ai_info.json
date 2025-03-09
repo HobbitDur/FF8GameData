@@ -140,7 +140,8 @@
    {"param_id": 2, "text": ["SELF TURN COUNTER IS"]},
    {"param_id": 3, "text": ["LAST ATTACKER USED COMMAND TYPE"]},
    {"param_id": 4, "text": ["LAST GFORCE LAUNCH WAS","LAST ACTION LAUNCH WAS"]},
-   {"param_id": 5, "text": ["LAST ATTACK WAS OF ELEMENT"]}
+   {"param_id": 5, "text": ["LAST ATTACK WAS OF ELEMENT"]},
+   {"param_id": 203, "text": ["UNKNOWN"]}
   ],
   "target_basic": [
     {"param_id": 200, "text": "SELF", "param_type": "", "comment":  ""},
