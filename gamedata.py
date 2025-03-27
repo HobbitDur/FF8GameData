@@ -233,7 +233,10 @@ class GameData:
             csv_text = text_file.read()
         number_comma = csv_text.count(',')
         number_semicolon = csv_text.count(';')
-        if number_semicolon >= number_comma:
+        number_pipe = csv_text.count('|')
+        if number_pipe >= number_semicolon and number_pipe >= number_comma:
+            delimiter = "|"
+        elif number_semicolon >= number_pipe and number_semicolon >= number_comma:
             delimiter = ";"
         else:
             delimiter = ","
