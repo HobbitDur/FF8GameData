@@ -571,6 +571,9 @@ class CommandAnalyser:
     def __get_possible_gforce(self):
         return [{'id': val_dict['id'], 'data': val_dict['name']} for id, val_dict in enumerate(self.game_data.gforce_data_json["gforce"])]
 
+    def __get_possible_gforce_shifted_64(self):
+        return [{'id': val_dict['id'] + 64, 'data': val_dict['name']} for id, val_dict in enumerate(self.game_data.gforce_data_json["gforce"])]
+
     def __get_possible_monster(self):
         return [{'id': val_dict['id'], 'data': val_dict['name']} for id, val_dict in enumerate(self.game_data.monster_data_json["monster"])]
 
@@ -813,15 +816,15 @@ class CommandAnalyser:
                 elif right_param_type == 'complex' and subject_id == 10:
                     attack_right_text = "{}"
                     attack_right_condition_param = [str(op_code[3])]
-                    if op_code[1] == 0:
+                    if op_code[1] == 0: #LAST ATTACK DAMAGE TYPE IS
                         list_param_possible_right.extend([{"id": x['id'], "data": x['type']} for x in self.game_data.ai_data_json['attack_type']])
                         attack_right_condition_param = [self.game_data.ai_data_json['attack_type'][op_code_right_condition_param]['type']]
-                    elif op_code[1] == 1:
+                    elif op_code[1] == 1: # LAST ATTACKER IS
                         attack_right_condition_param = [self.__get_target(op_code_right_condition_param, advanced=True, specific=True)]
                         list_param_possible_right.extend(self.__get_possible_target_advanced_specific())
-                    elif op_code[1] == 2:  # Turn counter
+                    elif op_code[1] == 2:  # SELF TURN COUNTER IS
                         attack_right_condition_param = [int(op_code_right_condition_param)]
-                    elif op_code[1] == 3:  # Need to handle better the was_magic
+                    elif op_code[1] == 3:  # LAST ATTACKER USED COMMAND TYPE
                         list_param_possible_right.extend([{"id": x['id'], "data": x['data']} for x in self.game_data.ai_data_json['command_type']])
                         attack_right_condition_param = [x['data'] for x in self.game_data.ai_data_json['command_type'] if
                                                         x['id'] == op_code_right_condition_param]
@@ -837,14 +840,14 @@ class CommandAnalyser:
                             self.__current_if_type = CurrentIfType.GFORCE
                         else:
                             print(f"Unknown condition type for subject 10 op code 3: {op_code_right_condition_param}")
-                    elif op_code[1] == 4:
+                    elif op_code[1] == 4: # "LAST GFORCE LAUNCH WAS","LAST ACTION LAUNCH WAS"
                         if op_code_right_condition_param >= 64:
                             attack_right_condition_param = [self.game_data.gforce_data_json["gforce"][op_code_right_condition_param - 64]['name']]
-                            list_param_possible_right.extend(self.__get_possible_gforce())
+                            list_param_possible_right.extend(self.__get_possible_gforce_shifted_64())
                         else:
                             if self.__current_if_type == CurrentIfType.GFORCE:
-                                attack_right_condition_param = [self.game_data.gforce_data_json["gforce"][op_code_right_condition_param - 64]['name']]
-                                list_param_possible_right.extend(self.__get_possible_magic())
+                                attack_right_condition_param = [self.game_data.gforce_data_json["gforce"][op_code_right_condition_param]['name']]
+                                list_param_possible_right.extend(self.__get_possible_gforce())
                             if self.__current_if_type == CurrentIfType.MAGIC:
                                 ret = self.game_data.magic_data_json["magic"][op_code_right_condition_param]['name']
                                 list_param_possible_right.extend(self.__get_possible_magic())

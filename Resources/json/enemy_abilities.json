@@ -96,7 +96,7 @@
     {"id":85, "name":"Sigh"},
     {"id":86, "name":"Curse"},
     {"id":87, "name":"Attack (Cariatide)"},
-    {"id":88, "name":"Ifrit HP < 50%"},
+    {"id":88, "name":"Ifrit HP below 50%"},
     {"id":89, "name":"Ifrit Shiva Summoned 1st time"},
     {"id":90, "name":"Ifrit Death"},
     {"id":91, "name":"Ifrit Defeated by Shiva"},

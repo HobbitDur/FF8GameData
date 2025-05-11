@@ -66,7 +66,7 @@ class MonsterAnalyser:
             # No need to analyze Section 1 : Skeleton
             # No need to analyze Section 2 : Model geometry
             # No need to analyze Section 3 : Model animation
-            self.__analyze_model_animation(game_data)
+            # self.__analyze_model_animation(game_data)
             # No need to analyze Section 4 : Unknown
             # self.__analyze_section_4(game_data)
             # No need to analyze Section 5 : Sequence Animation
