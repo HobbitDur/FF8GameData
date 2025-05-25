@@ -161,6 +161,15 @@ class CommandAnalyser:
                     op_code_list[i] = int(op_code_list[i]) - shift
                 elif param_type == "percent":
                     op_code_list[i] = int(int(op_code_list[i]) / 10)
+                elif param_type == "bool":
+                    bool_text_up = op_code_list[i].upper()
+                    if bool_text_up == "TRUE":
+                        op_code_list[i] = 1
+                    elif bool_text_up == "FALSE":
+                        op_code_list[i] = 0
+                    else:
+                        print(f"Unexpected bool value: {bool_text_up}, should be True or False. Considering True")
+                        op_code_list[i] = 1
                 elif param_type == "var":
                     op_code_list[i] = [x['op_code'] for x in self.game_data.ai_data_json['list_var'] if x['var_name'] == op_code_list[i]][0]
                 elif param_type == "activate":
@@ -602,13 +611,16 @@ class CommandAnalyser:
         return [{'id': val_dict['id'], 'data': val_dict['data']} for id, val_dict in enumerate(self.game_data.ai_data_json["special_byte_check"])]
 
     def __get_possible_battle_var(self):
-        return [{'id': val_dict['op_code'], 'data': val_dict['var_name']} for id, val_dict in enumerate(self.game_data.ai_data_json["list_var"]) if val_dict['var_type'] == "battle"]
+        return [{'id': val_dict['op_code'], 'data': val_dict['var_name']} for id, val_dict in enumerate(self.game_data.ai_data_json["list_var"]) if
+                val_dict['var_type'] == "battle"]
 
     def __get_possible_local_var(self):
-        return [{'id': val_dict['op_code'], 'data': val_dict['var_name']} for id, val_dict in enumerate(self.game_data.ai_data_json["list_var"]) if val_dict['var_type'] == "local"]
+        return [{'id': val_dict['op_code'], 'data': val_dict['var_name']} for id, val_dict in enumerate(self.game_data.ai_data_json["list_var"]) if
+                val_dict['var_type'] == "local"]
 
     def __get_possible_global_var(self):
-        return [{'id': val_dict['op_code'], 'data': val_dict['var_name']} for id, val_dict in enumerate(self.game_data.ai_data_json["list_var"]) if val_dict['var_type'] == "global"]
+        return [{'id': val_dict['op_code'], 'data': val_dict['var_name']} for id, val_dict in enumerate(self.game_data.ai_data_json["list_var"]) if
+                val_dict['var_type'] == "global"]
 
     def __op_35_analysis(self, op_code):
         op_info = [x for x in self.game_data.ai_data_json['op_code_info'] if x['op_code'] == 35][0]
@@ -816,10 +828,10 @@ class CommandAnalyser:
                 elif right_param_type == 'complex' and subject_id == 10:
                     attack_right_text = "{}"
                     attack_right_condition_param = [str(op_code[3])]
-                    if op_code[1] == 0: #LAST ATTACK DAMAGE TYPE IS
+                    if op_code[1] == 0:  # LAST ATTACK DAMAGE TYPE IS
                         list_param_possible_right.extend([{"id": x['id'], "data": x['type']} for x in self.game_data.ai_data_json['attack_type']])
                         attack_right_condition_param = [self.game_data.ai_data_json['attack_type'][op_code_right_condition_param]['type']]
-                    elif op_code[1] == 1: # LAST ATTACKER IS
+                    elif op_code[1] == 1:  # LAST ATTACKER IS
                         attack_right_condition_param = [self.__get_target(op_code_right_condition_param, advanced=True, specific=True)]
                         list_param_possible_right.extend(self.__get_possible_target_advanced_specific())
                     elif op_code[1] == 2:  # SELF TURN COUNTER IS
@@ -840,7 +852,7 @@ class CommandAnalyser:
                             self.__current_if_type = CurrentIfType.GFORCE
                         else:
                             print(f"Unknown condition type for subject 10 op code 3: {op_code_right_condition_param}")
-                    elif op_code[1] == 4: # "LAST GFORCE LAUNCH WAS","LAST ACTION LAUNCH WAS"
+                    elif op_code[1] == 4:  # "LAST GFORCE LAUNCH WAS","LAST ACTION LAUNCH WAS"
                         if op_code_right_condition_param >= 64:
                             attack_right_condition_param = [self.game_data.gforce_data_json["gforce"][op_code_right_condition_param - 64]['name']]
                             list_param_possible_right.extend(self.__get_possible_gforce_shifted_64())
@@ -972,6 +984,7 @@ class CommandAnalyser:
         else:
             print("Unexpected target with id: {}".format(id))
             return "UNKNOWN TARGET"
+
     @staticmethod
     def twos_complement(value, bit_length):
         """
