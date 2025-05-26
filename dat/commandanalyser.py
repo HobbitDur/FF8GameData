@@ -400,7 +400,7 @@ class CommandAnalyser:
                     self.param_possible_list.append(self.__get_possible_magic_type())
                 elif type == "bool":
                     param_value.append(str(bool(self.__op_code[op_index])))
-                    self.param_possible_list.append([{"id": 0, "data": "True"}, {"id": 1, "data": "False"}])
+                    self.param_possible_list.append([{"id": 0, "data": "False"}, {"id": 1, "data": "True"}])
                 elif type == "activate":
                     param_value.append([x['name'] for x in self.game_data.ai_data_json['activate_type'] if x['id'] == self.__op_code[op_index]][0])
                     self.param_possible_list.append(self.__get_possible_activate())

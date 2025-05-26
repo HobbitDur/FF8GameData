@@ -9,6 +9,7 @@ class TestGameData(unittest.TestCase):
         self.game_data = GameData()
         self.game_data.load_all()
 
+
     def test_sysfnt_basic(self):
         ff8_str = "This {in}"
         ff8_list = self.game_data.translate_str_to_hex(ff8_str)
