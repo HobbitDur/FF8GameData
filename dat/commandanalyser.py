@@ -465,13 +465,15 @@ class CommandAnalyser:
                         if self.__op_code[op_index] == i:
                             param_value.append(f"{i}")
                             self.__raw_text_added.append({"id": len(param_value) - 1, "text": " (" + text + " )", "text_html": " (" + text + " )<br/>"})
-                    if self.__op_code[op_index] >= nb_abilities:
+                    if self.__op_code[op_index] == 253:
+                        param_value.append(f"{253}")
+                        self.__raw_text_added.append({"id": len(param_value) - 1, "text": " (None) ", "text_html": " (None) "})
+                    elif self.__op_code[op_index] >= nb_abilities:
                         param_value.append(253)
                         self.__raw_text_added.append({"id": 253, "text": " (None) ", "text_html": " (None) "})
-                    else:
-                        possible_ability_values.append({'id': 0, 'data': "None"})  # 253 for None value is often used by monsters.
+                        print(f"Unexpected abilities line value (monster_line_ability): {self.__op_code[op_index]}")
+                    possible_ability_values.append({'id': 253, 'data': "None"})  # 253 is literally the case of None in the code
                     self.param_possible_list.append(possible_ability_values)
-
                 elif type == "battle_text":
                     if self.__op_code[op_index] < len(self.__battle_text):
                         battle_text_str = self.__battle_text[self.__op_code[op_index]].get_str()
