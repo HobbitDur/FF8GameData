@@ -220,10 +220,8 @@ class CommandAnalyser:
             if_subject_dict = [x for x in self.game_data.ai_data_json['if_subject'] if x['subject_id'] == subject_id]
             if if_subject_dict:
                 if_subject_dict = if_subject_dict[0]
-            elif subject_id > 20:  # It's a var
-                if_subject_dict = {"subject_id": subject_id, "short_text": "VAR Subject",  # For a var, subject ID need to be 200 for local var
-                                   "left_text": '{}', "complexity": "simple", "param_left_type": "const",
-                                   "param_right_type": "int", "param_list": [200]}
+            else:
+                print(f"Unexpected subject ID: {subject_id}")
             ## Now we want to have only the parameter of the subject, for this we remove data around
             split_text = if_subject_dict['left_text'].split('{}')
             if_subject_left_parameter_text = op_code_list[1].replace(split_text[0], '')
@@ -239,7 +237,7 @@ class CommandAnalyser:
                 temp_int_right = if_subject_left_parameter_text
                 op_code_list[1] = 200  # Always ALIVE
             elif if_subject_dict['param_left_type'] in ("var", "local_var", "battle_var", "global_var"):
-                op_code_list[1] = [x['op_code'] for x in self.game_data.ai_data_json['list_var'] if x['var_name'] == if_subject_left_parameter_text][0]
+                op_code_list[1] = 200
             elif if_subject_dict['param_left_type'] == "subject10":  # We don't use if_subject_left_parameter_text
                 subject10_list = [x['param_id'] for x in self.game_data.ai_data_json['subject_left_10'] if op_code_list[1] in x['text']]
                 if not subject10_list:
@@ -624,6 +622,15 @@ class CommandAnalyser:
         return [{'id': val_dict['op_code'], 'data': val_dict['var_name']} for id, val_dict in enumerate(self.game_data.ai_data_json["list_var"]) if
                 val_dict['var_type'] == "global"]
 
+    def __get_possible_option_local_var(self):
+        return [{'id': val_dict['id'], 'data': val_dict['data']} for id, val_dict in enumerate(self.game_data.ai_data_json["local_var_option"])]
+
+    def __get_possible_option_battle_var(self):
+        return [{'id': val_dict['id'], 'data': val_dict['data']} for id, val_dict in enumerate(self.game_data.ai_data_json["battle_var_option"])]
+
+    def __get_possible_option_global_var(self):
+        return [{'id': val_dict['id'], 'data': val_dict['data']} for id, val_dict in enumerate(self.game_data.ai_data_json["global_var_option"])]
+
     def __op_35_analysis(self, op_code):
         op_info = [x for x in self.game_data.ai_data_json['op_code_info'] if x['op_code'] == 35][0]
         jump = int.from_bytes(bytearray([op_code[0], op_code[1]]), byteorder='little')
@@ -721,7 +728,7 @@ class CommandAnalyser:
                     else:
                         param_left = "Unknown var"
                         print(f"Unexpected local var with code {subject_id}")
-                    list_param_possible_left.extend(self.__get_possible_local_var())
+                    list_param_possible_left.extend(self.__get_possible_option_local_var())
                 elif if_current_subject['param_left_type'] == "battle_var":
                     param_left = [x['var_name'] for x in self.game_data.ai_data_json['list_var'] if x['op_code'] == subject_id]
                     if param_left:
@@ -729,7 +736,7 @@ class CommandAnalyser:
                     else:
                         param_left = "Unknown var"
                         print(f"Unexpected battle var with code {subject_id}")
-                    list_param_possible_left.extend(self.__get_possible_battle_var())
+                    list_param_possible_left.extend(self.__get_possible_option_battle_var())
                 elif if_current_subject['param_left_type'] == "global_var":
                     param_left = [x['var_name'] for x in self.game_data.ai_data_json['list_var'] if x['op_code'] == subject_id]
                     if param_left:
@@ -737,7 +744,7 @@ class CommandAnalyser:
                     else:
                         param_left = "Unknown var"
                         print(f"Unexpected global var with code {subject_id}")
-                    list_param_possible_left.extend(self.__get_possible_global_var())
+                    list_param_possible_left.extend(self.__get_possible_option_global_var())
                 elif if_current_subject['param_left_type'] == "subject10":
                     param_left = []
                     if op_code_left_condition_param >= 200:  # Basic target
