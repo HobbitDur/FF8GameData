@@ -415,10 +415,14 @@ class CommandAnalyser:
                 elif type == "monster_line_ability":
                     possible_ability_values = []
                     nb_ability_high = len([x for x in self.info_stat_data['abilities_high'] if x['id'] != 0])
+                    last_line_ability_high = [i for i, x in enumerate(self.info_stat_data['abilities_high']) if x['id'] != 0][-1]
                     nb_ability_med = len([x for x in self.info_stat_data['abilities_med'] if x['id'] != 0])
+                    last_line_ability_med = [i for i, x in enumerate(self.info_stat_data['abilities_med']) if x['id'] != 0][-1]
                     nb_ability_low = len([x for x in self.info_stat_data['abilities_low'] if x['id'] != 0])
+                    last_line_ability_low = [i for i, x in enumerate(self.info_stat_data['abilities_low']) if x['id'] != 0][-1]
                     nb_abilities = max(nb_ability_high, nb_ability_med, nb_ability_low)
-                    for i in range(nb_abilities):
+                    last_line_ability_index = max(last_line_ability_high, last_line_ability_med, last_line_ability_low)
+                    for i in range(last_line_ability_index+1):
                         if self.info_stat_data['abilities_high'][i] != 0:
                             if self.info_stat_data['abilities_high'][i]['type'] == 2:  # Magic
                                 high_text = self.game_data.magic_data_json["magic"][self.info_stat_data['abilities_high'][i]['id']]['name']
@@ -466,10 +470,10 @@ class CommandAnalyser:
                     if self.__op_code[op_index] == 253:
                         param_value.append(f"{253}")
                         self.__raw_text_added.append({"id": len(param_value) - 1, "text": " (None) ", "text_html": " (None) "})
-                    elif self.__op_code[op_index] >= nb_abilities:
-                        param_value.append(253)
+                    elif self.__op_code[op_index] > last_line_ability_index:
+                        print(f"Unexpected line ability {self.__op_code[op_index]}, last one should be {last_line_ability_index}")
+                        param_value.append(f"{253}")
                         self.__raw_text_added.append({"id": 253, "text": " (None) ", "text_html": " (None) "})
-                        print(f"Unexpected abilities line value (monster_line_ability): {self.__op_code[op_index]}")
                     possible_ability_values.append({'id': 253, 'data': "None"})  # 253 is literally the case of None in the code
                     self.param_possible_list.append(possible_ability_values)
                 elif type == "battle_text":
