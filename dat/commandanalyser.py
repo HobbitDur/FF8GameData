@@ -901,9 +901,6 @@ class CommandAnalyser:
                 right_subject = {'text': '{}', 'param': op_code_right_condition_param}
 
         if_text = if_text.format('{}', left_subject['text'], '{}', right_subject['text'], '{}')
-        print(left_subject['text'])
-        print(right_subject['text'])
-        print(if_text)
 
         #right_subject_text = right_subject['text'].format(*right_subject['param'])
 
