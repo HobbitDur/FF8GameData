@@ -714,6 +714,7 @@ class CommandAnalyser:
                     param_left = int(op_code_right_condition_param) + shift
                 elif if_current_subject['param_left_type'] == "const":
                     param_left = if_current_subject['left_text']
+                    list_param_possible_left.extend( [{"id": if_current_subject['param_list'][0], "data": if_current_subject['left_text']}])
                 elif if_current_subject['param_left_type'] == "var":
                     param_left = [x['var_name'] for x in self.game_data.ai_data_json['list_var'] if x['op_code'] == subject_id]
                     if param_left:
