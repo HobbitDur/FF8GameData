@@ -472,8 +472,8 @@ class CommandAnalyser:
                         self.__raw_text_added.append({"id": len(param_value) - 1, "text": " (None) ", "text_html": " (None) "})
                     elif self.__op_code[op_index] > last_line_ability_index:
                         print(f"Unexpected line ability {self.__op_code[op_index]}, last one should be {last_line_ability_index}")
-                        param_value.append(f"{253}")
-                        self.__raw_text_added.append({"id": 253, "text": " (None) ", "text_html": " (None) "})
+                        param_value.append(f"{self.__op_code[op_index]}")
+                        self.__raw_text_added.append({"id": len(param_value) - 1, "text": " (None) ", "text_html": " (None) "})
                     possible_ability_values.append({'id': 253, 'data': "None"})  # 253 is literally the case of None in the code
                     self.param_possible_list.append(possible_ability_values)
                 elif type == "battle_text":
