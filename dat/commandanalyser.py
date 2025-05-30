@@ -34,6 +34,7 @@ class CommandAnalyser:
         self.__raw_parameters = []
         self.__raw_text_added = []
         self.__current_if_type = current_if_type
+        self.__jump_value = 0
         if text_param:
             self.__analyse_op_data_with_text_param()
         else:
@@ -59,6 +60,9 @@ class CommandAnalyser:
 
     def get_size(self):
         return self.__size
+
+    def get_jump_value(self):
+        return self.__jump_value
 
     def set_color(self, color):
         self.__color_param = color
@@ -644,6 +648,7 @@ class CommandAnalyser:
         # Jump backward
         if jump & 0x8000 != 0:
             jump = self.twos_complement(jump, 16)
+        self.__jump_value = jump
         if jump == 0:
             return [op_info['text'][0], []]
         else:
@@ -672,6 +677,7 @@ class CommandAnalyser:
         jump_value_op_1 = op_code[5]
         jump_value_op_2 = op_code[6]
         jump_value = int.from_bytes(bytearray([op_code[5], op_code[6]]), byteorder='little')
+        self.__jump_value = jump_value
         if op_code_comparator < len(self.game_data.ai_data_json['list_comparator']):
             comparator = self.game_data.ai_data_json['list_comparator'][op_code_comparator]
         else:

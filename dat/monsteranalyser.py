@@ -93,9 +93,17 @@ class MonsterAnalyser:
                     self.remove_command(index_section, -1)
                 # Now compute the size of all command
                 section_size = 0
+                # Last jump position is to manage the case where you jump in the middle of lots of stop so that you don't remove useful ones.
+                last_jump_position = 0
                 for command in section:
                     section_size += command.get_size()
+                    if section_size + command.get_jump_value() > last_jump_position:
+                        last_jump_position = section_size + command.get_jump_value()
+
                 new_end = CommandAnalyser(0, [], game_data)
+                while section_size <= last_jump_position:
+                    self.append_command(index_section, new_end)
+                    section_size += 1
                 while section_size % 4 != 0:
                     self.append_command(index_section, new_end)
                     section_size += 1
