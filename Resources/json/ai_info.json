@@ -142,7 +142,7 @@
    {"param_id": 3, "text": ["LAST ATTACKER USED COMMAND TYPE"]},
    {"param_id": 4, "text": ["LAST GFORCE LAUNCH WAS","LAST ACTION LAUNCH WAS"]},
    {"param_id": 5, "text": ["LAST ATTACK WAS OF ELEMENT"]},
-   {"param_id": 203, "text": ["UNKNOWN"]}
+   {"param_id": 203, "text": ["LAST ATTACKER c0m ID is", "LAST ATTACKER IS (c0m)"]}
   ],
   "target_basic": [
     {"param_id": 200, "text": "SELF", "param_type": "", "comment":  ""},
