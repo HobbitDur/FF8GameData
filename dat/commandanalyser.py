@@ -269,90 +269,94 @@ class CommandAnalyser:
             else:
                 print(f"Unexpected if_subject_dict['param_left_type']: {if_subject_dict['param_left_type']}")
                 op_code_list[1] = 0
+            if op_code_list[1] > 255 or op_code_list[1] < 0:
+                print(f"Left param value {op_code_list[1]} is >255 or <0")
             # Comparison (2)
             op_code_list[2] = self.game_data.ai_data_json['list_comparator_ifritAI'].index(op_code_list[2])
             # Right condition (3)
             r_cond = op_code_list[3]
             if if_subject_dict['param_right_type'] == "int":
-                op_code_list[3] = int(r_cond)
+                r_cond_result = int(r_cond)
             elif if_subject_dict['param_right_type'] == "alive":
-                op_code_list[3] = int(temp_int_right) + 3
+                r_cond_result = int(r_cond) + 3
             elif if_subject_dict['param_right_type'] == "gender":
-                op_code_list[3] = [x['id'] for x in self.game_data.ai_data_json['gender_type'] if x['type'] == r_cond][0]
+                r_cond_result = [x['id'] for x in self.game_data.ai_data_json['gender_type'] if x['type'] == r_cond][0]
             elif if_subject_dict['param_right_type'] == "percent":
-                op_code_list[3] = int(int(r_cond.replace(' %', '')) / 10)
+                r_cond_result = int(int(r_cond) / 10)
             elif if_subject_dict['param_right_type'] == "status_ai":
-                op_code_list[3] = [x['id'] for x in self.game_data.status_data_json['status_ai'] if x['name'] == r_cond][0]
+                r_cond_result = [x['id'] for x in self.game_data.status_data_json['status_ai'] if x['name'] == r_cond][0]
             elif if_subject_dict['param_right_type'] == "special_byte_check":
-                op_code_list[3] = [x['id'] for x in self.game_data.ai_data_json['special_byte_check'] if x['data'] == r_cond][0]
+                r_cond_result = [x['id'] for x in self.game_data.ai_data_json['special_byte_check'] if x['data'] == r_cond][0]
             elif if_subject_dict['param_right_type'] == "target_advanced_specific":
                 target_list = self.__get_target_list(advanced=True, specific=True)
-                op_code_list[3] = [x['id'] for x in target_list if x['data'] == r_cond][0]
+                r_cond_result = [x['id'] for x in target_list if x['data'] == r_cond][0]
             elif if_subject_dict['param_right_type'] == "target_advanced_generic":
                 target_list = self.__get_target_list(advanced=True, specific=False)
-                op_code_list[3] = [x['id'] for x in target_list if x['data'] == r_cond][0]
+                r_cond_result= [x['id'] for x in target_list if x['data'] == r_cond][0]
             elif if_subject_dict['param_right_type'] == "const":
-                op_code_list[3] = if_subject_dict['param_list'][1]  # Unused
+                r_cond_result = if_subject_dict['param_list'][1]  # Unused
             elif if_subject_dict['param_right_type'] == "complex":
                 if subject_id == 10:
                     if op_code_list[1] == 0:  # Attack type
-                        search_value = [x['id'] for x in self.game_data.ai_data_json['attack_type'] if x['type'] == op_code_list[3]]
+                        search_value = [x['id'] for x in self.game_data.ai_data_json['attack_type'] if x['type'] == r_cond]
                         if search_value:
-                            op_code_list[3] = search_value[0]
+                            r_cond_result = search_value[0]
                         else:
-                            print(f"Unexpected attack type: {op_code_list[3]}")
-                            op_code_list[3] = 0
+                            print(f"Unexpected attack type: {r_cond}")
+                            r_cond_result = 0
                     elif op_code_list[1] == 1:  # Target advanced specific
-                        search_value = [x['id'] for x in self.__get_target_list(advanced=True, specific=True) if x['data'] == op_code_list[3]]
+                        search_value = [x['id'] for x in self.__get_target_list(advanced=True, specific=True) if x['data'] == r_cond]
                         if search_value:
-                            op_code_list[3] = search_value[0]
+                            r_cond_result = search_value[0]
                         else:
-                            print(f"Unexpected target advanced specific: {op_code_list[3]}")
+                            print(f"Unexpected target advanced specific: {r_cond}")
                             op_code_list[3] = 0
                     elif op_code_list[1] == 2:  # TURN COUNTER INT
-                        op_code_list[3] = int(op_code_list[3])
+                        r_cond_result = int(r_cond)
                     elif op_code_list[1] == 3:  # Command type
                         search_value = [x['id'] for x in self.game_data.ai_data_json['command_type'] if x['data'] == op_code_list[3]]
                         if search_value:
-                            op_code_list[3] = search_value[0]
+                            r_cond_result = search_value[0]
                         else:
-                            print(f"Unexpected target advanced specific: {op_code_list[3]}")
-                            op_code_list[3] = 0
+                            print(f"Unexpected target advanced specific: {r_cond}")
+                            r_cond_result = 0
                     elif op_code_list[1] == 4:  # Last Command type or gforce
                         # First Gforce
                         search_gf = [x['id'] for x in self.game_data.gforce_data_json['gforce'] if x['name'] == op_code_list[3]]
                         if search_gf:
-                            op_code_list[3] = search_gf[0] + 64
+                            r_cond_result = search_gf[0] + 64
                         else:
-                            search_magic = [x['id'] for x in self.game_data.magic_data_json['magic'] if x['name'] == op_code_list[3]]
+                            search_magic = [x['id'] for x in self.game_data.magic_data_json['magic'] if x['name'] == r_cond]
                             if search_magic:
-                                op_code_list[3] = search_magic[0]
+                                r_cond_result = search_magic[0]
                             else:
-                                search_item = [x['id'] for x in self.game_data.item_data_json['items'] if x['name'] == op_code_list[3]]
+                                search_item = [x['id'] for x in self.game_data.item_data_json['items'] if x['name'] == r_cond]
                                 if search_item:
-                                    op_code_list[3] = search_item[0]
+                                    r_cond_result = search_item[0]
                                 else:
                                     search_special_action = [x['id'] for x in self.game_data.special_action_data_json['special_action'] if
-                                                             x['name'] == op_code_list[3]]
+                                                             x['name'] == r_cond]
                                     if search_special_action:
-                                        op_code_list[3] = search_special_action[0]
+                                        r_cond_result = search_special_action[0]
                                     else:
-                                        print(f"Unexpected param {op_code_list[3]} when searching for subject 10.4")
-                                        op_code_list[3] = int(op_code_list[3])
+                                        print(f"Unexpected param {r_cond} when searching for subject 10.4")
+                                        r_cond_result = int(r_cond)
                     elif op_code_list[1] == 5:  # Magic type
-                        search_value = [x['id'] for x in self.game_data.magic_data_json['magic_type'] if x['name'] == op_code_list[3]]
+                        search_value = [x['id'] for x in self.game_data.magic_data_json['magic_type'] if x['name'] == r_cond]
                         if search_value:
-                            op_code_list[3] = search_value[0]
+                            r_cond_result = search_value[0]
                         else:
-                            print(f"Unexpected magic type: {op_code_list[3]}")
-                            op_code_list[3] = 0
+                            print(f"Unexpected magic type: {r_cond}")
+                            r_cond_result = 0
                     else:
-                        print(f"Unexpected param right for subject id 10: {op_code_list[3]}")
-                        op_code_list[3] = 0
+                        print(f"Unexpected param right for subject id 10: {r_cond}")
+                        r_cond_result = 0
                 else:
                     print(f"Unexpected if subject param right type: {if_subject_dict['param_right_type']}")
             # Unused value (called debug)
-            op_code_list[4] = int(op_code_list[4])
+            op_code_list[3] = int.to_bytes(r_cond_result, byteorder="little", length=2)[0]
+            op_code_list[4] = int.to_bytes(r_cond_result, byteorder="little", length=2)[1]
+            #op_code_list[4] = int(op_code_list[4])
             # Expanding jump
             op_code_list[5] = int(op_code_list[5])
             op_code_list[6] = int(op_code_list[6])
@@ -677,11 +681,12 @@ class CommandAnalyser:
         subject_id = op_code[0]
         op_code_left_condition_param = op_code[1]
         op_code_comparator = op_code[2]
-        op_code_right_condition_param = op_code[3]
-        debug_unknown = op_code[4]
+        op_code_right_condition_param_1 = op_code[3]
+        op_code_right_condition_param_1 = op_code[4]
         jump_value_op_1 = op_code[5]
         jump_value_op_2 = op_code[6]
         jump_value = int.from_bytes(bytearray([op_code[5], op_code[6]]), byteorder='little')
+        op_code_right_condition_param = int.from_bytes(bytearray([op_code[3], op_code[4]]), byteorder='little')
         self.__jump_value = jump_value
         if op_code_comparator < len(self.game_data.ai_data_json['list_comparator']):
             comparator = self.game_data.ai_data_json['list_comparator'][op_code_comparator]
