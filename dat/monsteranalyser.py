@@ -76,7 +76,7 @@ class MonsterAnalyser:
             # Analyzing Section 7 : Informations & stats
             self.__analyze_info_stat(game_data)
             # Analyzing Section 8 : Battle scripts/AI
-            self.__analyze_battle_script_section(game_data)
+            self.analyze_battle_script_section(game_data)
             # No need to analyze Section 9 : Sounds
             # No need to analyze Section 10 : Sounds/Unknown
             # No need to analyze Section 11 : Textures
@@ -467,7 +467,7 @@ class MonsterAnalyser:
 
             self.info_stat_data[el['name']] = value
 
-    def __analyze_battle_script_section(self, game_data: GameData):
+    def analyze_battle_script_section(self, game_data: GameData):
         SECTION_NUMBER = 8
         if len(self.header_data['section_pos']) <= SECTION_NUMBER:
             return
