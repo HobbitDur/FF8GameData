@@ -87,10 +87,11 @@ class MonsterAnalyser:
     def __update_stop(self, game_data: GameData):
         """To remove all too much 0 and add new one till %4 for rainbow fix"""
         for index_section, section in enumerate(self.battle_script_data['ai_data']):
-            if section:
+            if index_section != len(self.battle_script_data['ai_data']) - 1:  # Last section is actually a fake one for internal purpose
                 # First do it by removing exceeding of stop
                 while len(section) >= 2 and section[-1].get_id() == 0 and section[-2].get_id() == 0:
                     self.remove_command(index_section, -1)
+                    section = self.battle_script_data['ai_data'][index_section]
                 # Now compute the size of all command
                 section_size = 0
                 # Last jump position is to manage the case where you jump in the middle of lots of stop so that you don't remove useful ones.
@@ -101,10 +102,10 @@ class MonsterAnalyser:
                         last_jump_position = section_size + command.get_jump_value()
 
                 new_end = CommandAnalyser(0, [], game_data)
-                while section_size <= last_jump_position:
+                while section_size <= last_jump_position + 1:
                     self.append_command(index_section, new_end)
                     section_size += 1
-                while section_size % 4 != 0:
+                while section_size % 4 != 0 or section_size == 0:
                     self.append_command(index_section, new_end)
                     section_size += 1
 
@@ -228,7 +229,6 @@ class MonsterAnalyser:
         while len(raw_text_section) % 4 != 0:
             raw_text_section.extend([0x00])
 
-
         # Now computing offset
         # Number of subsection doesn't change, neither the offset to AI-sub-section
         self.__add_section_raw_data_from_game_data(8, game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_NB_SUB)
@@ -241,10 +241,12 @@ class MonsterAnalyser:
         current_offset_section_compute += len(raw_ai_offset)
         current_offset_section_compute += len(raw_ai_section)
         self.section_raw_data[8].extend(
-            current_offset_section_compute.to_bytes(game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_OFFSET_TEXT_OFFSET_SUB['size'], game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_OFFSET_TEXT_OFFSET_SUB['byteorder']))
+            current_offset_section_compute.to_bytes(game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_OFFSET_TEXT_OFFSET_SUB['size'],
+                                                    game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_OFFSET_TEXT_OFFSET_SUB['byteorder']))
         current_offset_section_compute += len(raw_text_offset)
         self.section_raw_data[8].extend(
-            current_offset_section_compute.to_bytes(game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_OFFSET_TEXT_SUB['size'], game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_OFFSET_TEXT_SUB['byteorder']))
+            current_offset_section_compute.to_bytes(game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_OFFSET_TEXT_SUB['size'],
+                                                    game_data.AIData.SECTION_BATTLE_SCRIPT_HEADER_OFFSET_TEXT_SUB['byteorder']))
 
         current_offset_section_compute += len(raw_text_section)
         # Now adding the data
@@ -566,4 +568,3 @@ class MonsterAnalyser:
 
     def remove_command(self, code_section_id: int, index_removal: int = 0):
         del self.battle_script_data['ai_data'][code_section_id][index_removal]
-
