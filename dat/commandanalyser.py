@@ -41,7 +41,7 @@ class CommandAnalyser:
             self.__analyse_op_data()
 
     def __str__(self):
-        return f"Command(ID: {self.__op_id}, op_code: {self.__op_code}, text: {self.get_text()})"
+        return f"Command(ID: {self.__op_id}, op_code: {self.__op_code}, text: {self.get_text()}, line_index: {self.line_index})"
 
     def __repr__(self):
         return self.__str__()

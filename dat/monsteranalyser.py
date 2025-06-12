@@ -84,7 +84,7 @@ class MonsterAnalyser:
             print(f"Garbage file {self.origin_file_name}")
             raise GarbageFileError
 
-    def __update_stop(self, game_data: GameData):
+    def update_stop(self, game_data: GameData):
         """To remove all too much 0 and add new one till %4 for rainbow fix"""
         for index_section, section in enumerate(self.battle_script_data['ai_data']):
             if index_section != len(self.battle_script_data['ai_data']) - 1:  # Last section is actually a fake one for internal purpose
@@ -101,16 +101,56 @@ class MonsterAnalyser:
                     if section_size + command.get_jump_value() > last_jump_position:
                         last_jump_position = section_size + command.get_jump_value()
 
-                new_end = CommandAnalyser(0, [], game_data)
-                while section_size <= last_jump_position + 1:
-                    self.append_command(index_section, new_end)
-                    section_size += 1
+                new_end = CommandAnalyser(0, [], game_data, line_index=0)
+                if last_jump_position > 0:
+                    while section_size <= last_jump_position + 1:
+                        if not self.battle_script_data['ai_data'][index_section]:
+                            new_end.line_index = 0
+                        else:
+                            new_end.line_index = self.battle_script_data['ai_data'][index_section][-1].line_index + 1
+                        self.append_command(index_section, copy.deepcopy(new_end))
+                        section_size += 1
                 while section_size % 4 != 0 or section_size == 0:
-                    self.append_command(index_section, new_end)
+                    if not self.battle_script_data['ai_data'][index_section]:
+                        new_end.line_index = 0
+                    else:
+                        new_end.line_index = self.battle_script_data['ai_data'][index_section][-1].line_index + 1
+                    self.append_command(index_section, copy.deepcopy(new_end))
                     section_size += 1
 
+    def update_stop_on_list(self, game_data: GameData, list_to_update:[CommandAnalyser]):
+        """To remove all too much 0 and add new one till %4 for rainbow fix"""
+        # First do it by removing exceeding of stop
+        while len(list_to_update) >= 2 and list_to_update[-1].get_id() == 0 and list_to_update[-2].get_id() == 0:
+            del list_to_update[-1]
+        # Now compute the size of all command
+        section_size = 0
+        # Last jump position is to manage the case where you jump in the middle of lots of stop so that you don't remove useful ones.
+        last_jump_position = 0
+        for command in list_to_update:
+            section_size += command.get_size()
+            if section_size + command.get_jump_value() > last_jump_position:
+                last_jump_position = section_size + command.get_jump_value()
+
+        new_end = CommandAnalyser(0, [], game_data)
+        if last_jump_position > 0:
+            while section_size <= last_jump_position + 1:
+                list_to_update.append(copy.deepcopy(new_end))
+                if len(list_to_update) == 1:
+                    list_to_update[-1].line_index = 0
+                else:
+                    list_to_update[-1].line_index = list_to_update[-2].line_index + 1
+                section_size += 1
+        while section_size % 4 != 0 or section_size == 0:
+            list_to_update.append(copy.deepcopy(new_end))
+            if len(list_to_update) == 1:
+                list_to_update[-1].line_index = 0
+            else:
+                list_to_update[-1].line_index = list_to_update[-2].line_index + 1
+            section_size += 1
+        return list_to_update
+
     def write_data_to_file(self, game_data: GameData, dat_path):
-        print("Writing monster {}".format(self.info_stat_data["monster_name"].get_str()))
         raw_data_to_write = bytearray()
 
         # Write the 7 (0 to 6) first section as raw data
@@ -194,7 +234,7 @@ class MonsterAnalyser:
         raw_ai_subsection = []
 
         # To fix rainbow, remove excess stop then add to fill % 4
-        self.__update_stop(game_data)
+        self.update_stop(game_data)
         # first computing ai subsection
         for index, section in enumerate(self.battle_script_data['ai_data']):
             if section:  # Ignoring the last section that is empty
@@ -561,6 +601,9 @@ class MonsterAnalyser:
         self.battle_script_data['ai_data'].append([])  # Adding a end section that is empty to mark the end of the all IA section
 
     def insert_command(self, code_section_id: int, command: CommandAnalyser, index_insertion: int = 0):
+        #command.line_index = self.battle_script_data['ai_data'][code_section_id][index_insertion].line_index
+        #for i in range(index_insertion, len(self.battle_script_data['ai_data'][code_section_id])):
+        #    self.battle_script_data['ai_data'][code_section_id][i].line_index += 1
         self.battle_script_data['ai_data'][code_section_id].insert(index_insertion, command)
 
     def append_command(self, code_section_id: int, command: CommandAnalyser):
@@ -568,3 +611,6 @@ class MonsterAnalyser:
 
     def remove_command(self, code_section_id: int, index_removal: int = 0):
         del self.battle_script_data['ai_data'][code_section_id][index_removal]
+
+
+
