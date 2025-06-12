@@ -98,7 +98,7 @@ class MonsterAnalyser:
                 last_jump_position = 0
                 for command in section:
                     section_size += command.get_size()
-                    if section_size + command.get_jump_value() > last_jump_position:
+                    if section_size + command.get_jump_value() > last_jump_position and command.get_jump_value() > 0:
                         last_jump_position = section_size + command.get_jump_value()
 
                 new_end = CommandAnalyser(0, [], game_data, line_index=0)
