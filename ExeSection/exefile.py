@@ -36,22 +36,53 @@ class SectionExeFile(Section):
         else:
             print("Unknown msd type")
             id = 6
+
         index = [i for i in range(len(self._section_list)) if self._section_list[i].id == id][0]
         self._section_list[index].update_data_hex()
         offset_list = self._section_list[index].get_offset_section().get_all_offset()
+        if id == 7:
+            print("scan text offset")
+            print(offset_list)
+        if id == 6:
+            print("card text offset")
+            print(offset_list)
         text_list = self._section_list[index].get_text_section().get_text_list()
+        if id == 7:
+            print("scan list")
+            print(text_list)
+        if id == 6:
+            print("card text liqst")
+            print(offset_list)
         if len(text_list) != len(offset_list):
             print(f"Unexpected diff size between offset list (size:{len(offset_list)}) and text list (size:{len(text_list)}) for msd type: {msd_type}")
+        if id == 7:  # Scan as a 0 offset at the beggining for reason
+            del offset_list[0]
+
+        print("after del")
+        print(offset_list)
         first_offset = offset_list[0]
-        # As the offset from .exe vary from the one use in msd, shift them !
-        for i in range(len(offset_list)):
-            if offset_list[i] == 0:
-                continue
-            # First remove the original offset
-            offset_list[i] -= first_offset
-            # Then add the start of the first one for msd
-            offset_list[i] += len(text_list) * msd_offset_size
-            msd_data.extend(offset_list[i].to_bytes(length=msd_offset_size, byteorder="little"))
+
+        if id != 7:
+            # As the offset from .exe vary from the one use in msd, shift them !
+            for i in range(len(offset_list)):
+                if offset_list[i] == 0:
+                    continue
+                # First remove the original offset
+                offset_list[i] -= first_offset
+                # Then add the start of the first one for msd
+                offset_list[i] += len(text_list) * msd_offset_size
+                msd_data.extend(offset_list[i].to_bytes(length=msd_offset_size, byteorder="little"))
+        else:
+            # As the offset from .exe vary from the one use in msd, shift them !
+            current_text_size = 0
+            for i in range(len(text_list)):
+                # First remove the original offset
+                offset_list = current_text_size
+                # Then add the start of the first one for msd
+                offset_list += len(text_list) * msd_offset_size
+                current_text_size += len(text_list[i])
+                msd_data.extend(offset_list.to_bytes(length=msd_offset_size, byteorder="little"))
+
         msd_data.extend(self._section_list[index].get_text_section().get_data_hex())
         return msd_data
 
