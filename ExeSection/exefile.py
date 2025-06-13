@@ -23,6 +23,7 @@ class SectionExeFile(Section):
         return self.__str__()
 
     def produce_msd(self, msd_type: MsdType):
+        """/!\\ Draw point and card text seems to have offset as int16 but I didn't manage that"""
         msd_offset_size = 4
         msd_data = bytearray()
         if msd_type == MsdType.CARD_NAME:
@@ -40,28 +41,10 @@ class SectionExeFile(Section):
         index = [i for i in range(len(self._section_list)) if self._section_list[i].id == id][0]
         self._section_list[index].update_data_hex()
         offset_list = self._section_list[index].get_offset_section().get_all_offset()
-        if id == 7:
-            print("scan text offset")
-            print(offset_list)
-        if id == 6:
-            print("card text offset")
-            print(offset_list)
         text_list = self._section_list[index].get_text_section().get_text_list()
-        if id == 7:
-            print("scan list")
-            print(text_list)
-        if id == 6:
-            print("card text liqst")
-            print(offset_list)
         if len(text_list) != len(offset_list):
             print(f"Unexpected diff size between offset list (size:{len(offset_list)}) and text list (size:{len(text_list)}) for msd type: {msd_type}")
-        if id == 7:  # Scan as a 0 offset at the beggining for reason
-            del offset_list[0]
-
-        print("after del")
-        print(offset_list)
         first_offset = offset_list[0]
-
         if id != 7:
             # As the offset from .exe vary from the one use in msd, shift them !
             for i in range(len(offset_list)):
