@@ -423,11 +423,26 @@ class CommandAnalyser:
                 elif type == "monster_line_ability":
                     possible_ability_values = []
                     nb_ability_high = len([x for x in self.info_stat_data['abilities_high'] if x['id'] != 0])
-                    last_line_ability_high = [i for i, x in enumerate(self.info_stat_data['abilities_high']) if x['id'] != 0][-1]
+                    last_line_ability_high = [i for i, x in enumerate(self.info_stat_data['abilities_high']) if x['id'] != 0]
+                    if last_line_ability_high:
+                        last_line_ability_high = last_line_ability_high[-1]
+                    else:
+                        print("No ability high found")
+                        last_line_ability_high = 0
                     nb_ability_med = len([x for x in self.info_stat_data['abilities_med'] if x['id'] != 0])
-                    last_line_ability_med = [i for i, x in enumerate(self.info_stat_data['abilities_med']) if x['id'] != 0][-1]
+                    last_line_ability_med = [i for i, x in enumerate(self.info_stat_data['abilities_med']) if x['id'] != 0]
+                    if last_line_ability_med:
+                        last_line_ability_med = last_line_ability_med[-1]
+                    else:
+                        print("No ability med found")
+                        last_line_ability_med = 0
                     nb_ability_low = len([x for x in self.info_stat_data['abilities_low'] if x['id'] != 0])
-                    last_line_ability_low = [i for i, x in enumerate(self.info_stat_data['abilities_low']) if x['id'] != 0][-1]
+                    last_line_ability_low = [i for i, x in enumerate(self.info_stat_data['abilities_low']) if x['id'] != 0]
+                    if last_line_ability_low:
+                        last_line_ability_low = last_line_ability_low[-1]
+                    else:
+                        print("No ability low found")
+                        last_line_ability_low = 0
                     nb_abilities = max(nb_ability_high, nb_ability_med, nb_ability_low)
                     last_line_ability_index = max(last_line_ability_high, last_line_ability_med, last_line_ability_low)
                     for i in range(last_line_ability_index+1):
@@ -556,8 +571,11 @@ class CommandAnalyser:
                     param_value.append(self.__op_code[op_index])
             # Now putting the op_list in the correct order for param value (data analysis already in correct order):
             original_param_possible = self.param_possible_list.copy()
-            for i, param_index in enumerate(op_info['param_index']):
-                self.param_possible_list[param_index] = original_param_possible[i]
+            if len(original_param_possible) != len(op_info['param_index']):
+                print(f"Param possible list size: {len(original_param_possible)} different that op_info['param_index']: {len(op_info['param_index'])} ")
+            else:
+                for i, param_index in enumerate(op_info['param_index']):
+                    self.param_possible_list[param_index] = original_param_possible[i]
             self.__raw_text = op_info['text']
             self.__raw_parameters = param_value
         elif op_info["complexity"] == "complex":
