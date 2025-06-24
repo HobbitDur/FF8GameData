@@ -152,19 +152,50 @@ class MonsterAnalyser:
     def write_data_to_file(self, game_data: GameData, dat_path):
         raw_data_to_write = bytearray()
 
-        # Write the 7 (0 to 6) first section as raw data
+        # Write the 5 (0 to 4) first section as raw data
         for i, section_data in enumerate(self.section_raw_data):
-            if i < 7:
+            if i < 5:
                 raw_data_to_write.extend(section_data)
             else:
                 break
         # For the 3rnd, just changing nb animation after
-        section_offset = self.header_data['section_pos'][3]
-        start_animation = section_offset + AIData.SECTION_MODEL_ANIM_NB_MODEL['offset']
-        end_animation = section_offset + AIData.SECTION_MODEL_ANIM_NB_MODEL['offset'] + AIData.SECTION_MODEL_ANIM_NB_MODEL['size']
-        raw_data_to_write[start_animation:end_animation] = self.model_animation_data['nb_animation'].to_bytes(
-            byteorder=AIData.SECTION_MODEL_ANIM_NB_MODEL['byteorder'], length=AIData.SECTION_MODEL_ANIM_NB_MODEL['size'])
+        #section_offset = self.header_data['section_pos'][3]
+        #start_animation = section_offset + AIData.SECTION_MODEL_ANIM_NB_MODEL['offset']
+        #end_animation = section_offset + AIData.SECTION_MODEL_ANIM_NB_MODEL['offset'] + AIData.SECTION_MODEL_ANIM_NB_MODEL['size']
+        #raw_data_to_write[start_animation:end_animation] = self.model_animation_data['nb_animation'].to_bytes(
+        #    byteorder=AIData.SECTION_MODEL_ANIM_NB_MODEL['byteorder'], length=AIData.SECTION_MODEL_ANIM_NB_MODEL['size'])
 
+        # Monster seq animation
+        section_position = 5
+        #raw_data_to_write.extend(self.section_raw_data[section_position])
+        self.section_raw_data[section_position] = bytearray()
+        nb_seq = len(self.seq_animation_data['seq_animation_data'])
+        size_list = []
+        for seq in  self.seq_animation_data['seq_animation_data']:
+            size_list.append(len(seq))
+
+        ## Now compute offset
+        offset_list = []
+        current_offset = AIData.SECTION_MODEL_SEQ_ANIM_NB_SEQ['size'] + nb_seq*AIData.SECTION_MODEL_SEQ_ANIM_OFFSET['size']
+        for size in size_list:
+            if size == 0:
+                offset_list.append(0)
+            else:
+                offset_list.append(current_offset)
+                current_offset += size
+
+        ## Now construction the raw data:
+        self.section_raw_data[section_position].extend(int.to_bytes(nb_seq, byteorder=AIData.SECTION_MODEL_SEQ_ANIM_NB_SEQ['byteorder'], length=AIData.SECTION_MODEL_SEQ_ANIM_NB_SEQ['size']))
+        for offset in offset_list:
+            self.section_raw_data[section_position].extend(int.to_bytes(offset, byteorder=AIData.SECTION_MODEL_SEQ_ANIM_OFFSET['byteorder'], length=AIData.SECTION_MODEL_SEQ_ANIM_OFFSET['size']))
+        for seq in self.seq_animation_data['seq_animation_data']:
+            self.section_raw_data[section_position].extend(seq)
+        raw_data_to_write.extend(self.section_raw_data[section_position])
+        # Section 6: no analyze done yet
+        section_position = 6
+        raw_data_to_write.extend(self.section_raw_data[section_position])
+
+        # Monster stat info
         section_position = 7
         self.section_raw_data[section_position] = bytearray()
         for param_name, value in self.info_stat_data.items():
@@ -411,11 +442,8 @@ class MonsterAnalyser:
         #    print(f"Index animation: {i}, Nb frame: {el['nb_frame']}, len_animation: {len(el['unk'])}")
 
     def __analyze_sequence_animation(self, game_data: GameData):
-        print("__analyze_sequence_animation")
         SECTION_NUMBER = 5
-        print(f"Len section 5: {self.section_raw_data[SECTION_NUMBER]}")
         self.seq_animation_data['nb_anim_seq'] = self.__get_int_value_from_info(game_data.AIData.SECTION_MODEL_SEQ_ANIM_NB_SEQ, SECTION_NUMBER)
-        print(f"Nb sequence: {self.seq_animation_data['nb_anim_seq']}")
         list_seq_anim_offset = []
         offset_size = game_data.AIData.SECTION_MODEL_SEQ_ANIM_OFFSET['size']
         start_offset = game_data.AIData.SECTION_MODEL_SEQ_ANIM_NB_SEQ['size']
@@ -423,18 +451,12 @@ class MonsterAnalyser:
             list_seq_anim_offset.append(
                 int.from_bytes(self.section_raw_data[SECTION_NUMBER][start_offset + index_offset * offset_size:start_offset + (index_offset + 1) * offset_size],
                                byteorder="little"))
-        print(list_seq_anim_offset)
         self.seq_animation_data['seq_anim_offset'] =  list_seq_anim_offset
 
         animation_seq_list = []
-        start_anim = list_seq_anim_offset[0]
-
-
-        #start_anim = 0
 
         for index, anim_offset in enumerate(list_seq_anim_offset):
-            #print(f"Start anim: {start_anim}")
-            #print(f"index: {index}, anim_offset: {anim_offset}")
+            start_anim = list_seq_anim_offset[index]
             if index == len(list_seq_anim_offset) - 1:
                 end_anim = len(self.section_raw_data[SECTION_NUMBER])
             else:
@@ -442,14 +464,9 @@ class MonsterAnalyser:
                     end_anim = start_anim
                 else:
                     end_anim =  min([x for x in list_seq_anim_offset if x > anim_offset])
-            #print(f"end_anim: {end_anim}")
             animation_seq_list.append(self.section_raw_data[SECTION_NUMBER][start_anim: end_anim])
-            start_anim = end_anim
-        print(animation_seq_list)
 
         self.seq_animation_data['seq_animation_data'] = animation_seq_list
-        print("self.seq_animation_data")
-        print(self.seq_animation_data)
 
         #for i, el in enumerate(animation_seq_list):
         #    print(f"Index seq animation: {i},  seq_animation: {len(el['unk'])}")
