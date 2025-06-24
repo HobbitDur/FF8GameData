@@ -70,7 +70,7 @@ class MonsterAnalyser:
             # No need to analyze Section 4 : Unknown
             # self.__analyze_section_4(game_data)
             # No need to analyze Section 5 : Sequence Animation
-            # self.__analyze_sequence_animation(game_data)
+            self.__analyze_sequence_animation(game_data)
             # No need to analyze Section 6 : Unknown
             # self.__analyze_section_6(game_data)
             # Analyzing Section 7 : Informations & stats
@@ -424,31 +424,43 @@ class MonsterAnalyser:
                 int.from_bytes(self.section_raw_data[SECTION_NUMBER][start_offset + index_offset * offset_size:start_offset + (index_offset + 1) * offset_size],
                                byteorder="little"))
         print(list_seq_anim_offset)
+        self.seq_animation_data['seq_anim_offset'] =  list_seq_anim_offset
 
         animation_seq_list = []
-        start_anim = start_offset + len(list_seq_anim_offset) * offset_size
+        start_anim = list_seq_anim_offset[0]
+
+
+        #start_anim = 0
 
         for index, anim_offset in enumerate(list_seq_anim_offset):
-            print(f"Start anim: {start_anim}")
-            print(f"index: {index}, anim_offset: {anim_offset}")
+            #print(f"Start anim: {start_anim}")
+            #print(f"index: {index}, anim_offset: {anim_offset}")
             if index == len(list_seq_anim_offset) - 1:
                 end_anim = len(self.section_raw_data[SECTION_NUMBER])
             else:
-                end_anim = list_seq_anim_offset[index + 1]
-            print(f"end_anim: {end_anim}")
-            animation_seq_list.append({'unk': self.section_raw_data[SECTION_NUMBER][start_anim: end_anim]})
+                if anim_offset == 0:
+                    end_anim = start_anim
+                else:
+                    end_anim =  min([x for x in list_seq_anim_offset if x > anim_offset])
+            #print(f"end_anim: {end_anim}")
+            animation_seq_list.append(self.section_raw_data[SECTION_NUMBER][start_anim: end_anim])
             start_anim = end_anim
         print(animation_seq_list)
-        for i, el in enumerate(animation_seq_list):
-            print(f"Index seq animation: {i},  seq_animation: {len(el['unk'])}")
-        for i, el in enumerate(animation_seq_list):
-            print(f"Seq data {i}: {el['unk'].hex(sep=" ")}")
+
+        self.seq_animation_data['seq_animation_data'] = animation_seq_list
+        print("self.seq_animation_data")
+        print(self.seq_animation_data)
+
+        #for i, el in enumerate(animation_seq_list):
+        #    print(f"Index seq animation: {i},  seq_animation: {len(el['unk'])}")
+        #for i, el in enumerate(animation_seq_list):
+        #    print(f"Seq data {i}: {el['unk'].hex(sep=" ")}")
 
         # Now analysing the sequence 12
-        print("Analysing seq 11:")
-        print(f"Seq data {11}: {animation_seq_list[11]['unk'].hex(sep=" ")}")
-        sequence_analyser = SequenceAnalyser(game_data=game_data, model_anim_data=self.model_animation_data, sequence=animation_seq_list[11]['unk'])
-        print("End sequence analyser")
+        #print("Analysing seq 11:")
+        #print(f"Seq data {11}: {animation_seq_list[11]['unk'].hex(sep=" ")}")
+        #sequence_analyser = SequenceAnalyser(game_data=game_data, model_anim_data=self.model_animation_data, sequence=animation_seq_list[11]['unk'])
+        #print("End sequence analyser")
 
     def __analyze_info_stat(self, game_data: GameData):
         SECTION_NUMBER = 7
