@@ -15,7 +15,7 @@
     {"op_code": "0xAE", "size": 5, "text": "Move Target ?: frame selector {}, mid point {}, to {}, stay for {}", "param_index": [0, 1, 2, 4], "complexity": "complex", "param_type": ["ubyte", "ubyte", "int16", "ubyte"], "param_list": [], "comment": "X3-X4 is int16"},
     {"op_code": "0xB0", "size": -1, "text": "Launch Particle Effect", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": "Flag-based param count, up to 6 params"},
     {"op_code": "0xB7", "size": 0, "text": "Unknown B7", "param_index": [], "complexity": "simple", "param_type": [], "param_list": [], "comment": ""},
-    {"op_code": "0xB8", "size": -1, "text": "Play sound", "param_index": [0], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
+    {"op_code": "0xB8", "size": -1, "text": "Play sound", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
     {"op_code": "0xB9", "size": 1, "text": "BATTLE_STATE_CONTROLER + 1 = {} - 1", "param_index": [0], "complexity": "simple", "param_type": ["ubyte"], "param_list": [], "comment": ""},
     {"op_code": "0xBA", "size": 0, "text": "Play a loaded animation ?", "param_index": [], "complexity": "simple", "param_type": [], "param_list": [], "comment": ""},
     {"op_code": "0xBB", "size": 0, "text": "Print attack name", "param_index": [], "complexity": "simple", "param_type": [], "param_list": [], "comment": ""},
