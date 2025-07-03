@@ -86,11 +86,12 @@
     {"param_id": "0x1A", "text": "Angle between the target and the attacker"},
     {"param_id": "0x33", "text": "Battle Stage ID"},
     {"param_id": "0x78", "text": "*(E5_7F_save + 14)"},
-    {"param_id": "0x79", "text": "*(E5_7F_save + 12)"}
-    {"param_id": "0x7A", "text": "*(E5_7F_save + 10)"}
-    {"param_id": "0x7B", "text": "*(E5_7F_save + 8)"}{"param_id": "0x7C", "text": "*(E5_7F_save + 6)"}
-    {"param_id": "0x7D", "text": "*(E5_7F_save + 4)"} 
-    {"param_id": "0x7E", "text": "*(E5_7F_save + 2)"}
+    {"param_id": "0x79", "text": "*(E5_7F_save + 12)"},
+    {"param_id": "0x7A", "text": "*(E5_7F_save + 10)"},
+    {"param_id": "0x7B", "text": "*(E5_7F_save + 8)"},
+    {"param_id": "0x7C", "text": "*(E5_7F_save + 6)"},
+    {"param_id": "0x7D", "text": "*(E5_7F_save + 4)"} ,
+    {"param_id": "0x7E", "text": "*(E5_7F_save + 2)"},
     {"param_id": "0x7F", "text": "*(E5_7F_save)"}
   ],
   "e5_special_params": [
@@ -119,12 +120,12 @@
     {"param_id": "0x32", "text": "target_lean_to_side_rot = current_value"},
     {"param_id": "0x34", "text": "target_y_pos = current_value"},
     {"param_id": "0x78", "text": "*(dword_1D9820C + 98) = current_value"},
-    {"param_id": "0x79", "text": "*(dword_1D9820C + 96) = current_value"}
-    {"param_id": "0x7A", "text": "*(dword_1D9820C + 94) = current_value"}
-    {"param_id": "0x7B", "text": "*(dword_1D9820C + 92) = current_value"}
-    {"param_id": "0x7C", "text": "*(dword_1D9820C + 90) = current_value"}
-    {"param_id": "0x7D", "text": "*(dword_1D9820C + 88) = current_value"}
-    {"param_id": "0x7E", "text": "*(dword_1D9820C + 86) = current_value"}
+    {"param_id": "0x79", "text": "*(dword_1D9820C + 96) = current_value"},
+    {"param_id": "0x7A", "text": "*(dword_1D9820C + 94) = current_value"},
+    {"param_id": "0x7B", "text": "*(dword_1D9820C + 92) = current_value"},
+    {"param_id": "0x7C", "text": "*(dword_1D9820C + 90) = current_value"},
+    {"param_id": "0x7D", "text": "*(dword_1D9820C + 88) = current_value"},
+    {"param_id": "0x7E", "text": "*(dword_1D9820C + 86) = current_value"},
     {"param_id": "0x7F", "text": "*(dword_1D9820C + 84) = current_value"}
   ],
   "effect_id": [
