@@ -71,64 +71,53 @@ class SequenceAnalyser:
                 text_analyze += f"Play anim {current_opcode_hex_str}"
             else:
                 # Searching the data in op code list
+                description_param = []
                 if current_op_code_data['complexity'] == "simple":
                     for index_param_in_str, param_type in enumerate(current_op_code_data['param_type']):
                         param_index = current_op_code_data['param_index'][index_param_in_str]
                         param_data = param_list[param_index]
+                        description = current_op_code_data['text']
                         # For the moment we mainly show int, but in the futur we will show text linked to this ID
                         if param_type == "anim_id":
-                            text_analyze += f"Play anim {int.from_bytes(param_data, byteorder="little", signed=False )}"
+                            description_param.append(f"{int.from_bytes(param_data, byteorder="little", signed=False )}")
                         elif param_type == "effect_id":
-                            text_analyze += f"{int.from_bytes(param_data, byteorder="little", signed=False )}"
+                            description_param.append(f"{int.from_bytes(param_data, byteorder="little", signed=False )}")
                         elif param_type == "fade_effect_id":
-                            text_analyze +=  f"{int.from_bytes(param_data, byteorder="little", signed=False )}"
+                            description_param.append(f"{int.from_bytes(param_data, byteorder="little", signed=False )}")
                         elif param_type == "ubyte":
-                            text_analyze +=  f"{int.from_bytes(param_data, byteorder="little", signed=False )}"
+                            description_param.append(f"{int.from_bytes(param_data, byteorder="little", signed=False )}")
                         elif param_type == "sbyte":
-                            text_analyze +=  f"{int.from_bytes(param_data, byteorder="little", signed=True )}"
+                            description_param.append( f"{int.from_bytes(param_data, byteorder="little", signed=True )}")
                         elif param_type == "int16":
-                            text_analyze +=  f"{int.from_bytes(param_list[param_index: param_index+1], byteorder="little", signed=True )}"
+                            description_param.append( f"{int.from_bytes(param_list[param_index: param_index+1], byteorder="little", signed=True )}")
                         else:
-                            text_analyze += "Unknown type parameter"
+                            description_param.append( "Unknown type parameter")
+                    text_analyze += current_op_code_data['text'].format(*description_param)
                 elif current_op_code_data['complexity'] == "complex":
-                    added_text = ""
-                    if op_info['op_code'] == 0xc1:
-                        if self._sequence[index_data + 1] == 0x00 and self._sequence[index_data + 2] == 0xe5 and self._sequence[index_data + 3] == 0x0f:
-                            added_text = "Place model at home location"
-                            op_code = self._sequence[index_data: index_data + 3]
-                            index_data += 3
-                        elif self._sequence[index_data + 2] == 0xe5 and self._sequence[index_data + 3] == 0x7f:
-                            anim = self._sequence[index_data + 4]
-                            nb_loop = self._sequence[index_data + 1]
-                            added_text = "Loop {:02X} times anim {:02X}".format(nb_loop, anim)
-                            op_code = self._sequence[index_data: index_data + 4]
-                            index_data += 4
+                    if current_op_code_data['op_code'] in ["0x99", "0xb1"]:
+                        pass
+                    if int(current_op_code_data['op_code'], 16) in [0xC3, 0xC7, 0xCB, 0xCF, 0xD3, 0xD7, 0xDB, 0xDF, 0xE3, 0xE5]:
+                        if param_list[0] < 0x80:
+                            special_read = [x for x in self.game_data.anim_sequence_data_json["special_change_current_value_params"] if  int.from_bytes(param_list[0]) == x['param_id']]
+                            if special_read:
+                                special_read = special_read[0]
+                            else:
+                                print(f"No param_id in special_change_current_value_params for {param_list[0]}")
+                            description_param.append(special_read)
+                            text_analyze += current_op_code_data['text'].format(description_param)
                         else:
-                            added_text = "Unknown C1"
-                            index_data += 1
-                            op_code = None
-                    elif op_info['op_code'] == 0xc3:
-                        if self._sequence[index_data + 1] == 0x7F:
-                            added_text = "Wait till previous sequence is complete"
-                            op_code = self._sequence[index_data: index_data + 7]
-                            index_data += 7
-                        elif self._sequence[index_data + 1] == 0x0C:
-                            added_text = "Unknown but size found"
-                            op_code = self._sequence[index_data: index_data + 6]
-                            index_data += 6
-                        elif self._sequence[index_data + 1] == 0x08:
-                            added_text = "Unknown but size found"
-                            op_code = self._sequence[index_data: index_data + 6]
-                            index_data += 6
-                        else:
-                            added_text = "Unknown C3"
-                            index_data += 1
-                            op_code = None
-                    if op_code:
-                        op_code_text = ' '.join("{:02X}".format(byte) for byte in op_code)
-                    else:
-                        op_code_text = "None"
-                    print("Op code {:02X} with Op code {} means {}".format(op_info['op_code'], op_code_text, added_text))
+                            if current_op_code_data['op_code'] == "0xE5":
+                                special_read = [x for x in self.game_data.anim_sequence_data_json["e5_special_params"] if "0x80" == x['param_id']]
+                            else:
+                                special_read = [x for x in self.game_data.anim_sequence_data_json["special_change_current_value_params"] if
+                                                "0x80" == x['param_id']]
+                            if special_read:
+                                special_read = special_read[0]
+                            else:
+                                print(f"No param_id in special_change_current_value_params for >=0x80 values")
+                            text_analyze += current_op_code_data['text'].format(special_read.format(param_list[0]))
+
+
             text_analyze += "\n"
         print("End __analyse_sequence")
 

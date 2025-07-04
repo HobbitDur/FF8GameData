@@ -12,7 +12,7 @@
     {"op_code": "0xA5", "size": 2, "text": "Effect ID {}", "param_index": [0], "complexity": "simple", "param_type": ["effect_id"], "param_list": [], "comment": ""},
     {"op_code": "0xA8", "size": 1, "text": "Fade effect ID {}", "param_index": [0], "complexity": "simple", "param_type": ["fade_effect_id"], "param_list": [], "comment": ""},
     {"op_code": "0xAD", "size": 4, "text": "Call AE with FF as param 2: AE({}, FF, {}, {}, {})", "param_index": [0, 1, 2, 3], "complexity": "simple", "param_type": ["ubyte", "ubyte", "ubyte", "ubyte"], "param_list": [], "comment": ""},
-    {"op_code": "0xAE", "size": 5, "text": "Move Target ?: frame selector {}, mid point {}, to {}, stay for {}", "param_index": [0, 1, 2, 4], "complexity": "complex", "param_type": ["ubyte", "ubyte", "int16", "ubyte"], "param_list": [], "comment": "X3-X4 is int16"},
+    {"op_code": "0xAE", "size": 5, "text": "Move Target ?: frame selector {}, mid point {}, to {}, stay for {}", "param_index": [0, 1, 2, 4], "complexity": "simple", "param_type": ["ubyte", "ubyte", "int16", "ubyte"], "param_list": [], "comment": "X3-X4 is int16"},
     {"op_code": "0xB0", "size": -1, "text": "Launch Particle Effect", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": "Flag-based param count, up to 6 params"},
     {"op_code": "0xB7", "size": 0, "text": "Unknown B7", "param_index": [], "complexity": "simple", "param_type": [], "param_list": [], "comment": ""},
     {"op_code": "0xB8", "size": -1, "text": "Play sound", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
@@ -50,16 +50,16 @@
     {"op_code": "0xDA", "size": 1, "text": "current_value |= {}", "param_index": [0], "complexity": "simple", "param_type": ["ubyte"], "param_list": [], "comment": ""},
     {"op_code": "0xDE", "size": 1, "text": "current_value ^= {}", "param_index": [0], "complexity": "simple", "param_type": ["ubyte"], "param_list": [], "comment": ""},
     {"op_code": "0xE2", "size": 1, "text": "current_value %= {}", "param_index": [0], "complexity": "simple", "param_type": ["ubyte"], "param_list": [], "comment": ""},
-    {"op_code": "0xC3", "size": 1, "text": "current_value = ", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
-    {"op_code": "0xC7", "size": 1, "text": "current_value += ", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
-    {"op_code": "0xCB", "size": 1, "text": "current_value -= ", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
-    {"op_code": "0xCF", "size": 1, "text": "current_value *= ", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
-    {"op_code": "0xD3", "size": 1, "text": "current_value /= ", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
-    {"op_code": "0xD7", "size": 1, "text": "current_value &= ", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
-    {"op_code": "0xDB", "size": 1, "text": "current_value |= ", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
-    {"op_code": "0xDF", "size": 1, "text": "current_value ^= ", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
-    {"op_code": "0xE3", "size": 1, "text": "current_value %= ", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
-    {"op_code": "0xE5", "size": 1, "text": "Write value", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""}
+    {"op_code": "0xC3", "size": 1, "text": "current_value =  {}", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
+    {"op_code": "0xC7", "size": 1, "text": "current_value += {}", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
+    {"op_code": "0xCB", "size": 1, "text": "current_value -= {}", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
+    {"op_code": "0xCF", "size": 1, "text": "current_value *= {}", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
+    {"op_code": "0xD3", "size": 1, "text": "current_value /= {}", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
+    {"op_code": "0xD7", "size": 1, "text": "current_value &= {}", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
+    {"op_code": "0xDB", "size": 1, "text": "current_value |= {}", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
+    {"op_code": "0xDF", "size": 1, "text": "current_value ^= {}", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
+    {"op_code": "0xE3", "size": 1, "text": "current_value %= {}", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
+    {"op_code": "0xE5", "size": 1, "text": "Write current_value to {}", "param_index": [], "complexity": "complex", "param_type": [], "param_list": [], "comment": ""},
     {"op_code": "0xE6", "size": 1, "text": "Jump {} bytes", "param_index": [0], "complexity": "simple", "param_type": ["sbyte"], "param_list": [], "comment": "Always jump forward (signed byte)"},
     {"op_code": "0xE7", "size": 1, "text": "If > 0 jump {} bytes", "param_index": [0], "complexity": "simple", "param_type": ["sbyte"], "param_list": [], "comment": "Else skip param"},
     {"op_code": "0xE8", "size": 1, "text": "If >= 0 jump {} bytes", "param_index": [0], "complexity": "simple", "param_type": ["sbyte"], "param_list": [], "comment": "Else skip param"},
@@ -92,7 +92,8 @@
     {"param_id": "0x7C", "text": "*(E5_7F_save + 6)"},
     {"param_id": "0x7D", "text": "*(E5_7F_save + 4)"} ,
     {"param_id": "0x7E", "text": "*(E5_7F_save + 2)"},
-    {"param_id": "0x7F", "text": "*(E5_7F_save)"}
+    {"param_id": "0x7F", "text": "*(E5_7F_save)"},
+    {"param_id": "0x80", "text": "Read from stack {}"}
   ],
   "e5_special_params": [
     {"param_id": "0x00", "text": "*(BATTLE_STATE_CONTROLER + 20) = current_value"},
@@ -126,7 +127,8 @@
     {"param_id": "0x7C", "text": "*(dword_1D9820C + 90) = current_value"},
     {"param_id": "0x7D", "text": "*(dword_1D9820C + 88) = current_value"},
     {"param_id": "0x7E", "text": "*(dword_1D9820C + 86) = current_value"},
-    {"param_id": "0x7F", "text": "*(dword_1D9820C + 84) = current_value"}
+    {"param_id": "0x7F", "text": "*(dword_1D9820C + 84) = current_value"},
+    {"param_id": "0x80", "text": "to stack {}"}
   ],
   "effect_id": [
     {"param_id": "0x00", "text": "Character/Boss magic effect"},
