@@ -319,6 +319,18 @@ class GameData:
         for i, el in enumerate(self.anim_sequence_data_json["op_code_info"]):
             if el["op_code"]:
                 self.anim_sequence_data_json["op_code_info"][i]["op_code"] = int(self.anim_sequence_data_json["op_code_info"][i]["op_code"], 16)
+        for i, el in enumerate(self.anim_sequence_data_json["special_change_current_value_params"]):
+            if el["param_id"]:
+                self.anim_sequence_data_json["special_change_current_value_params"][i]["param_id"] = int(self.anim_sequence_data_json["special_change_current_value_params"][i]["param_id"], 16)
+        for i, el in enumerate(self.anim_sequence_data_json["e5_special_params"]):
+            if el["param_id"]:
+                self.anim_sequence_data_json["e5_special_params"][i]["param_id"] = int(self.anim_sequence_data_json["e5_special_params"][i]["param_id"], 16)
+        for i, el in enumerate(self.anim_sequence_data_json["effect_id"]):
+            if el["param_id"]:
+                self.anim_sequence_data_json["effect_id"][i]["param_id"] = int(self.anim_sequence_data_json["effect_id"][i]["param_id"], 16)
+        for i, el in enumerate(self.anim_sequence_data_json["fade_effect_id"]):
+            if el["param_id"]:
+                self.anim_sequence_data_json["fade_effect_id"][i]["param_id"] = int(self.anim_sequence_data_json["fade_effect_id"][i]["param_id"], 16)
 
     def load_mngrp_data(self):
         file_path = os.path.join(self.resource_folder_json, "mngrp_bin_data.json")

@@ -1,5 +1,6 @@
 {
   "op_code_info": [
+    {"op_code": "0x00", "size": 0, "text": "Play anim {}", "param_index": [0], "complexity": "simple", "param_type": ["sbyte"], "param_list": [], "comment": ""},
     {"op_code": "0x85", "size": 0, "text": "Hide Selection Cursor", "param_index": [], "complexity": "simple", "param_type": [], "param_list": [], "comment": ""},
     {"op_code": "0x86", "size": 0, "text": "Show Selection Cursor", "param_index": [], "complexity": "simple", "param_type": [], "param_list": [], "comment": ""},
     {"op_code": "0x94", "size": 0, "text": "Toggle Shadow", "param_index": [], "complexity": "simple", "param_type": [], "param_list": [], "comment": ""},
@@ -128,7 +129,7 @@
     {"param_id": "0x7D", "text": "*(dword_1D9820C + 88) = current_value"},
     {"param_id": "0x7E", "text": "*(dword_1D9820C + 86) = current_value"},
     {"param_id": "0x7F", "text": "*(dword_1D9820C + 84) = current_value"},
-    {"param_id": "0x80", "text": "to stack {}"}
+    {"param_id": "0x80", "text": "stack {}"}
   ],
   "effect_id": [
     {"param_id": "0x00", "text": "Character/Boss magic effect"},

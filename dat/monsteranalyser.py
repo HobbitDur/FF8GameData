@@ -470,16 +470,8 @@ class MonsterAnalyser:
 
         self.seq_animation_data['seq_animation_data'] = animation_seq_list
 
-        # for i, el in enumerate(animation_seq_list):
-        #    print(f"Index seq animation: {i},  seq_animation: {len(el['unk'])}")
-        # for i, el in enumerate(animation_seq_list):
-        #    print(f"Seq data {i}: {el['unk'].hex(sep=" ")}")
-
-        # Now analysing the sequence 12
-        # print("Analysing seq 11:")
-        # print(f"Seq data {11}: {animation_seq_list[11]['unk'].hex(sep=" ")}")
-        # sequence_analyser = SequenceAnalyser(game_data=game_data, model_anim_data=self.model_animation_data, sequence=animation_seq_list[11]['unk'])
-        # print("End sequence analyser")
+        #sequence_analyser = SequenceAnalyser(game_data=game_data, model_anim_data=self.model_animation_data, sequence=animation_seq_list[11])
+        #print(sequence_analyser.get_text())
 
     def __analyze_info_stat(self, game_data: GameData):
         SECTION_NUMBER = 7
