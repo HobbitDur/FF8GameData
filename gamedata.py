@@ -331,6 +331,12 @@ class GameData:
         for i, el in enumerate(self.anim_sequence_data_json["fade_effect_id"]):
             if el["param_id"]:
                 self.anim_sequence_data_json["fade_effect_id"][i]["param_id"] = int(self.anim_sequence_data_json["fade_effect_id"][i]["param_id"], 16)
+        for i, el in enumerate(self.anim_sequence_data_json["sound_channel_flag"]):
+            if el["param_id"]:
+                self.anim_sequence_data_json["sound_channel_flag"][i]["param_id"] = int(self.anim_sequence_data_json["sound_channel_flag"][i]["param_id"], 16)
+        for i, el in enumerate(self.anim_sequence_data_json["sound_id_from_category"]):
+            if el["param_id"]:
+                self.anim_sequence_data_json["sound_id_from_category"][i]["param_id"] = int(self.anim_sequence_data_json["sound_id_from_category"][i]["param_id"], 16)
 
     def load_mngrp_data(self):
         file_path = os.path.join(self.resource_folder_json, "mngrp_bin_data.json")

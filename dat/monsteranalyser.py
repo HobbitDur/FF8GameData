@@ -170,20 +170,26 @@ class MonsterAnalyser:
         # raw_data_to_write.extend(self.section_raw_data[section_position])
         self.section_raw_data[section_position] = bytearray()
         nb_seq = len(self.seq_animation_data['seq_animation_data'])
-        size_list = []
-        for seq in self.seq_animation_data['seq_animation_data']:
-            size_list.append(len(seq))
+
+
 
         ## Now compute offset
         offset_list = []
         current_offset = AIData.SECTION_MODEL_SEQ_ANIM_NB_SEQ['size'] + nb_seq * AIData.SECTION_MODEL_SEQ_ANIM_OFFSET['size']
-        for size in size_list:
-            if size == 0:
-                offset_list.append(0)
+        for index, seq in enumerate(self.seq_animation_data['seq_animation_data']):
+            if len(seq['data']) == 0:
+                self.seq_animation_data['seq_animation_data'][index]['offset'] = 0
             else:
-                offset_list.append(current_offset)
-                current_offset += size
+                self.seq_animation_data['seq_animation_data'][index]['offset'] = current_offset
+            current_offset+=len(seq['data'])
 
+        current_id = 0
+        while current_id < nb_seq:
+            for index, seq in enumerate(self.seq_animation_data['seq_animation_data']):
+                if seq["id"] != current_id:
+                    continue
+                offset_list.append(seq['offset'])
+                current_id +=1
         ## Now construction the raw data:
         self.section_raw_data[section_position].extend(
             int.to_bytes(nb_seq, byteorder=AIData.SECTION_MODEL_SEQ_ANIM_NB_SEQ['byteorder'], length=AIData.SECTION_MODEL_SEQ_ANIM_NB_SEQ['size']))
@@ -191,7 +197,7 @@ class MonsterAnalyser:
             self.section_raw_data[section_position].extend(
                 int.to_bytes(offset, byteorder=AIData.SECTION_MODEL_SEQ_ANIM_OFFSET['byteorder'], length=AIData.SECTION_MODEL_SEQ_ANIM_OFFSET['size']))
         for seq in self.seq_animation_data['seq_animation_data']:
-            self.section_raw_data[section_position].extend(seq)
+            self.section_raw_data[section_position].extend(seq['data'])
         raw_data_to_write.extend(self.section_raw_data[section_position])
         # Section 6: no analyze done yet
         section_position = 6
@@ -454,8 +460,8 @@ class MonsterAnalyser:
                 int.from_bytes(self.section_raw_data[SECTION_NUMBER][start_offset + index_offset * offset_size:start_offset + (index_offset + 1) * offset_size],
                                byteorder="little"))
         self.seq_animation_data['seq_anim_offset'] = list_seq_anim_offset
-
         animation_seq_list = []
+        offset_list_done = []
         for index, anim_offset in enumerate(list_seq_anim_offset):
             start_anim = list_seq_anim_offset[index]
             if anim_offset == 0:
@@ -466,13 +472,43 @@ class MonsterAnalyser:
                     end_anim = min(next_offset)
                 else:
                     end_anim = len(self.section_raw_data[SECTION_NUMBER])
-            animation_seq_list.append(self.section_raw_data[SECTION_NUMBER][start_anim: end_anim])
+            # Insert the data to have a continuous byte structure
+
+            self.insert_sorted_with_zeros(offset_list_done, anim_offset)
+            if anim_offset == 0:
+                animation_seq_list.append({"id": index, "data":self.section_raw_data[SECTION_NUMBER][start_anim: end_anim]})
+            else:
+                animation_seq_list.insert(offset_list_done.index(anim_offset), {"id": index, "data":self.section_raw_data[SECTION_NUMBER][start_anim: end_anim]})
 
         self.seq_animation_data['seq_animation_data'] = animation_seq_list
 
-        #sequence_analyser = SequenceAnalyser(game_data=game_data, model_anim_data=self.model_animation_data, sequence=animation_seq_list[11])
-        #print(sequence_analyser.get_text())
 
+    @staticmethod
+    def insert_sorted_with_zeros(lst, value):
+        if value == 0:
+            lst.append(0)
+            return lst
+
+        # Get all non-zero values
+        non_zeros = [x for x in lst if x != 0]
+
+        # Find where to insert the value
+        insert_pos = 0
+        while insert_pos < len(non_zeros) and non_zeros[insert_pos] < value:
+            insert_pos += 1
+
+        # Insert in the list, skipping zeros
+        count = 0
+        for i in range(len(lst)):
+            if lst[i] != 0:
+                if count == insert_pos:
+                    lst.insert(i, value)
+                    return lst
+                count += 1
+
+        # If we got here, insert at the end before the zeros
+        lst.append(value)
+        return lst
     def __analyze_info_stat(self, game_data: GameData):
         SECTION_NUMBER = 7
         for el in game_data.AIData.SECTION_INFO_STAT_LIST_DATA:
