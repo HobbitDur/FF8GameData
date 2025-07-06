@@ -101,7 +101,7 @@ class SequenceAnalyser:
                     elif param_type == "sbyte":
                         description_param.append(f"{int.from_bytes(param_data_hex, byteorder="little", signed=True)}")
                     elif param_type == "int16":
-                        description_param.append(f"{int.from_bytes(param_list[param_index: param_index + 1], byteorder="little", signed=True)}")
+                        description_param.append(f"{int.from_bytes(param_list[param_index: param_index + 2], byteorder="little", signed=True)}")
                     else:
                         description_param.append("Unknown type parameter")
                 text_analyze += current_op_code_data['text'].format(*description_param)
