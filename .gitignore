@@ -10,3 +10,4 @@
 *.fl
 *.tim
 *.egg-info/
+**/vc_redist.x64.exe
