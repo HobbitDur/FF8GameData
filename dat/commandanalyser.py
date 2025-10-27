@@ -348,6 +348,11 @@ class CommandAnalyser:
                         else:
                             print(f"Unexpected magic type: {r_cond}")
                             r_cond_result = 0
+                    elif op_code_list[1] == 203:  # comID type
+                        if r_cond == "SELF":
+                            r_cond_result = 200
+                        else:
+                            r_cond_result = int(r_cond)+0x10
                     else:
                         print(f"Unexpected param right for subject id 10: {r_cond}")
                         r_cond_result = 0
@@ -699,8 +704,6 @@ class CommandAnalyser:
         subject_id = op_code[0]
         op_code_left_condition_param = op_code[1]
         op_code_comparator = op_code[2]
-        op_code_right_condition_param_1 = op_code[3]
-        op_code_right_condition_param_1 = op_code[4]
         jump_value_op_1 = op_code[5]
         jump_value_op_2 = op_code[6]
         jump_value = int.from_bytes(bytearray([op_code[5], op_code[6]]), byteorder='little')
@@ -925,7 +928,7 @@ class CommandAnalyser:
                         if op_code_right_condition_param == 200:
                             attack_right_condition_param = "SELF"
                         else:
-                            attack_right_condition_param = f"c0m ID {op_code_right_condition_param-0x10}"
+                            attack_right_condition_param = f"{op_code_right_condition_param-0x10}"
                         list_param_possible_right.extend(self.__get_possible_subject_10_203())
                     else:
                         attack_right_condition_param = op_code_right_condition_param
