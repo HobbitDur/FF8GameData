@@ -16,7 +16,7 @@ class CommandAnalyser:
     PARAM_CHAR_RIGHT = "]"
 
     def __init__(self, op_id: int, op_code: list, game_data: GameData, battle_text=(), info_stat_data={},
-                 line_index=0, color="#0055ff", text_param=False, current_if_type=CurrentIfType.NONE):
+                 line_index=0, color="#0055ff", text_param=False, current_if_type=CurrentIfType.NONE, comment:str=""):
         self.__op_id = op_id
         self.__op_code = op_code
         self.__battle_text = battle_text
@@ -35,6 +35,7 @@ class CommandAnalyser:
         self.__raw_text_added = []
         self.__current_if_type = current_if_type
         self.__jump_value = 0
+        self.__comment = comment
         if text_param:
             self.__analyse_op_data_with_text_param()
         else:
@@ -90,7 +91,7 @@ class CommandAnalyser:
     def get_text_param(self):
         return self.__raw_parameters
 
-    def get_text(self, with_size=True, raw=False, for_code=False, html=False):
+    def get_text(self, with_size=True, raw=False, for_code=False, html=False, comment=True):
         text = self.__raw_text
         parameters = self.__raw_parameters.copy()
 
@@ -123,6 +124,8 @@ class CommandAnalyser:
             text = text.format(*parameters)
         if with_size:
             text += " (size:{}bytes)".format(self.__size)
+        if comment and self.__comment:
+            text += "//" + self.__comment
         # Removing return line as we compute line by line
         if for_code:
             text = text.replace('<br/>', '')
