@@ -44,12 +44,12 @@
     {"op_code": 11,  "size": 3, "func_name":"useRandom",        "short_text":"11:Random ability" ,"text": "Randomly use ability line {} or {} or {}", "param_index": [0,1,2], "complexity": "simple", "param_type":  ["monster_line_ability", "monster_line_ability", "monster_line_ability"], "param_list":  [], "comment":  "Random attack"},
     {"op_code": 12,  "size": 1, "func_name":"use",              "short_text":"12:Execute ability" ,"text": "Execute ability line {}", "param_index": [0], "complexity": "simple", "param_type":  ["monster_line_ability"], "param_list":  [], "comment":  "Attack/animation"},
     {"op_code": 13,  "size": 1, "func_name":"unknown13",        "short_text":"13:Unknown"             ,"text": "Unknown action13 {}", "param_index": [0], "complexity": "simple", "param_type":  ["int"], "param_list":  [], "comment":  "Not used by any monster"},
-    {"op_code": 14,  "size": 2, "func_name":"var",              "short_text":"14:Set var"             ,"text": "Set {} to {} (scope:monster)", "param_index": [0, 1], "complexity": "simple", "param_type":  ["var", "int"], "param_list":  [], "comment":  "Set var"},
-    {"op_code": 15,  "size": 2, "func_name":"bvar",             "short_text":"15:Set battle var"      ,"text": "Set {} to {} (scope:battle)", "param_index": [0, 1], "complexity": "simple", "param_type":  ["var", "int"], "param_list":  [], "comment":  "Set var globally"},
-    {"op_code": 17,  "size": 2, "func_name":"gvar",             "short_text":"17:Set global var"      ,"text": "Set {} to {} (scope:global)", "param_index": [0,1], "complexity": "simple", "param_type":  ["var", "int"], "param_list":  [], "comment":  "Set var map"},
-    {"op_code": 18,  "size": 2, "func_name":"add",              "short_text":"18:Add to var"          ,"text": "Add to {} value {} (scope:monster)", "param_index": [0,1], "complexity": "simple", "param_type":  ["var", "int"], "param_list":  [], "comment":  "Add var"},
-    {"op_code": 19,  "size": 2, "func_name":"badd",             "short_text":"19:Add to battle var"   ,"text": "Add to {} value {} (scope:battle)", "param_index": [0,1], "complexity": "simple", "param_type":  ["var", "int"], "param_list":  [], "comment":  "Add var global"},
-    {"op_code": 21,  "size": 2, "func_name":"gadd",             "short_text":"21:Add to global var"   ,"text": "Add to {} value {} (scope:global)", "param_index": [0,1], "complexity": "simple", "param_type":  ["var", "int"], "param_list":  [], "comment":  "ADD var savemap"},
+    {"op_code": 14,  "size": 2, "func_name":"var",              "short_text":"14:Set var"             ,"text": "Set {} to {} (scope:monster)", "param_index": [0, 1], "complexity": "simple", "param_type":  ["local_var", "int"], "param_list":  [], "comment":  "Set var"},
+    {"op_code": 15,  "size": 2, "func_name":"bvar",             "short_text":"15:Set battle var"      ,"text": "Set {} to {} (scope:battle)", "param_index": [0, 1], "complexity": "simple", "param_type":  ["battle_var", "int"], "param_list":  [], "comment":  "Set var globally"},
+    {"op_code": 17,  "size": 2, "func_name":"gvar",             "short_text":"17:Set global var"      ,"text": "Set {} to {} (scope:global)", "param_index": [0,1], "complexity": "simple", "param_type":  ["global_var", "int"], "param_list":  [], "comment":  "Set var map"},
+    {"op_code": 18,  "size": 2, "func_name":"add",              "short_text":"18:Add to var"          ,"text": "Add to {} value {} (scope:monster)", "param_index": [0,1], "complexity": "simple", "param_type":  ["local_var", "int"], "param_list":  [], "comment":  "Add var"},
+    {"op_code": 19,  "size": 2, "func_name":"badd",             "short_text":"19:Add to battle var"   ,"text": "Add to {} value {} (scope:battle)", "param_index": [0,1], "complexity": "simple", "param_type":  ["battle_var", "int"], "param_list":  [], "comment":  "Add var global"},
+    {"op_code": 21,  "size": 2, "func_name":"gadd",             "short_text":"21:Add to global var"   ,"text": "Add to {} value {} (scope:global)", "param_index": [0,1], "complexity": "simple", "param_type":  ["global_var", "int"], "param_list":  [], "comment":  "ADD var savemap"},
     {"op_code": 22,  "size": 0, "func_name":"recover",          "short_text":"22:Recover"             ,"text": "Heal all HP", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "FUll hp"},
     {"op_code": 23,  "size": 1, "func_name":"setEscape",        "short_text":"23:Run"                 ,"text": "escape activated = {}", "param_index": [0], "complexity": "simple", "param_type":  ["bool"], "param_list":  [], "comment":  "Deactivate Run away"},
     {"op_code": 24,  "size": 1, "func_name":"printSpeed",       "short_text":"24:Show text speed"     ,"text": "Show text with ID {} using setup speed", "param_index": [0], "complexity": "simple", "param_type":  ["battle_text"], "param_list":  [], "comment":  "Show battle text with debug ?"},
@@ -127,14 +127,14 @@
    {"subject_id": 101,"short_text": "BattleVar101",               "left_text": "BATTLE VAR {}",                             "complexity": "simple",  "right_text":"",               "param_left_type": "battle_var"              , "param_right_type":"int"},
    {"subject_id": 102,"short_text": "BattleVar102",               "left_text": "BATTLE VAR {}",                             "complexity": "simple",  "right_text":"",               "param_left_type": "battle_var"              , "param_right_type":"int"},
    {"subject_id": 103,"short_text": "BattleVar103",               "left_text": "BATTLE VAR {}",                             "complexity": "simple",  "right_text":"",               "param_left_type": "battle_var"              , "param_right_type":"int"},
-   {"subject_id": 220,"short_text": "varA",                       "left_text": "LOCAL VAR {}",                              "complexity": "simple",  "right_text":"",               "param_left_type": "local_var"               , "param_right_type":"int"},
-   {"subject_id": 221,"short_text": "varB",                       "left_text": "LOCAL VAR {}",                              "complexity": "simple",  "right_text":"",               "param_left_type": "local_var"               , "param_right_type":"int"},
-   {"subject_id": 222,"short_text": "varC",                       "left_text": "LOCAL VAR {}",                              "complexity": "simple",  "right_text":"",               "param_left_type": "local_var"               , "param_right_type":"int"},
-   {"subject_id": 223,"short_text": "varD",                       "left_text": "LOCAL VAR {}",                              "complexity": "simple",  "right_text":"",               "param_left_type": "local_var"               , "param_right_type":"int"},
-   {"subject_id": 224,"short_text": "varE",                       "left_text": "LOCAL VAR {}",                              "complexity": "simple",  "right_text":"",               "param_left_type": "local_var"               , "param_right_type":"int"},
-   {"subject_id": 225,"short_text": "varF",                       "left_text": "LOCAL VAR {}",                              "complexity": "simple",  "right_text":"",               "param_left_type": "local_var"               , "param_right_type":"int"},
-   {"subject_id": 226,"short_text": "varG",                       "left_text": "LOCAL VAR {}",                              "complexity": "simple",  "right_text":"",               "param_left_type": "local_var"               , "param_right_type":"int"},
-   {"subject_id": 227,"short_text": "varH",                       "left_text": "LOCAL VAR {}",                              "complexity": "simple",  "right_text":"",               "param_left_type": "local_var"               , "param_right_type":"int"}
+   {"subject_id": 220,"short_text": "varA",                       "left_text": "{} of {}",                                  "complexity": "simple",  "right_text":"",               "param_left_type": "local_var"               , "param_right_type":"int"},
+   {"subject_id": 221,"short_text": "varB",                       "left_text": "{} of {}",                                  "complexity": "simple",  "right_text":"",               "param_left_type": "local_var"               , "param_right_type":"int"},
+   {"subject_id": 222,"short_text": "varC",                       "left_text": "{} of {}",                                  "complexity": "simple",  "right_text":"",               "param_left_type": "local_var"               , "param_right_type":"int"},
+   {"subject_id": 223,"short_text": "varD",                       "left_text": "{} of {}",                                  "complexity": "simple",  "right_text":"",               "param_left_type": "local_var"               , "param_right_type":"int"},
+   {"subject_id": 224,"short_text": "varE",                       "left_text": "{} of {}",                                  "complexity": "simple",  "right_text":"",               "param_left_type": "local_var"               , "param_right_type":"int"},
+   {"subject_id": 225,"short_text": "varF",                       "left_text": "{} of {}",                                  "complexity": "simple",  "right_text":"",               "param_left_type": "local_var"               , "param_right_type":"int"},
+   {"subject_id": 226,"short_text": "varG",                       "left_text": "{} of {}",                                  "complexity": "simple",  "right_text":"",               "param_left_type": "local_var"               , "param_right_type":"int"},
+   {"subject_id": 227,"short_text": "varH",                       "left_text": "{} of {}",                                  "complexity": "simple",  "right_text":"",               "param_left_type": "local_var"               , "param_right_type":"int"}
   ],
   "subject_left_10":[
    {"param_id": 0, "text": ["LAST ATTACK DAMAGE TYPE IS"]},
@@ -241,13 +241,24 @@
     {"id": 7, "data": "UNKNOWN7"}
   ],
   "local_var_option": [
-    {"id": 200, "data": "SELF VAR"},
-    {"id": 203, "data": "LAST ATTACKER VAR"}
+    {"id": 200, "data": "SELF"},
+    {"id": 203, "data": "LAST ATTACKER"},
+    {"id": 220, "data": "SLOT ID entity FROM varA"},
+    {"id": 221, "data": "SLOT ID entity FROM varB"},
+    {"id": 222, "data": "SLOT ID entity FROM varC"},
+    {"id": 223, "data": "SLOT ID entity FROM varD"},
+    {"id": 224, "data": "SLOT ID entity FROM varE"},
+    {"id": 225, "data": "SLOT ID entity FROM varF"},
+    {"id": 226, "data": "SLOT ID entity FROM varG"},
+    {"id": 227, "data": "SLOT ID entity FROM varH"}
   ],
   "battle_var_option": [
     {"id": 200, "data": "DEFAULT_BEHAVIOR"}
   ],
   "global_var_option": [
     {"id": 200, "data": "DEFAULT_BEHAVIOR"}
-  ]
+  ],
+  "local_var_monster_option":
+    {"text": "{} of first {}"}
 }
+
