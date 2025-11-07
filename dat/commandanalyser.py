@@ -661,7 +661,11 @@ class CommandAnalyser:
                 val_dict['var_type'] == "global"]
 
     def __get_possible_option_local_var(self):
-        return [{'id': val_dict['id'], 'data': val_dict['data']} for id, val_dict in enumerate(self.game_data.ai_data_json["local_var_option"])]
+        possible_values = [{'id': val_dict['id'], 'data': val_dict['data']} for id, val_dict in enumerate(self.game_data.ai_data_json["local_var_option"])]
+        # Adding the comId one
+        for monster in self.game_data.monster_data_json["monster"]:
+            possible_values.append({'id': monster['id'] + 0x10, 'data': monster['name']} )
+        # Adding the var one
 
     def __get_possible_option_battle_var(self):
         return [{'id': val_dict['id'], 'data': val_dict['data']} for id, val_dict in enumerate(self.game_data.ai_data_json["battle_var_option"])]
@@ -724,9 +728,6 @@ class CommandAnalyser:
 
         if if_current_subject:
             if_current_subject = if_current_subject[0]
-        elif subject_id > 20:
-            left_subject = {'text': '{}', 'param': self.__get_var_name(subject_id)}
-            right_subject = {'text': '{}', 'param': [int(op_code_right_condition_param)]}
         else:
             left_subject = {'text': 'UNKNOWN SUBJECT', 'param': None}
             right_subject = {'text': '{}', 'param': [op_code_right_condition_param]}
