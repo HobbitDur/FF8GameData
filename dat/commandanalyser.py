@@ -185,8 +185,6 @@ class CommandAnalyser:
                     op_code_list[i] = [x['id'] for x in self.game_data.special_action_data_json['special_action'] if x['name'] == op_code_list[i]][0]
                 elif param_type == "monster_line_ability":
                     op_code_list[i] = int(op_code_list[i])
-                elif param_type == "ability":
-                    op_code_list[i] = [x['id'] for x in self.game_data.enemy_abilities_data_json['abilities'] if x['name'] == op_code_list[i]][0]
                 elif param_type == "card":
                     op_code_list[i] = [x['id'] for x in self.game_data.card_data_json['card_info'] if x['name'] == op_code_list[i]][0]
                 elif param_type == "monster":
@@ -209,6 +207,10 @@ class CommandAnalyser:
                     op_code_list[i] = [x['id'] for x in self.game_data.status_data_json['status_ai'] if x['name'] == op_code_list[i]][0]
                 elif param_type == "magic_type":
                     op_code_list[i] = [x['id'] for x in self.game_data.magic_data_json['magic_type'] if x['name'] == op_code_list[i]][0]
+                elif param_type == "magic":
+                    op_code_list[i] = [x['id'] for x in self.game_data.magic_data_json['magic'] if x['name'] == op_code_list[i]][0]
+                elif param_type == "monster_ability":
+                    op_code_list[i] = [x['id'] for x in self.game_data.enemy_abilities_data_json['abilities'] if x['name'] == op_code_list[i]][0]
                 elif param_type == "aptitude":
                     op_code_list[i] = [x['aptitude_id'] for x in self.game_data.ai_data_json['aptitude_list'] if x['text'] == op_code_list[i]][0]
                 elif param_type == "battle_text":
@@ -423,8 +425,14 @@ class CommandAnalyser:
                     param_value.append(str(self.__op_code[op_index] * 10))
                     self.param_possible_list.append([])
                 elif type == "magic_type":
-                    param_value.append(str([x['name'] for x in self.game_data.magic_data_json['magic_type'] if x['id'] == self.__op_code[op_index]]))
+                    param_value.append(str([x['name'] for x in self.game_data.magic_data_json['magic_type'] if x['id'] == self.__op_code[op_index]][0]))
                     self.param_possible_list.append(self.__get_possible_magic_type())
+                elif type == "magic":
+                    param_value.append(str([x['name'] for x in self.game_data.magic_data_json['magic'] if x['id'] == self.__op_code[op_index]][0]))
+                    self.param_possible_list.append(self.__get_possible_magic())
+                elif type == "monster_ability":
+                    param_value.append(str([x['name'] for x in self.game_data.enemy_abilities_data_json['abilities'] if x['id'] == self.__op_code[op_index]][0]))
+                    self.param_possible_list.append(self.__get_possible_monster_abilities())
                 elif type == "bool":
                     param_value.append(str(bool(self.__op_code[op_index])))
                     self.param_possible_list.append([{"id": 0, "data": "False"}, {"id": 1, "data": "True"}])
@@ -644,6 +652,9 @@ class CommandAnalyser:
 
     def __get_possible_monster(self):
         return [{'id': val_dict['id'], 'data': val_dict['name']} for id, val_dict in enumerate(self.game_data.monster_data_json["monster"])]
+
+    def __get_possible_monster_abilities(self):
+        return [{'id': val_dict['id'], 'data': val_dict['name']} for id, val_dict in enumerate(self.game_data.enemy_abilities_data_json["abilities"])]
 
     def __get_possible_card(self):
         return [{'id': val_dict['id'], 'data': val_dict['name']} for id, val_dict in enumerate(self.game_data.card_data_json["card_info"])]
