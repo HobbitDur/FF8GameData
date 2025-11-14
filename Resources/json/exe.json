@@ -35,8 +35,6 @@
     "es_offset":             "+0x1C8"
   },
 
-
-
    "scan_data_offset":{
     "eng_section_start":     "0x1487474",
     "eng_section_end":       "0x14875B3",
@@ -47,5 +45,10 @@
     "de_offset":       "0xE3C",
     "es_offset":       "0xAE0"
 
+  },
+  "draw_data_offset":{
+    "og_eng_start":     "0x792328",
+    "size":     "0x100"
   }
+
 }
