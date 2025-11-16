@@ -202,10 +202,13 @@ class GameData:
         self.enemy_abilities_data_json = {}
         self.gforce_data_json = {}
         self.item_data_json = {}
+        self.draw_data_json = {}
         self.special_action_data_json = {}
+        self.field_data_json = {}
         self.stat_data_json = {}
         self.monster_data_json = {}
         self.status_data_json = {}
+        self.field_data_json = {}
         self.sysfnt_data_json = {}
         self.kernel_data_json = {}
         self.mngrp_data_json = {}
@@ -267,6 +270,11 @@ class GameData:
         with open(file_path, encoding="utf8") as f:
             self.devour_data_json = json.load(f)
 
+    def load_field_data(self):
+        file_path = os.path.join(self.resource_folder_json, "field.json")
+        with open(file_path, encoding="utf8") as f:
+            self.field_data_json = json.load(f)
+
     def load_enemy_abilities_data(self):
         file_path = os.path.join(self.resource_folder_json, "enemy_abilities.json")
         with open(file_path, encoding="utf8") as f:
@@ -297,6 +305,11 @@ class GameData:
         with open(file_path, encoding="utf8") as f:
             self.item_data_json = json.load(f)
 
+    def load_draw_data(self):
+        file_path = os.path.join(self.resource_folder_json, "draw.json")
+        with open(file_path, encoding="utf8") as f:
+            self.draw_data_json = json.load(f)
+
     def load_exe_data(self):
         file_path = os.path.join(self.resource_folder_json, "exe.json")
         with open(file_path, encoding="utf8") as f:
@@ -311,6 +324,8 @@ class GameData:
             self.exe_data_json["scan_data_offset"][key] = int(self.exe_data_json["scan_data_offset"][key], 16)
         for key in self.exe_data_json["draw_text_offset"]:
             self.exe_data_json["draw_text_offset"][key] = int(self.exe_data_json["draw_text_offset"][key], 16)
+        for key in self.exe_data_json["draw_data_offset"]:
+            self.exe_data_json["draw_data_offset"][key] = int(self.exe_data_json["draw_data_offset"][key], 16)
 
     def load_anim_sequence_data(self):
         file_path = os.path.join(self.resource_folder_json, "anim_sequence_info.json")
@@ -689,6 +704,8 @@ class GameData:
         self.load_enemy_abilities_data()
         self.load_special_action_data()
         self.load_anim_sequence_data()
+        self.load_field_data()
+        self.load_draw_data()
 
 
 if __name__ == "__main__":
