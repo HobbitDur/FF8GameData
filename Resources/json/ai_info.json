@@ -158,8 +158,16 @@
     {"param_id": 209, "text": "NEW ALLY", "param_type": "", "comment":  "Shiva"}
   ],
   "target_advanced_specific": [
-    {"param_id": 200, "text": "SELF", "param_type": "", "comment":  ""},
-    {"param_id": 203, "text": "LAST ATTACKER", "param_type": "", "comment":  ""}
+    {"param_id": 200, "text": "SELF",                     "param_type": "", "comment":  ""},
+    {"param_id": 203, "text": "LAST ATTACKED",            "param_type": "", "comment":  ""},
+    {"param_id": 220, "text": "SLOT ID entity FROM varA", "param_type": ""},
+    {"param_id": 221, "text": "SLOT ID entity FROM varB", "param_type": ""},
+    {"param_id": 222, "text": "SLOT ID entity FROM varC", "param_type": ""},
+    {"param_id": 223, "text": "SLOT ID entity FROM varD", "param_type": ""},
+    {"param_id": 224, "text": "SLOT ID entity FROM varE", "param_type": ""},
+    {"param_id": 225, "text": "SLOT ID entity FROM varF", "param_type": ""},
+    {"param_id": 226, "text": "SLOT ID entity FROM varG", "param_type": ""},
+    {"param_id": 227, "text": "SLOT ID entity FROM varH", "param_type": ""}
   ],
   "target_advanced_generic": [
     {"param_id": 200, "text": "ENEMY TEAM", "param_type": "", "comment":  ""},
@@ -239,18 +247,6 @@
     {"id": 5, "data": "RINOA_ALTERNATE_LIMIT_UNLOCKED"},
     {"id": 6, "data": "UNKNOWN6"},
     {"id": 7, "data": "UNKNOWN7"}
-  ],
-  "local_var_option": [
-    {"id": 200, "data": "SELF"},
-    {"id": 203, "data": "LAST ATTACKER"},
-    {"id": 220, "data": "SLOT ID entity FROM varA"},
-    {"id": 221, "data": "SLOT ID entity FROM varB"},
-    {"id": 222, "data": "SLOT ID entity FROM varC"},
-    {"id": 223, "data": "SLOT ID entity FROM varD"},
-    {"id": 224, "data": "SLOT ID entity FROM varE"},
-    {"id": 225, "data": "SLOT ID entity FROM varF"},
-    {"id": 226, "data": "SLOT ID entity FROM varG"},
-    {"id": 227, "data": "SLOT ID entity FROM varH"}
   ],
   "battle_var_option": [
     {"id": 200, "data": "DEFAULT_BEHAVIOR"}

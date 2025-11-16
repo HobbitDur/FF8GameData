@@ -254,7 +254,7 @@ class CommandAnalyser:
             elif if_subject_dict['param_left_type'] in ("battle_var", "global_var"):
                 op_code_list[1] = 200
             elif if_subject_dict['param_left_type'] == "local_var":
-                local_var_found = [x['id'] for x in self.__get_possible_option_local_var() if x['data'] == if_subject_left_parameter_text]
+                local_var_found = [x['id'] for x in self.__get_possible_target_advanced_specific() if x['data'] == if_subject_left_parameter_text]
                 if local_var_found:
                     op_code_list[1] = local_var_found[0]
                 else:
@@ -441,7 +441,7 @@ class CommandAnalyser:
                     self.param_possible_list.append(self.__get_possible_activate())
                 elif type == "local_var":
                     param_value.append(self.__get_var_name(self.__op_code[op_index]))
-                    self.param_possible_list.append(self.__get_possible_local_var())
+                    self.param_possible_list.append(self.__get_possible_target_advanced_specific())
                 elif type == "battle_var":
                     param_value.append(self.__get_var_name(self.__op_code[op_index]))
                     self.param_possible_list.append(self.__get_possible_battle_var())
@@ -651,7 +651,7 @@ class CommandAnalyser:
         return [{'id': val_dict['id'] + 64, 'data': val_dict['name']} for id, val_dict in enumerate(self.game_data.gforce_data_json["gforce"])]
 
     def __get_possible_monster(self):
-        return [{'id': val_dict['id'], 'data': val_dict['name']} for id, val_dict in enumerate(self.game_data.monster_data_json["monster"])]
+        return [{'id': val_dict['entity_id'], 'data': val_dict['name']} for id, val_dict in enumerate(self.game_data.monster_data_json["monster"])]
 
     def __get_possible_monster_abilities(self):
         return [{'id': val_dict['id'], 'data': val_dict['name']} for id, val_dict in enumerate(self.game_data.enemy_abilities_data_json["abilities"])]
@@ -684,20 +684,10 @@ class CommandAnalyser:
         return [{'id': val_dict['op_code'], 'data': val_dict['var_name']} for id, val_dict in enumerate(self.game_data.ai_data_json["list_var"]) if
                 val_dict['var_type'] == "battle"]
 
-    def __get_possible_local_var(self):
-        return [{'id': val_dict['op_code'], 'data': val_dict['var_name']} for id, val_dict in enumerate(self.game_data.ai_data_json["list_var"]) if
-                val_dict['var_type'] == "local"]
-
     def __get_possible_global_var(self):
         return [{'id': val_dict['op_code'], 'data': val_dict['var_name']} for id, val_dict in enumerate(self.game_data.ai_data_json["list_var"]) if
                 val_dict['var_type'] == "global"]
 
-    def __get_possible_option_local_var(self):
-        possible_values = [{'id': val_dict['id'], 'data': val_dict['data']} for id, val_dict in enumerate(self.game_data.ai_data_json["local_var_option"])]
-        # Adding the comId one
-        for monster in self.game_data.monster_data_json["monster"]:
-            possible_values.append({'id': monster['entity_id'], 'data': monster['name']})
-        return possible_values
 
     def __get_possible_option_battle_var(self):
         return [{'id': val_dict['id'], 'data': val_dict['data']} for id, val_dict in enumerate(self.game_data.ai_data_json["battle_var_option"])]
@@ -800,7 +790,7 @@ class CommandAnalyser:
                         subject_id_var = subject_id_var[0]
                         subject_id_param = subject_id_var  # For var, use a specific name
                         specific_left_text = specific_left_text.format(subject_id_var, "{}")
-                        local_var_option = [x['data'] for x in self.game_data.ai_data_json['local_var_option'] if x['id'] == op_code_left_condition_param]
+                        local_var_option = [x['text'] for x in self.game_data.ai_data_json['target_advanced_specific'] if x['param_id'] == op_code_left_condition_param]
                         if local_var_option:  # If it's a defined option
                             param_left = local_var_option[0]
                         else:
@@ -813,7 +803,7 @@ class CommandAnalyser:
                     else:
                         param_left = "Unknown var"
                         print(f"Unexpected var with code {subject_id}")
-                    list_param_possible_left.extend(self.__get_possible_option_local_var())
+                    list_param_possible_left.extend(self.__get_possible_target_advanced_specific())
                 elif if_current_subject['param_left_type'] == "battle_var":
                     param_left = [x['var_name'] for x in self.game_data.ai_data_json['list_var'] if x['op_code'] == subject_id]
                     if param_left:
@@ -1033,11 +1023,6 @@ class CommandAnalyser:
                 list_target.append({"id": i, "data": self.game_data.ai_data_json['list_target_char'][i]})
             for i in range(0, len(self.game_data.monster_data_json["monster"])):
                 list_target.append({"id": i + 16, "data": self.game_data.monster_data_json["monster"][i]["name"]})
-            number_of_generic_var_read = 0
-            for var_data in self.game_data.ai_data_json['list_var']:
-                if var_data['op_code'] == 220 + number_of_generic_var_read:
-                    list_target.append({"id": number_of_generic_var_read + 220, "data": "TARGET CONTAINED IN VAR " + var_data['var_name']})
-                    number_of_generic_var_read += 1
         if slot:
             list_target_data = self.game_data.ai_data_json['target_slot']
         elif advanced:
