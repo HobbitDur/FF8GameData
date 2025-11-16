@@ -159,7 +159,7 @@
   ],
   "target_advanced_specific": [
     {"param_id": 200, "text": "SELF",                     "param_type": "", "comment":  ""},
-    {"param_id": 203, "text": "LAST ATTACKED",            "param_type": "", "comment":  ""},
+    {"param_id": 203, "text": "LAST ATTACKER",            "param_type": "", "comment":  ""},
     {"param_id": 220, "text": "SLOT ID entity FROM varA", "param_type": ""},
     {"param_id": 221, "text": "SLOT ID entity FROM varB", "param_type": ""},
     {"param_id": 222, "text": "SLOT ID entity FROM varC", "param_type": ""},
