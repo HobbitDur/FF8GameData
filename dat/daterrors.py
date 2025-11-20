@@ -116,3 +116,8 @@ class ParamLocalVarParamError(AICodeError):
     def __init__(self, local_var_param: str):
         super().__init__(f"Unexpected local var param: {local_var_param}")
 
+
+class ParamSceneOutSlotIdError(AICodeError):
+    def __init__(self, scene_out_slot_id: str):
+        super().__init__(f"Unexpected scene out slot id: {scene_out_slot_id}")
+

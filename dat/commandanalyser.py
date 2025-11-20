@@ -1,6 +1,6 @@
 from enum import Enum
 
-from .daterrors import ParamSlotIdEnableError, ParamLocalVarParamError
+from .daterrors import ParamSlotIdEnableError, ParamLocalVarParamError, ParamSceneOutSlotIdError
 from ..gamedata import GameData
 
 
@@ -198,6 +198,11 @@ class CommandAnalyser:
                     op_code_list[i] = int(op_code_list[i])
                 elif param_type == "card":
                     op_code_list[i] = [x['id'] for x in self.game_data.card_data_json['card_info'] if x['name'] == op_code_list[i]][0]
+                elif param_type == "scene_out_slot_id":
+                    try:
+                        op_code_list[i] = [x['param_id'] for x in self.game_data.ai_data_json['scene_out_slot_id'] if x['text'] == op_code_list[i]][0]
+                    except IndexError:
+                        raise ParamSceneOutSlotIdError(op_code_list[i])
                 elif param_type == "monster":
                     op_code_list[i] = [x['id'] for x in self.game_data.monster_data_json['monster'] if x['name'] == op_code_list[i]][0]
                 elif param_type == "slot_id_enable":
@@ -488,6 +493,14 @@ class CommandAnalyser:
                         #param_value.append(self.game_data.ai_data_json['activate_type'][0]['name'])
                         param_value.append("UNKNOWN ACTIVATE TYPE")
                         self.param_possible_list[-1].append({'id': self.__op_code[op_index], 'data': "UNKNOWN ACTIVATE TYPE"})
+                elif type == "scene_out_slot_id":
+                    self.param_possible_list.append(self.__get_possible_scene_out_slot_id())
+                    try:
+                        param_value.append([x['text'] for x in self.game_data.ai_data_json['scene_out_slot_id'] if x['param_id'] == self.__op_code[op_index]][0])
+                    except IndexError:
+                        #param_value.append(self.game_data.ai_data_json['activate_type'][0]['name'])
+                        param_value.append("UNKNOWN SCENE OUT SLOT ID")
+                        self.param_possible_list[-1].append({'id': self.__op_code[op_index], 'data': "UNKNOWN SCENE OUT SLOT ID"})
                 elif type == "local_var":
                     param_value.append(self.__get_var_name(self.__op_code[op_index]))
                     self.param_possible_list.append(self.__get_possible_local_var())
@@ -734,6 +747,9 @@ class CommandAnalyser:
 
     def __get_possible_activate(self):
         return [{'id': val_dict['id'], 'data': val_dict['name']} for id, val_dict in enumerate(self.game_data.ai_data_json["activate_type"])]
+
+    def __get_possible_scene_out_slot_id(self):
+        return [{'id': val_dict['param_id'], 'data': val_dict['text']} for id, val_dict in enumerate(self.game_data.ai_data_json["scene_out_slot_id"])]
 
     def __get_possible_special_byte_check(self):
         return [{'id': val_dict['id'], 'data': val_dict['data']} for id, val_dict in enumerate(self.game_data.ai_data_json["special_byte_check"])]

@@ -79,8 +79,8 @@
     {"op_code": 49,  "size": 1, "func_name":"giveGF",           "short_text":"49:Give gf" ,"text": "Give gforce {}", "param_index": [0], "complexity": "simple", "param_type":  ["gforce"], "param_list":  [], "comment":  "Give gforce (tomberrry)"},
     {"op_code": 50,  "size": 0, "func_name":"prepareSummon",    "short_text":"50:Prepare for summon" ,"text": "Prepare for summon", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "11, 12, 109, 122. . Not yet fully understood"},
     {"op_code": 51,  "size": 0, "func_name":"activate",         "short_text":"51:Activate target" ,"text": "Activate target", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Activate target"},
-    {"op_code": 52,  "size": 1, "func_name":"enable",           "short_text":"52:Enable monster" ,"text": "Enable encounter slot {}", "param_index": [0], "complexity": "simple", "param_type":  ["int"], "param_list":  [], "comment":  "12, 109"},
-    {"op_code": 53,  "size": 1, "func_name":"loadAndTargetable","short_text":"53:Loads and makes monster targetable" ,"text": "Load and make {} targetable", "param_index": [0], "complexity": "simple", "param_type":  ["slot_id_enable"], "param_list":  [], "comment":  "Activate enemy as target"},
+    {"op_code": 52,  "size": 1, "func_name":"enable",           "short_text":"52:Enable monster" ,"text": "Enable encounter slot ID {} and put it in first battle slot available", "param_index": [0], "complexity": "simple", "param_type":  ["scene_out_slot_id"], "param_list":  [], "comment":  "12, 109"},
+    {"op_code": 53,  "size": 1, "func_name":"loadAndTargetable","short_text":"53:Loads and makes monster targetable" ,"text": "Load and make battle slot ID {} targetable", "param_index": [0], "complexity": "simple", "param_type":  ["slot_id_enable"], "param_list":  [], "comment":  "Activate enemy as target"},
     {"op_code": 54,  "size": 0, "func_name":"gilgamesh",        "short_text":"54:Give gilgamesh" ,"text": "Give gilgamesh", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Seifer 4"},
     {"op_code": 55,  "size": 1, "func_name":"giveCard",         "short_text":"55:Give card" ,"text": "give card {}", "param_index": [0], "complexity": "simple", "param_type":  ["card"], "param_list":  [], "comment":  "Give card"},
     {"op_code": 56,  "size": 1, "func_name":"giveItem",         "short_text":"56:Give item" ,"text": "Give item {}", "param_index": [0], "complexity": "simple", "param_type":  ["item"], "param_list":  [], "comment":  "Give object"},
@@ -165,12 +165,23 @@
     {"param_id": 226, "text": "TARGET MASK FROM varG", "param_type": ""},
     {"param_id": 227, "text": "TARGET MASK FROM varH", "param_type": ""}
   ],
+  "scene_out_slot_id": [
+    {"param_id": 0, "text": "0"},
+    {"param_id": 1, "text": "1"},
+    {"param_id": 2, "text": "2"},
+    {"param_id": 3, "text": "3"},
+    {"param_id": 4, "text": "4"},
+    {"param_id": 5, "text": "5"},
+    {"param_id": 6, "text": "6"},
+    {"param_id": 7, "text": "7"}
+  ],
+
   "slot_id_enable": [
-    {"param_id": 3, "text": "SLOT ID 3"},
-    {"param_id": 4, "text": "SLOT ID 4"},
-    {"param_id": 5, "text": "SLOT ID 5"},
-    {"param_id": 6, "text": "SLOT ID 6"},
-    {"param_id": 209, "text": "SLOT ID ENABLED MONSTER"}
+    {"param_id": 3, "text": "3"},
+    {"param_id": 4, "text": "4"},
+    {"param_id": 5, "text": "5"},
+    {"param_id": 6, "text": "6"},
+    {"param_id": 209, "text": "LAST ENABLED MONSTER"}
   ],
   "target_advanced_specific": [
     {"param_id": 200, "text": "SELF",                     "param_type": "", "comment":  ""},
