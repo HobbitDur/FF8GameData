@@ -103,7 +103,16 @@ class BracketError(AICodeError):
 class SectionError(AICodeError):
     def __init__(self, message: str):
         super().__init__(message)
+
 class ParamCountError(AICodeError):
     def __init__(self, message: str):
         super().__init__(message)
+
+class ParamSlotIdEnableError(AICodeError):
+    def __init__(self, slot_id_enable: str):
+        super().__init__(f"Unexpected slot id enable: {slot_id_enable}")
+
+class ParamLocalVarParamError(AICodeError):
+    def __init__(self, local_var_param: str):
+        super().__init__(f"Unexpected local var param: {local_var_param}")
 
