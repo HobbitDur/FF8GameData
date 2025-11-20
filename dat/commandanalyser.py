@@ -887,8 +887,13 @@ class CommandAnalyser:
                             if monster_id_option:
                                 param_left = monster_id_option[0]
                             else:
-                                param_left = "Unknown var"
-                                print(f"Unexpected local var option with code {op_code_left_condition_param}")
+                                chara_id_option = [x for i, x in enumerate(self.game_data.ai_data_json['list_target_char']) if
+                                                     i == op_code_left_condition_param]
+                                if chara_id_option:
+                                    param_left = chara_id_option[0]
+                                else:
+                                    param_left = "Unknown var"
+                                    print(f"Unexpected local var option with code {op_code_left_condition_param}")
                     else:
                         param_left = "Unknown var"
                         print(f"Unexpected var with code {subject_id}")
