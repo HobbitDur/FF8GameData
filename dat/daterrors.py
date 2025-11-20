@@ -112,6 +112,10 @@ class ParamSlotIdEnableError(AICodeError):
     def __init__(self, slot_id_enable: str):
         super().__init__(f"Unexpected slot id enable: {slot_id_enable}")
 
+class ParamAssignSlotIdError(AICodeError):
+    def __init__(self, assign_slot_id: str):
+        super().__init__(f"Unexpected assign slot id: {assign_slot_id}")
+
 class ParamLocalVarParamError(AICodeError):
     def __init__(self, local_var_param: str):
         super().__init__(f"Unexpected local var param: {local_var_param}")
@@ -120,4 +124,40 @@ class ParamLocalVarParamError(AICodeError):
 class ParamSceneOutSlotIdError(AICodeError):
     def __init__(self, scene_out_slot_id: str):
         super().__init__(f"Unexpected scene out slot id: {scene_out_slot_id}")
+
+class ParamMagicIdError(AICodeError):
+    def __init__(self, magic_id: str):
+        super().__init__(f"Unexpected magic id: {magic_id}")
+
+class ParamMagicTypeError(AICodeError):
+    def __init__(self, magic_type: str):
+        super().__init__(f"Unexpected magic type: {magic_type}")
+
+
+
+class ParamStatusAIError(AICodeError):
+    def __init__(self, status_ai: str):
+        super().__init__(f"Unexpected status ai: {status_ai}")
+
+class ParamItemError(AICodeError):
+    def __init__(self, item: str):
+        super().__init__(f"Unexpected item: {item}")
+
+
+class ComparatorError(AICodeError):
+    def __init__(self, comparator: str):
+        super().__init__(f"Unexpected comparator: {comparator}")
+
+class ParamGfError(AICodeError):
+    def __init__(self, gf: str):
+        super().__init__(f"Unexpected gf: {gf}")
+
+
+class ParamCardError(AICodeError):
+    def __init__(self, card: str):
+        super().__init__(f"Unexpected card: {card}")
+
+class ParamSpecialActionError(AICodeError):
+    def __init__(self, special_action: str):
+        super().__init__(f"Unexpected special_action: {special_action}")
 

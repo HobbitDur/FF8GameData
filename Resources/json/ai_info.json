@@ -86,7 +86,7 @@
     {"op_code": 56,  "size": 1, "func_name":"giveItem",         "short_text":"56:Give item" ,"text": "Give item {}", "param_index": [0], "complexity": "simple", "param_type":  ["item"], "param_list":  [], "comment":  "Give object"},
     {"op_code": 57,  "size": 0, "func_name":"gameOver",         "short_text":"57:Game over" ,"text": "Game over", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Game over"},
     {"op_code": 58,  "size": 1, "func_name":"targetableSlot",   "short_text":"58:Targetable slot" ,"text": "Make monster in slot {} targetable", "param_index": [0], "complexity": "simple", "param_type":  ["int_shift"], "param_list":  [-3], "comment":  "Needs more testing, sometimes leads to unexpected results"},
-    {"op_code": 59,  "size": 2, "func_name":"assignSlot",       "short_text":"59:Assigns monster to slot" ,"text": "Assign monster {} to slot {}", "param_index": [0,1], "complexity": "simple", "param_type":  ["int", "int"], "param_list":  [], "comment":  "124, 126. Not yet fully understood. Seems that slot 0 means actually the first slot available"},
+    {"op_code": 59,  "size": 2, "func_name":"assignSlot",       "short_text":"59:Assigns monster to slot" ,"text": "Assign monster from encounter slot {} to battle slot {}", "param_index": [0,1], "complexity": "simple", "param_type":  ["scene_out_slot_id", "assign_slot_id"], "param_list":  [], "comment":  "124, 126. Not yet fully understood. Seems that slot 0 means actually the first slot available"},
     {"op_code": 60,  "size": 1, "func_name":"addMaxHP",         "short_text":"60:Increase HP" ,"text": "Increase max HP (but not current) by {}", "param_index": [0], "complexity": "simple", "param_type":  ["int"], "param_list":  [], "comment":  "Increase Max HP"},
     {"op_code": 61,  "size": 0, "func_name":"proofOfOmega",     "short_text":"61:Give Proof of Omega" ,"text": "Give proof of omega", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "114"},
     {"op_code": 255, "size": 0, "func_name":"unused255",        "short_text":"255:Unused" ,"text": "UNUSED255", "param_index": [], "complexity": "simple", "param_type":  [], "param_list":  [], "comment":  "Default unused when op_id doesn't exist"}
@@ -182,6 +182,14 @@
     {"param_id": 5, "text": "5"},
     {"param_id": 6, "text": "6"},
     {"param_id": 209, "text": "LAST ENABLED MONSTER"}
+  ],
+
+  "assign_slot_id": [
+    {"param_id": 0, "text": "FIRST SLOT AVAILABLE"},
+    {"param_id": 3, "text": "3"},
+    {"param_id": 4, "text": "4"},
+    {"param_id": 5, "text": "5"},
+    {"param_id": 6, "text": "6"}
   ],
   "target_advanced_specific": [
     {"param_id": 200, "text": "SELF",                     "param_type": "", "comment":  ""},

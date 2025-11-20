@@ -1,6 +1,7 @@
 from enum import Enum
 
-from .daterrors import ParamSlotIdEnableError, ParamLocalVarParamError, ParamSceneOutSlotIdError
+from .daterrors import ParamSlotIdEnableError, ParamLocalVarParamError, ParamSceneOutSlotIdError, ParamAssignSlotIdError, ParamMagicIdError, \
+    ParamMagicTypeError, ParamStatusAIError, ComparatorError, ParamItemError, ParamGfError, ParamCardError, ParamSpecialActionError
 from ..gamedata import GameData
 
 
@@ -183,7 +184,14 @@ class CommandAnalyser:
                 elif param_type == "activate":
                     op_code_list[i] = [x['id'] for x in self.game_data.ai_data_json['activate_type'] if x['name'] == op_code_list[i]][0]
                 elif param_type == "special_action":
-                    op_code_list[i] = [x['id'] for x in self.game_data.special_action_data_json['special_action'] if x['name'] == op_code_list[i]][0]
+                    try:
+                        op_code_list[i] = [x['id'] for x in self.game_data.special_action_data_json['special_action'] if x['name'] == op_code_list[i]][0]
+                    except IndexError:
+                        special_param_id = [val_dict["id"] for val_dict in self.game_data.special_action_data_json["special_action"]]
+                        if int(op_code_list[i]) in special_param_id:
+                            op_code_list[i] = int(op_code_list[i])
+                        else:
+                            raise ParamSpecialActionError(op_code_list[i])
                 elif param_type == "local_var_param":
                     # Managing special case for 203 instead of last attacker
                     try:
@@ -197,7 +205,14 @@ class CommandAnalyser:
                 elif param_type == "monster_line_ability":
                     op_code_list[i] = int(op_code_list[i])
                 elif param_type == "card":
-                    op_code_list[i] = [x['id'] for x in self.game_data.card_data_json['card_info'] if x['name'] == op_code_list[i]][0]
+                    try:
+                        op_code_list[i] = [x['id'] for x in self.game_data.card_data_json['card_info'] if x['name'] == op_code_list[i]][0]
+                    except IndexError:
+                        special_param_id = [val_dict["id"] for val_dict in self.game_data.card_data_json["card_info"]]
+                        if int(op_code_list[i]) in special_param_id:
+                            op_code_list[i] = int(op_code_list[i])
+                        else:
+                            raise ParamCardError(op_code_list[i])
                 elif param_type == "scene_out_slot_id":
                     try:
                         op_code_list[i] = [x['param_id'] for x in self.game_data.ai_data_json['scene_out_slot_id'] if x['text'] == op_code_list[i]][0]
@@ -214,11 +229,34 @@ class CommandAnalyser:
                         if int(op_code_list[i]) in special_param_id:
                             op_code_list[i] = int(op_code_list[i])
                         else:
-                           raise ParamSlotIdEnableError(op_code_list[i])
+                            raise ParamSlotIdEnableError(op_code_list[i])
+                elif param_type == "assign_slot_id":
+                    try:
+                        op_code_list[i] = [x['param_id'] for x in self.game_data.ai_data_json['assign_slot_id'] if x['text'] == op_code_list[i]][0]
+                    except IndexError:
+                        special_param_id = [val_dict["param_id"] for val_dict in self.game_data.ai_data_json["assign_slot_id"]]
+                        if int(op_code_list[i]) in special_param_id:
+                            op_code_list[i] = int(op_code_list[i])
+                        else:
+                            raise ParamAssignSlotIdError(op_code_list[i])
                 elif param_type == "item":
-                    op_code_list[i] = [x['id'] for x in self.game_data.item_data_json['items'] if x['name'] == op_code_list[i]][0]
+                    try:
+                        op_code_list[i] = [x['id'] for x in self.game_data.item_data_json['items'] if x['name'] == op_code_list[i]][0]
+                    except IndexError:
+                        special_param_id = [val_dict["id"] for val_dict in self.game_data.item_data_json["items"]]
+                        if int(op_code_list[i]) in special_param_id:
+                            op_code_list[i] = int(op_code_list[i])
+                        else:
+                            raise ParamItemError(op_code_list[i])
                 elif param_type == "gforce":
-                    op_code_list[i] = [x['id'] for x in self.game_data.gforce_data_json['gforce'] if x['name'] == op_code_list[i]][0]
+                    try:
+                        op_code_list[i] = [x['id'] for x in self.game_data.gforce_data_json['gforce'] if x['name'] == op_code_list[i]][0]
+                    except IndexError:
+                        special_param_id = [val_dict["id"] for val_dict in self.game_data.gforce_data_json["gforce"]]
+                        if int(op_code_list[i]) in special_param_id:
+                            op_code_list[i] = int(op_code_list[i])
+                        else:
+                            raise ParamGfError(op_code_list[i])
                 elif param_type == "target_slot":
                     op_code_list[i] = [x['id'] for x in self.__get_target_list(advanced=True, specific=True, slot=True) if x['data'] == op_code_list[i]][0]
                 elif param_type == "target_advanced_specific":
@@ -228,13 +266,37 @@ class CommandAnalyser:
                 elif param_type == "target_basic":
                     op_code_list[i] = [x['id'] for x in self.__get_target_list(advanced=False, specific=False) if x['data'] == op_code_list[i]][0]
                 elif param_type == "comparator":
-                    op_code_list[i] = self.game_data.ai_data_json['list_comparator_ifritAI'].index(op_code_list[i])
+                    try:
+                        op_code_list[i] = self.game_data.ai_data_json['list_comparator_ifritAI'].index(op_code_list[i])
+                    except IndexError:
+                        raise ComparatorError(op_code_list[i])
                 elif param_type == "status_ai":
-                    op_code_list[i] = [x['id'] for x in self.game_data.status_data_json['status_ai'] if x['name'] == op_code_list[i]][0]
+                    try:
+                        op_code_list[i] = [x['id'] for x in self.game_data.status_data_json['status_ai'] if x['name'] == op_code_list[i]][0]
+                    except IndexError:
+                        special_param_id = [val_dict["id"] for val_dict in self.game_data.status_data_json["status_ai"]]
+                        if int(op_code_list[i]) in special_param_id:
+                            op_code_list[i] = int(op_code_list[i])
+                        else:
+                            raise ParamStatusAIError(op_code_list[i])
                 elif param_type == "magic_type":
-                    op_code_list[i] = [x['id'] for x in self.game_data.magic_data_json['magic_type'] if x['name'] == op_code_list[i]][0]
+                    try:
+                        op_code_list[i] = [x['id'] for x in self.game_data.magic_data_json['magic_type'] if x['name'] == op_code_list[i]][0]
+                    except IndexError:
+                        special_param_id = [val_dict["id"] for val_dict in self.game_data.magic_data_json["magic_type"]]
+                        if int(op_code_list[i]) in special_param_id:
+                            op_code_list[i] = int(op_code_list[i])
+                        else:
+                            raise ParamMagicTypeError(op_code_list[i])
                 elif param_type == "magic":
-                    op_code_list[i] = [x['id'] for x in self.game_data.magic_data_json['magic'] if x['name'] == op_code_list[i]][0]
+                    try:
+                        op_code_list[i] = [x['id'] for x in self.game_data.magic_data_json['magic'] if x['name'] == op_code_list[i]][0]
+                    except IndexError:
+                        special_param_id = [val_dict["id"] for val_dict in self.game_data.magic_data_json["magic"]]
+                        if int(op_code_list[i]) in special_param_id:
+                            op_code_list[i] = int(op_code_list[i])
+                        else:
+                            raise ParamMagicIdError(op_code_list[i])
                 elif param_type == "monster_ability":
                     op_code_list[i] = [x['id'] for x in self.game_data.enemy_abilities_data_json['abilities'] if x['name'] == op_code_list[i]][0]
                 elif param_type == "aptitude":
@@ -251,11 +313,11 @@ class CommandAnalyser:
             # Subject ID (0)
             # Change the subject ID with the name of var
             var_data = [x for x in self.game_data.ai_data_json['list_var'] if x['var_name'] == op_code_list[0]]
-            if var_data: #Local var is str of var name instead of an ID
+            if var_data:  # Local var is str of var name instead of an ID
                 subject_id = var_data[0]['op_code']
             else:
                 subject_id = int(op_code_list[0])
-            #subject_id = int(op_code_list[0])
+            # subject_id = int(op_code_list[0])
             op_code_list[0] = int(op_code_list[0])
             # Left condition (1)
             if_subject_dict = [x for x in self.game_data.ai_data_json['if_subject'] if x['subject_id'] == subject_id]
@@ -454,31 +516,42 @@ class CommandAnalyser:
                     try:
                         param_value.append(str([x['name'] for x in self.game_data.magic_data_json['magic_type'] if x['id'] == self.__op_code[op_index]][0]))
                     except IndexError:
-                        #param_value.append(self.game_data.magic_data_json['magic_type'][0]['name'])
+                        # param_value.append(self.game_data.magic_data_json['magic_type'][0]['name'])
                         param_value.append("UNKNOWN MAGIC TYPE")
                     self.param_possible_list.append(self.__get_possible_magic_type())
                 elif type == "slot_id_enable":
                     self.param_possible_list.append(self.__get_possible_slot_id_enable())
                     try:
-                        param_value.append(str([x['text'] for x in self.game_data.ai_data_json['slot_id_enable'] if x['param_id'] == self.__op_code[op_index]][0]))
+                        param_value.append(
+                            str([x['text'] for x in self.game_data.ai_data_json['slot_id_enable'] if x['param_id'] == self.__op_code[op_index]][0]))
                     except IndexError:
-                        #param_value.append(self.game_data.ai_data_json['slot_id_enable'][0]['text'])
+                        # param_value.append(self.game_data.ai_data_json['slot_id_enable'][0]['text'])
                         param_value.append("UNKNOWN SLOT ID ENABLE")
                         self.param_possible_list[-1].append({'id': self.__op_code[op_index], 'data': "UNKNOWN SLOT ID ENABLE"})
+                elif type == "assign_slot_id":
+                    self.param_possible_list.append(self.__get_possible_assign_slot_id())
+                    try:
+                        param_value.append(
+                            str([x['text'] for x in self.game_data.ai_data_json['assign_slot_id'] if x['param_id'] == self.__op_code[op_index]][0]))
+                    except IndexError:
+                        # param_value.append(self.game_data.ai_data_json['slot_id_enable'][0]['text'])
+                        param_value.append("UNKNOWN ASSIGN SLOT ID")
+                        self.param_possible_list[-1].append({'id': self.__op_code[op_index], 'data': "UNKNOWN ASSIGN SLOT ID"})
                 elif type == "magic":
                     self.param_possible_list.append(self.__get_possible_magic())
                     try:
                         param_value.append(str([x['name'] for x in self.game_data.magic_data_json['magic'] if x['id'] == self.__op_code[op_index]][0]))
                     except IndexError:
-                        #param_value.append(self.game_data.magic_data_json['magic'][0]['name'])
+                        # param_value.append(self.game_data.magic_data_json['magic'][0]['name'])
                         param_value.append("UNKNOWN MAGIC")
                         self.param_possible_list[-1].append({'id': self.__op_code[op_index], 'data': "UNKNOWN MAGIC"})
                 elif type == "monster_ability":
                     self.param_possible_list.append(self.__get_possible_monster_abilities())
                     try:
-                        param_value.append(str([x['name'] for x in self.game_data.enemy_abilities_data_json['abilities'] if x['id'] == self.__op_code[op_index]][0]))
+                        param_value.append(
+                            str([x['name'] for x in self.game_data.enemy_abilities_data_json['abilities'] if x['id'] == self.__op_code[op_index]][0]))
                     except IndexError:
-                        #param_value.append(self.game_data.enemy_abilities_data_json['abilities'][0]['name'])
+                        # param_value.append(self.game_data.enemy_abilities_data_json['abilities'][0]['name'])
                         param_value.append("UNKNOWN ABILITIES")
                         self.param_possible_list[-1].append({'id': self.__op_code[op_index], 'data': "UNKNOWN ABILITIES"})
 
@@ -490,15 +563,16 @@ class CommandAnalyser:
                     try:
                         param_value.append([x['name'] for x in self.game_data.ai_data_json['activate_type'] if x['id'] == self.__op_code[op_index]][0])
                     except IndexError:
-                        #param_value.append(self.game_data.ai_data_json['activate_type'][0]['name'])
+                        # param_value.append(self.game_data.ai_data_json['activate_type'][0]['name'])
                         param_value.append("UNKNOWN ACTIVATE TYPE")
                         self.param_possible_list[-1].append({'id': self.__op_code[op_index], 'data': "UNKNOWN ACTIVATE TYPE"})
                 elif type == "scene_out_slot_id":
                     self.param_possible_list.append(self.__get_possible_scene_out_slot_id())
                     try:
-                        param_value.append([x['text'] for x in self.game_data.ai_data_json['scene_out_slot_id'] if x['param_id'] == self.__op_code[op_index]][0])
+                        param_value.append(
+                            [x['text'] for x in self.game_data.ai_data_json['scene_out_slot_id'] if x['param_id'] == self.__op_code[op_index]][0])
                     except IndexError:
-                        #param_value.append(self.game_data.ai_data_json['activate_type'][0]['name'])
+                        # param_value.append(self.game_data.ai_data_json['activate_type'][0]['name'])
                         param_value.append("UNKNOWN SCENE OUT SLOT ID")
                         self.param_possible_list[-1].append({'id': self.__op_code[op_index], 'data': "UNKNOWN SCENE OUT SLOT ID"})
                 elif type == "local_var":
@@ -703,6 +777,9 @@ class CommandAnalyser:
     def __get_possible_slot_id_enable(self):
         return [{"id": x['param_id'], "data": x['text']} for x in self.game_data.ai_data_json["slot_id_enable"]]
 
+    def __get_possible_assign_slot_id(self):
+        return [{"id": x['param_id'], "data": x['text']} for x in self.game_data.ai_data_json["assign_slot_id"]]
+
     def __get_possible_magic(self):
         return [{'id': val_dict['id'], 'data': val_dict['name']} for id, val_dict in enumerate(self.game_data.magic_data_json["magic"])]
 
@@ -766,17 +843,16 @@ class CommandAnalyser:
         param_possible = []
         special_param_id = [val_dict["param_id"] for val_dict in self.game_data.ai_data_json["local_var_param"]]
         for i in range(0, 256):
-            if i in  special_param_id:
+            if i in special_param_id:
                 param_possible.append([{'id': val_dict['param_id'], 'data': val_dict['text']}
-                                      for val_dict in self.game_data.ai_data_json["local_var_param"] if val_dict['param_id'] == i][0])
+                                       for val_dict in self.game_data.ai_data_json["local_var_param"] if val_dict['param_id'] == i][0])
             else:
-                param_possible.append({'id':i, 'data': str(i)})
+                param_possible.append({'id': i, 'data': str(i)})
         return param_possible
 
     def __get_possible_global_var(self):
         return [{'id': val_dict['op_code'], 'data': val_dict['var_name']} for id, val_dict in enumerate(self.game_data.ai_data_json["list_var"]) if
                 val_dict['var_type'] == "global"]
-
 
     def __get_possible_option_battle_var(self):
         return [{'id': val_dict['id'], 'data': val_dict['data']} for id, val_dict in enumerate(self.game_data.ai_data_json["battle_var_option"])]
@@ -879,16 +955,18 @@ class CommandAnalyser:
                         subject_id_var = subject_id_var[0]
                         subject_id_param = subject_id_var  # For var, use a specific name
                         specific_left_text = specific_left_text.format(subject_id_var, "{}")
-                        local_var_option = [x['text'] for x in self.game_data.ai_data_json['target_advanced_specific'] if x['param_id'] == op_code_left_condition_param]
+                        local_var_option = [x['text'] for x in self.game_data.ai_data_json['target_advanced_specific'] if
+                                            x['param_id'] == op_code_left_condition_param]
                         if local_var_option:  # If it's a defined option
                             param_left = local_var_option[0]
                         else:
-                            monster_id_option = [x['name'] for x in self.game_data.monster_data_json['monster'] if x['entity_id'] == op_code_left_condition_param]
+                            monster_id_option = [x['name'] for x in self.game_data.monster_data_json['monster'] if
+                                                 x['entity_id'] == op_code_left_condition_param]
                             if monster_id_option:
                                 param_left = monster_id_option[0]
                             else:
                                 chara_id_option = [x for i, x in enumerate(self.game_data.ai_data_json['list_target_char']) if
-                                                     i == op_code_left_condition_param]
+                                                   i == op_code_left_condition_param]
                                 if chara_id_option:
                                     param_left = chara_id_option[0]
                                 else:
