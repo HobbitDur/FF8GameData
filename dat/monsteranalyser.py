@@ -86,8 +86,16 @@ class MonsterAnalyser:
 
     def update_stop(self, game_data: GameData):
         """To remove all too much 0 and add new one till %4 for rainbow fix"""
+        new_end = CommandAnalyser(0, [], game_data, line_index=0)
         for index_section, section in enumerate(self.battle_script_data['ai_data']):
             if index_section != len(self.battle_script_data['ai_data']) - 1:  # Last section is actually a fake one for internal purpose
+                # Must always have a stop at the end, so adding one:
+                self.append_command(index_section, copy.deepcopy(new_end))
+                if not self.battle_script_data['ai_data'][index_section]:
+                    new_end.line_index = 0
+                else:
+                    new_end.line_index = self.battle_script_data['ai_data'][index_section][-1].line_index + 1
+
                 # First do it by removing exceeding of stop
                 while len(section) >= 2 and section[-1].get_id() == 0 and section[-2].get_id() == 0:
                     self.remove_command(index_section, -1)
@@ -101,7 +109,7 @@ class MonsterAnalyser:
                     if section_size + command.get_jump_value() > last_jump_position and command.get_jump_value() > 0:
                         last_jump_position = section_size + command.get_jump_value()
 
-                new_end = CommandAnalyser(0, [], game_data, line_index=0)
+
                 if last_jump_position > 0:
                     while section_size <= last_jump_position + 1:
                         if not self.battle_script_data['ai_data'][index_section]:
@@ -120,6 +128,13 @@ class MonsterAnalyser:
 
     def update_stop_on_list(self, game_data: GameData, list_to_update: [CommandAnalyser]):
         """To remove all too much 0 and add new one till %4 for rainbow fix"""
+        new_end = CommandAnalyser(0, [], game_data)
+        # Must always have a stop at the end, so adding one:
+        list_to_update.append(copy.deepcopy(new_end))
+        if len(list_to_update) == 1:
+            list_to_update[-1].line_index = 0
+        else:
+            list_to_update[-1].line_index = list_to_update[-2].line_index + 1
         # First do it by removing exceeding of stop
         while len(list_to_update) >= 2 and list_to_update[-1].get_id() == 0 and list_to_update[-2].get_id() == 0:
             del list_to_update[-1]
@@ -131,7 +146,7 @@ class MonsterAnalyser:
             section_size += command.get_size()
             if section_size + command.get_jump_value() > last_jump_position and command.get_jump_value() > 0:
                 last_jump_position = section_size + command.get_jump_value()
-        new_end = CommandAnalyser(0, [], game_data)
+
         if last_jump_position > 0:
             while section_size <= last_jump_position + 1:
                 list_to_update.append(copy.deepcopy(new_end))
@@ -300,7 +315,7 @@ class MonsterAnalyser:
         for battle_text in self.battle_script_data['battle_text']:
             raw_text_offset.extend(current_offset.to_bytes(length=2, byteorder="little"))
             current_offset += len(battle_text)
-        while len(raw_text_offset) % 4 != 0:
+        while len(raw_text_offset) % 4 != 0: #For rainbow bug
             raw_text_offset.extend([0x00])
         for battle_text in self.battle_script_data['battle_text']:
             raw_text_section.extend(battle_text.get_data_hex())
