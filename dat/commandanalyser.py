@@ -1,7 +1,8 @@
 from enum import Enum
 
 from .daterrors import ParamSlotIdEnableError, ParamLocalVarParamError, ParamSceneOutSlotIdError, ParamAssignSlotIdError, ParamMagicIdError, \
-    ParamMagicTypeError, ParamStatusAIError, ComparatorError, ParamItemError, ParamGfError, ParamCardError, ParamSpecialActionError
+    ParamMagicTypeError, ParamStatusAIError, ComparatorError, ParamItemError, ParamGfError, ParamCardError, ParamSpecialActionError, ParamTargetBasicError, \
+    ParamTargetSpecificError, ParamTargetGenericError, ParamTargetSlotError
 from ..gamedata import GameData
 
 
@@ -258,13 +259,42 @@ class CommandAnalyser:
                         else:
                             raise ParamGfError(op_code_list[i])
                 elif param_type == "target_slot":
-                    op_code_list[i] = [x['id'] for x in self.__get_target_list(advanced=True, specific=True, slot=True) if x['data'] == op_code_list[i]][0]
+                    try:
+                        op_code_list[i] = [x['id'] for x in self.__get_target_list(advanced=True, specific=True, slot=True) if x['data'] == op_code_list[i]][0]
+                    except IndexError:
+                        target_basic_id = [val_dict["id"] for val_dict in self.__get_target_list(advanced=True, specific=True, slot=True)]
+                        if int(op_code_list[i]) in target_basic_id:
+                            op_code_list[i] = int(op_code_list[i])
+                        else:
+                            raise ParamTargetSlotError(op_code_list[i])
                 elif param_type == "target_advanced_specific":
-                    op_code_list[i] = [x['id'] for x in self.__get_target_list(advanced=True, specific=True) if x['data'] == op_code_list[i]][0]
+                    try:
+                        op_code_list[i] = [x['id'] for x in self.__get_target_list(advanced=True, specific=True) if x['data'] == op_code_list[i]][0]
+                    except IndexError:
+                        target_basic_id = [val_dict["id"] for val_dict in self.__get_target_list(advanced=True, specific=True)]
+                        if int(op_code_list[i]) in target_basic_id:
+                            op_code_list[i] = int(op_code_list[i])
+                        else:
+                            raise ParamTargetSpecificError(op_code_list[i])
                 elif param_type == "target_advanced_generic":
-                    op_code_list[i] = [x['id'] for x in self.__get_target_list(advanced=True, specific=False) if x['data'] == op_code_list[i]][0]
+                    try:
+                        op_code_list[i] = [x['id'] for x in self.__get_target_list(advanced=True, specific=False) if x['data'] == op_code_list[i]][0]
+                    except IndexError:
+                        target_basic_id = [val_dict["id"] for val_dict in self.__get_target_list(advanced=True, specific=False)]
+                        if int(op_code_list[i]) in target_basic_id:
+                            op_code_list[i] = int(op_code_list[i])
+                        else:
+                            raise ParamTargetGenericError(op_code_list[i])
                 elif param_type == "target_basic":
-                    op_code_list[i] = [x['id'] for x in self.__get_target_list(advanced=False, specific=False) if x['data'] == op_code_list[i]][0]
+                    try:
+                        op_code_list[i] = [x['id'] for x in self.__get_target_list(advanced=False, specific=False) if x['data'] == op_code_list[i]][0]
+                    except IndexError:
+                        target_basic_id = [val_dict["id"] for val_dict in self.__get_target_list(advanced=False, specific=False)]
+                        if int(op_code_list[i]) in target_basic_id:
+                            op_code_list[i] = int(op_code_list[i])
+                        else:
+                            raise ParamTargetBasicError(op_code_list[i])
+
                 elif param_type == "comparator":
                     try:
                         op_code_list[i] = self.game_data.ai_data_json['list_comparator_ifritAI'].index(op_code_list[i])
@@ -366,8 +396,14 @@ class CommandAnalyser:
                     target_list = self.__get_target_list(advanced=True, specific=True)
                 if if_subject_dict['param_left_type'] == "target_advanced_generic":
                     target_list = self.__get_target_list(advanced=True, specific=False)
-                target_id = [x['id'] for x in target_list if x['data'] == if_subject_left_parameter_text][0]
-                op_code_list[1] = int(target_id)
+                try:
+                    op_code_list[1] = [x['id'] for x in target_list if x['data'] == op_code_list[1]][0]
+                except IndexError:
+                    target_id = [val_dict["id"] for val_dict in target_list]
+                    if int(op_code_list[1]) in target_id:
+                        op_code_list[1] = int(op_code_list[1])
+                    else:
+                        raise ParamTargetSpecificError(op_code_list[1])
             elif if_subject_dict['param_left_type'] == "const":
                 op_code_list[1] = if_subject_dict['param_list'][0]  # Unused
             elif if_subject_dict['param_left_type'] == "":

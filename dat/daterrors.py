@@ -161,3 +161,20 @@ class ParamSpecialActionError(AICodeError):
     def __init__(self, special_action: str):
         super().__init__(f"Unexpected special_action: {special_action}")
 
+
+class ParamTargetBasicError(AICodeError):
+    def __init__(self, target_basic: str):
+        super().__init__(f"Unexpected target_basic: {target_basic}")
+
+class ParamTargetGenericError(AICodeError):
+    def __init__(self, target_generic: str):
+        super().__init__(f"Unexpected target_generic: {target_generic}")
+
+class ParamTargetSpecificError(AICodeError):
+    def __init__(self, target_specific: str):
+        super().__init__(f"Unexpected target_specific: {target_specific}")
+
+class ParamTargetSlotError(AICodeError):
+    def __init__(self, target_slot: str):
+        super().__init__(f"Unexpected target_slot: {target_slot}")
+
