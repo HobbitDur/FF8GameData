@@ -929,7 +929,7 @@ class CommandAnalyser:
         return [op_info['text'], [element, element_val]]
 
     def __op_02_analysis(self, op_code):
-        # op_02 = ['subject_id', 'left condition (target)', 'comparator', 'right condition (value)', 'jump1', 'jump2', 'debug']
+        # op_02 = ['subject_id', 'left condition (target)', 'comparator', 'right condition 1', 'right condition 2', 'jump1', 'jump2']
         op_info = [x for x in self.game_data.ai_data_json['op_code_info'] if x['op_code'] == 2][0]
         subject_id = op_code[0]
         subject_id_param = subject_id
