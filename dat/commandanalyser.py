@@ -2,7 +2,7 @@ from enum import Enum
 
 from .daterrors import ParamSlotIdEnableError, ParamLocalVarParamError, ParamSceneOutSlotIdError, ParamAssignSlotIdError, ParamMagicIdError, \
     ParamMagicTypeError, ParamStatusAIError, ComparatorError, ParamItemError, ParamGfError, ParamCardError, ParamSpecialActionError, ParamTargetBasicError, \
-    ParamTargetSpecificError, ParamTargetGenericError, ParamTargetSlotError
+    ParamTargetSpecificError, ParamTargetGenericError, ParamTargetSlotError, ParamAptitudeError
 from ..gamedata import GameData
 
 
@@ -94,11 +94,27 @@ class CommandAnalyser:
     def get_text_param(self):
         return self.__raw_parameters
 
-    def get_text(self, with_size=True, raw=False, for_code=False, html=False, comment=True):
+    def get_text(self, with_size=True, raw=False, for_code=False, html=False, comment=True, for_decompiled=True):
         text = self.__raw_text
         parameters = self.__raw_parameters.copy()
 
-        if for_code:
+        if for_decompiled:
+            #  ['subject_id', 'left condition (target)', 'comparator', 'right condition 1', 'right condition 2', 'jump1', 'jump2']
+            if self.__op_id == 2:
+               del parameters[-1]
+            text = "("
+            for i, param in enumerate(parameters):
+                if i < len(parameters)-1:
+                    text += f"{param}, "
+                else:
+                    text += f"{param}"
+            text+=")"
+            list_comparator_destination = self.game_data.ai_data_json['list_comparator_ifritAI_html']
+            for i in range(len(list_comparator_destination)):
+                text = text.replace(self.game_data.ai_data_json['list_comparator'][i], list_comparator_destination[i])
+            return text
+
+        elif for_code:
             parameters = []
             for parameter in self.__raw_parameters:
                 parameters.append(self.PARAM_CHAR_LEFT + str(parameter) + self.PARAM_CHAR_RIGHT)
@@ -777,10 +793,17 @@ class CommandAnalyser:
                     param_value.append(self.game_data.ai_data_json['list_comparator'][self.__op_code[op_index]])
                     self.param_possible_list.append([{"id": i, "data": x} for i, x in enumerate(self.game_data.ai_data_json['list_comparator'])])
                 elif type == "aptitude":
-                    param_value.append([x['text'] for x in self.game_data.ai_data_json['aptitude_list'] if x['aptitude_id'] == self.__op_code[op_index]][0])
+                    try:
+                        param_value_append = [x['text'] for x in self.game_data.ai_data_json['aptitude_list'] if x['aptitude_id'] == self.__op_code[op_index]][0]
+                    except IndexError:
+                        aptitude_id = [val_dict["aptitude_id"] for val_dict in self.game_data.ai_data_json["aptitude_list"]]
+                        if int(self.__op_code[op_index]) in aptitude_id:
+                            param_value_append = int(self.__op_code[op_index])
+                        else:
+                            raise ParamAptitudeError(self.__op_code[op_index])
+
+                    param_value.append(param_value_append)
                     self.param_possible_list.append([{"id": x["aptitude_id"], "data": x['text']} for x in self.game_data.ai_data_json['aptitude_list']])
-                else:
-                    param_value.append(self.__op_code[op_index])
             # Now putting the op_list in the correct order for param value (data analysis already in correct order):
             original_param_possible = self.param_possible_list.copy()
             if len(original_param_possible) != len(op_info['param_index']):

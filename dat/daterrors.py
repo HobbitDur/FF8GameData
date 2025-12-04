@@ -178,3 +178,8 @@ class ParamTargetSlotError(AICodeError):
     def __init__(self, target_slot: str):
         super().__init__(f"Unexpected target_slot: {target_slot}")
 
+
+class ParamAptitudeError(AICodeError):
+    def __init__(self, aptitude: str):
+        super().__init__(f"Unexpected aptitude: {aptitude}")
+
