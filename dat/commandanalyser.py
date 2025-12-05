@@ -94,7 +94,11 @@ class CommandAnalyser:
     def get_text_param(self):
         return self.__raw_parameters
 
-    def get_text(self, with_size=True, raw=False, for_code=False, html=False, comment=True, for_decompiled=True):
+    def _normalize_string(self, text):
+        """Normalize string for case-insensitive lookup"""
+        return text.upper().replace(' ', '_').replace('-', '_')
+
+    def get_text(self, with_size=True, raw=False, for_code=False, html=False, comment=True, for_decompiled=False, ):
         text = self.__raw_text
         parameters = self.__raw_parameters.copy()
 
@@ -105,13 +109,17 @@ class CommandAnalyser:
             text = "("
             for i, param in enumerate(parameters):
                 if i < len(parameters)-1:
-                    text += f"{param}, "
+                    text += f"{self._normalize_string(param)}, "
                 else:
-                    text += f"{param}"
+                    text += f"{self._normalize_string(param)}"
             text+=")"
+            if self.__op_id != 2:
+                text += ";"
             list_comparator_destination = self.game_data.ai_data_json['list_comparator_ifritAI_html']
             for i in range(len(list_comparator_destination)):
                 text = text.replace(self.game_data.ai_data_json['list_comparator'][i], list_comparator_destination[i])
+            if not self.__comment:
+                text += " // " + self.get_text(for_code=True, html=True)
             return text
 
         elif for_code:

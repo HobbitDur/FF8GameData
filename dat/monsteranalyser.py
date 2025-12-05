@@ -651,27 +651,41 @@ class MonsterAnalyser:
         list_code = [init_code, ennemy_turn_code, counterattack_code, death_code, before_dying_or_hit_code]
         self.battle_script_data['ai_data'] = []
         for index, code in enumerate(list_code):
-            current_if_type = CurrentIfType.NONE
-            index_read = 0
-            list_result = []
-            while index_read < len(code):
-                all_op_code_info = game_data.ai_data_json["op_code_info"]
-                op_code_ref = [x for x in all_op_code_info if x["op_code"] == code[index_read]]
-                if not op_code_ref and code[index_read] >= 0x40:
-                    index_read += 1
-                    continue
-                elif op_code_ref:  # >0x40 not used
-                    op_code_ref = op_code_ref[0]
-                    start_param = index_read + 1
-                    end_param = index_read + 1 + op_code_ref['size']
-                    command = CommandAnalyser(code[index_read], code[start_param:end_param], game_data=game_data,
-                                              battle_text=self.battle_script_data['battle_text'],
-                                              info_stat_data=self.info_stat_data, color=game_data.AIData.COLOR, current_if_type=current_if_type)
-                    current_if_type = command.get_current_if_type()
-                    list_result.append(command)
-                    index_read += 1 + op_code_ref['size']
-            self.battle_script_data['ai_data'].append(list_result)
+            self.battle_script_data['ai_data'].append(self._get_command_list_from_ai_bytes_section(code, game_data))
         self.battle_script_data['ai_data'].append([])  # Adding a end section that is empty to mark the end of the all IA section
+
+
+    def _get_command_list_from_ai_bytes_section(self, code:List, game_data:GameData):
+        current_if_type = CurrentIfType.NONE
+        index_read = 0
+        list_result = []
+        while index_read < len(code):
+            all_op_code_info = game_data.ai_data_json["op_code_info"]
+            op_code_ref = [x for x in all_op_code_info if x["op_code"] == code[index_read]]
+            if not op_code_ref and code[index_read] >= 0x40:
+                index_read += 1
+                continue
+            elif op_code_ref:  # >0x40 not used
+                op_code_ref = op_code_ref[0]
+                start_param = index_read + 1
+                end_param = index_read + 1 + op_code_ref['size']
+                command = CommandAnalyser(code[index_read], code[start_param:end_param], game_data=game_data,
+                                          battle_text=self.battle_script_data['battle_text'],
+                                          info_stat_data=self.info_stat_data, color=game_data.AIData.COLOR, current_if_type=current_if_type)
+                current_if_type = command.get_current_if_type()
+                list_result.append(command)
+                index_read += 1 + op_code_ref['size']
+        list_result = self.update_stop_on_list(game_data, list_result)
+        return list_result
+
+    def set_ai_section_from_bytes(self, code:List, section_index, game_data:GameData):
+        print("set_ai_section_from_bytes")
+        print(code)
+        print(self.battle_script_data['ai_data'][section_index])
+        self.battle_script_data['ai_data'][section_index] = self._get_command_list_from_ai_bytes_section(code, game_data)
+        print(self.battle_script_data['ai_data'][section_index])
+        return self.battle_script_data['ai_data'][section_index]
+
 
     def insert_command(self, code_section_id: int, command: CommandAnalyser, index_insertion: int = 0):
         # command.line_index = self.battle_script_data['ai_data'][code_section_id][index_insertion].line_index
