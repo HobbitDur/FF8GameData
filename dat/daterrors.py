@@ -7,6 +7,7 @@ class AICodeError(Exception):
 
     _errors: List[Dict[str, Any]] = []
     _auto_print = True  # Control whether to auto-print
+
     def __init__(self, message: str = "", context: Optional[Dict[str, Any]] = None):
         self.message = message
         self.timestamp = datetime.now()
@@ -24,7 +25,6 @@ class AICodeError(Exception):
                 print(f"{message}")
         super().__init__(message)
 
-
     def __str__(self):
         return self.message
 
@@ -36,7 +36,7 @@ class AICodeError(Exception):
     @classmethod
     def get_error_messages(cls) -> List[str]:
         """Get only the error messages"""
-        return ["<i>"+error['title']+"</i> - " + error['message'] for error in cls._errors]
+        return ["<i>" + error['title'] + "</i> - " + error['message'] for error in cls._errors]
 
     @classmethod
     def clear_errors(cls):
@@ -67,54 +67,67 @@ class AICodeError(Exception):
         """Enable/disable automatic printing"""
         cls._auto_print = enabled
 
+
 # To be deleted as it shouldn't be used
 class OpCodeNotFound(AICodeError):
     def __init__(self, op_code: int):
         message = f"No op_code defined for op_id: {op_code}"
         super().__init__(message)
 
+
 class FuncNameNotFound(AICodeError):
     def __init__(self, func_name: str):
         message = f"Didn't find func name: <b>{func_name}</b>"
         super().__init__(message)
+
 
 class FuncNameUnexpected(AICodeError):
     def __init__(self, func_name_unexpected: str, func_name_expected: str):
         message = f"Unexpected func name: <b>{func_name_unexpected}</b>, expected {func_name_expected}"
         super().__init__(message)
 
+
 class LineUnexpectedCharaError(AICodeError):
     def __init__(self, chara_unexpected: str, func_name_expected: str):
         message = f"Unexpected <b>{chara_unexpected}</b> in line {func_name_expected}"
         super().__init__(message)
+
+
 class EmptyLineError(AICodeError):
     def __init__(self):
         message = f"Unexpected empty line"
         super().__init__(message)
 
+
 class LineError(AICodeError):
     def __init__(self, message: str):
         super().__init__(message)
+
 
 class BracketError(AICodeError):
     def __init__(self, message: str):
         super().__init__(message)
 
+
 class SectionError(AICodeError):
     def __init__(self, message: str):
         super().__init__(message)
+
 
 class ParamCountError(AICodeError):
     def __init__(self, message: str):
         super().__init__(message)
 
+
 class ParamSlotIdEnableError(AICodeError):
     def __init__(self, slot_id_enable: str):
         super().__init__(f"Unexpected slot id enable: {slot_id_enable}")
 
+
 class ParamAssignSlotIdError(AICodeError):
     def __init__(self, assign_slot_id: str):
         super().__init__(f"Unexpected assign slot id: {assign_slot_id}")
+
 
 class ParamLocalVarParamError(AICodeError):
     def __init__(self, local_var_param: str):
@@ -125,19 +138,21 @@ class ParamSceneOutSlotIdError(AICodeError):
     def __init__(self, scene_out_slot_id: str):
         super().__init__(f"Unexpected scene out slot id: {scene_out_slot_id}")
 
+
 class ParamMagicIdError(AICodeError):
     def __init__(self, magic_id: str):
         super().__init__(f"Unexpected magic id: {magic_id}")
+
 
 class ParamMagicTypeError(AICodeError):
     def __init__(self, magic_type: str):
         super().__init__(f"Unexpected magic type: {magic_type}")
 
 
-
 class ParamStatusAIError(AICodeError):
     def __init__(self, status_ai: str):
         super().__init__(f"Unexpected status ai: {status_ai}")
+
 
 class ParamItemError(AICodeError):
     def __init__(self, item: str):
@@ -148,6 +163,12 @@ class ComparatorError(AICodeError):
     def __init__(self, comparator: str):
         super().__init__(f"Unexpected comparator: {comparator}")
 
+
+class SubjectIdError(AICodeError):
+    def __init__(self, subject_id: str):
+        super().__init__(f"Unexpected subject_id: {subject_id}")
+
+
 class ParamGfError(AICodeError):
     def __init__(self, gf: str):
         super().__init__(f"Unexpected gf: {gf}")
@@ -156,6 +177,7 @@ class ParamGfError(AICodeError):
 class ParamCardError(AICodeError):
     def __init__(self, card: str):
         super().__init__(f"Unexpected card: {card}")
+
 
 class ParamSpecialActionError(AICodeError):
     def __init__(self, special_action: str):
@@ -166,13 +188,16 @@ class ParamTargetBasicError(AICodeError):
     def __init__(self, target_basic: str):
         super().__init__(f"Unexpected target_basic: {target_basic}")
 
+
 class ParamTargetGenericError(AICodeError):
     def __init__(self, target_generic: str):
         super().__init__(f"Unexpected target_generic: {target_generic}")
 
+
 class ParamTargetSpecificError(AICodeError):
     def __init__(self, target_specific: str):
         super().__init__(f"Unexpected target_specific: {target_specific}")
+
 
 class ParamTargetSlotError(AICodeError):
     def __init__(self, target_slot: str):
@@ -183,3 +208,7 @@ class ParamAptitudeError(AICodeError):
     def __init__(self, aptitude: str):
         super().__init__(f"Unexpected aptitude: {aptitude}")
 
+
+class ParamIntShiftError(AICodeError):
+    def __init__(self, int_shift: str, shift: int):
+        super().__init__(f"Unexpected IntShift: {int_shift} with shift: {shift}")
