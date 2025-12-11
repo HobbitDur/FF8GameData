@@ -193,6 +193,10 @@ class ParamTargetGenericError(AICodeError):
     def __init__(self, target_generic: str):
         super().__init__(f"Unexpected target_generic: {target_generic}")
 
+class ParamBattleTextError(AICodeError):
+    def __init__(self, battle_text: str):
+        super().__init__(f"Unexpected battle_text: {battle_text}")
+
 
 class ParamTargetSpecificError(AICodeError):
     def __init__(self, target_specific: str):
@@ -212,3 +216,15 @@ class ParamAptitudeError(AICodeError):
 class ParamIntShiftError(AICodeError):
     def __init__(self, int_shift: str, shift: int):
         super().__init__(f"Unexpected IntShift: {int_shift} with shift: {shift}")
+class ParamIntError(AICodeError):
+    def __init__(self, int_value: str):
+        super().__init__(f"Unexpected Int: {int_value}")
+class ParamPercentError(AICodeError):
+    def __init__(self, percent: str):
+        super().__init__(f"Unexpected percent: {percent}")
+class ParamPercentElemError(AICodeError):
+    def __init__(self, percent_elem: str):
+        super().__init__(f"Unexpected percent_elem: {percent_elem}")
+class ParamBoolError(AICodeError):
+    def __init__(self, bool_value: str):
+        super().__init__(f"Unexpected bool_value: {bool_value}")
