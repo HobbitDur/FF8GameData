@@ -133,6 +133,18 @@ class ParamLocalVarParamError(AICodeError):
     def __init__(self, local_var_param: str):
         super().__init__(f"Unexpected local var param: {local_var_param}")
 
+class ParamLocalVarError(AICodeError):
+    def __init__(self, local_var: str):
+        super().__init__(f"Unexpected local_var : {local_var}")
+
+class ParamBattleVarError(AICodeError):
+    def __init__(self, battle_var: str):
+        super().__init__(f"Unexpected battle_var : {battle_var}")
+
+class ParamGlobalVarError(AICodeError):
+    def __init__(self, global_var: str):
+        super().__init__(f"Unexpected global_var : {global_var}")
+
 
 class ParamSceneOutSlotIdError(AICodeError):
     def __init__(self, scene_out_slot_id: str):
@@ -228,3 +240,12 @@ class ParamPercentElemError(AICodeError):
 class ParamBoolError(AICodeError):
     def __init__(self, bool_value: str):
         super().__init__(f"Unexpected bool_value: {bool_value}")
+
+class ParamMonsterAbilityError(AICodeError):
+    def __init__(self, monster_ability: str):
+        super().__init__(f"Unexpected monster_ability: {monster_ability}")
+
+
+class ParamMonsterLineAbilityError(AICodeError):
+    def __init__(self, monster_line_ability: str):
+        super().__init__(f"Unexpected monster_line_ability: {monster_line_ability}")
