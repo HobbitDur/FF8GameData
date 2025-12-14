@@ -231,6 +231,9 @@ class ParamIntShiftError(AICodeError):
 class ParamIntError(AICodeError):
     def __init__(self, int_value: str):
         super().__init__(f"Unexpected Int: {int_value}")
+class ParamInt16Error(AICodeError):
+    def __init__(self, int16_value: str):
+        super().__init__(f"Unexpected Int16: {int16_value}")
 class ParamPercentError(AICodeError):
     def __init__(self, percent: str):
         super().__init__(f"Unexpected percent: {percent}")
