@@ -98,11 +98,12 @@ class CommandAnalyser:
         """Normalize string for case-insensitive lookup"""
         return text.upper().replace(' ', '_').replace('-', '_')
 
-    def get_text(self, with_size=True, raw=False, for_code=False, html=False, comment=True, for_decompiled=False, ):
+    def get_text(self, with_size=True, raw=False, for_code=False, html=False, comment=True, for_decompiled=False):
         text = self.__raw_text
         parameters = self.__raw_parameters.copy()
 
         if for_decompiled:
+            print("for decompiled")
             #  ['subject_id', 'left condition (target)', 'comparator', 'right condition 1', 'right condition 2', 'jump1', 'jump2']
             if self.__op_id == 2:
                del parameters[-1]
@@ -122,7 +123,7 @@ class CommandAnalyser:
                 text += " // " + self.get_text(for_code=True, html=True)
             return text
 
-        elif for_code:
+        if for_code:
             parameters = []
             for parameter in self.__raw_parameters:
                 parameters.append(self.PARAM_CHAR_LEFT + str(parameter) + self.PARAM_CHAR_RIGHT)
@@ -1002,7 +1003,10 @@ class CommandAnalyser:
                     param_left = self.__get_target(op_code_left_condition_param, advanced=True, specific=False)
                     list_param_possible_left.extend(self.__get_target_list(advanced=True, specific=False))
                 elif if_current_subject['param_left_type'] == "target_advanced_specific":
+                    print("op 2 analysis target advanced specific")
+                    print(op_code_left_condition_param)
                     param_left = self.__get_target(op_code_left_condition_param, advanced=True, specific=True)
+                    print(param_left)
                     list_param_possible_left.extend(self.__get_target_list(advanced=True, specific=True))
                 elif if_current_subject['param_left_type'] == "int":
                     param_left = int(op_code_left_condition_param)
@@ -1105,7 +1109,7 @@ class CommandAnalyser:
         if if_current_subject:
             right_param_type = if_current_subject['param_right_type']
             if right_param_type:
-                if right_param_type == 'percent':
+                if right_param_type == 'hp_percent':
                     right_subject = {'text': '{} %', 'param': op_code_right_condition_param * 10}
                 elif right_param_type == 'alive':
                     right_subject = {'text': 'ALIVE', 'param': ''}

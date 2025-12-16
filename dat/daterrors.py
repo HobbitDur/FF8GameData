@@ -129,6 +129,11 @@ class ParamAssignSlotIdError(AICodeError):
         super().__init__(f"Unexpected assign slot id: {assign_slot_id}")
 
 
+class ParamSlotIdError(AICodeError):
+    def __init__(self, slot_id: str):
+        super().__init__(f"Unexpected slot_id: {slot_id}")
+
+
 class ParamLocalVarParamError(AICodeError):
     def __init__(self, local_var_param: str):
         super().__init__(f"Unexpected local var param: {local_var_param}")
@@ -194,12 +199,13 @@ class ParamCardError(AICodeError):
 class ParamSpecialActionError(AICodeError):
     def __init__(self, special_action: str):
         super().__init__(f"Unexpected special_action: {special_action}")
-
+class ParamActivateError(AICodeError):
+    def __init__(self, activate: str):
+        super().__init__(f"Unexpected activate: {activate}")
 
 class ParamTargetBasicError(AICodeError):
     def __init__(self, target_basic: str):
         super().__init__(f"Unexpected target_basic: {target_basic}")
-
 
 class ParamTargetGenericError(AICodeError):
     def __init__(self, target_generic: str):
