@@ -243,6 +243,9 @@ class ParamInt16Error(AICodeError):
 class ParamPercentError(AICodeError):
     def __init__(self, percent: str):
         super().__init__(f"Unexpected percent: {percent}")
+class ParamHpPercentError(AICodeError):
+    def __init__(self, hp_percent: str):
+        super().__init__(f"Unexpected hp_percent: {hp_percent}")
 class ParamPercentElemError(AICodeError):
     def __init__(self, percent_elem: str):
         super().__init__(f"Unexpected percent_elem: {percent_elem}")

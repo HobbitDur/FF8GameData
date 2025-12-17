@@ -35,6 +35,7 @@ class CommandAnalyser:
         self.__size = 0
         self.__raw_text = ""
         self.__raw_parameters = []
+        self.__raw_type_parameters = []
         self.__raw_text_added = []
         self.__current_if_type = current_if_type
         self.__jump_value = 0
@@ -42,13 +43,20 @@ class CommandAnalyser:
         if text_param:
             self.__analyse_op_data_with_text_param()
         else:
-            self.__analyse_op_data()
+            pass
+            #self.__analyse_op_data()
 
     def __str__(self):
         return f"Command(ID: {self.__op_id}, op_code: {self.__op_code}, text: {self.get_text()}, line_index: {self.line_index})"
 
     def __repr__(self):
         return self.__str__()
+
+    def __eq__(self, other):
+        if self.__op_id == other.__op_id and self.__op_code == other.__op_code:
+            return True
+        return False
+
 
     def reset_data(self):
         self.param_possible_list = []
@@ -103,10 +111,10 @@ class CommandAnalyser:
         parameters = self.__raw_parameters.copy()
 
         if for_decompiled:
-            print("for decompiled")
-            #  ['subject_id', 'left condition (target)', 'comparator', 'right condition 1', 'right condition 2', 'jump1', 'jump2']
+            print("for_decompiled")
             if self.__op_id == 2:
-               del parameters[-1]
+                print(parameters)
+                del parameters[-1]
             text = "("
             for i, param in enumerate(parameters):
                 if i < len(parameters)-1:
@@ -1003,10 +1011,7 @@ class CommandAnalyser:
                     param_left = self.__get_target(op_code_left_condition_param, advanced=True, specific=False)
                     list_param_possible_left.extend(self.__get_target_list(advanced=True, specific=False))
                 elif if_current_subject['param_left_type'] == "target_advanced_specific":
-                    print("op 2 analysis target advanced specific")
-                    print(op_code_left_condition_param)
                     param_left = self.__get_target(op_code_left_condition_param, advanced=True, specific=True)
-                    print(param_left)
                     list_param_possible_left.extend(self.__get_target_list(advanced=True, specific=True))
                 elif if_current_subject['param_left_type'] == "int":
                     param_left = int(op_code_left_condition_param)
@@ -1110,7 +1115,7 @@ class CommandAnalyser:
             right_param_type = if_current_subject['param_right_type']
             if right_param_type:
                 if right_param_type == 'hp_percent':
-                    right_subject = {'text': '{} %', 'param': op_code_right_condition_param * 10}
+                    right_subject = {'text': '{}%', 'param': op_code_right_condition_param * 10}
                 elif right_param_type == 'alive':
                     right_subject = {'text': 'ALIVE', 'param': ''}
                 elif right_param_type == "const":
@@ -1239,8 +1244,10 @@ class CommandAnalyser:
         self.param_possible_list.append([])
 
         list_param = [subject_id_param, left_subject['param'], comparator, right_subject['param'], jump_value]
-        if '{}' not in left_subject['text'] and subject_id != 10:
-            del list_param[1]
+        print("if list param")
+        print(list_param)
+        #if '{}' not in left_subject['text'] and subject_id != 10:
+        #    del list_param[1]
         return [if_text, list_param]
 
     def __get_var_name(self, id):
