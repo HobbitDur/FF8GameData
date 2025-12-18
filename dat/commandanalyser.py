@@ -35,7 +35,7 @@ class CommandAnalyser:
         self.__size = 0
         self.__raw_text = ""
         self.__raw_parameters = []
-        self.__raw_type_parameters = []
+        self.param_typed = []
         self.__raw_text_added = []
         self.__current_if_type = current_if_type
         self.__jump_value = 0
@@ -47,7 +47,7 @@ class CommandAnalyser:
             #self.__analyse_op_data()
 
     def __str__(self):
-        return f"Command(ID: {self.__op_id}, op_code: {self.__op_code}, text: {self.get_text()}, line_index: {self.line_index})"
+        return f"Command(id: {self.__op_id}, param: {self.__op_code}, param_type: {self.param_typed}, text: {self.get_text()}, line_index: {self.line_index})"
 
     def __repr__(self):
         return self.__str__()
@@ -105,6 +105,19 @@ class CommandAnalyser:
     def _normalize_string(self, text):
         """Normalize string for case-insensitive lookup"""
         return text.upper().replace(' ', '_').replace('-', '_')
+
+    def get_param_text(self):
+        print("get_param_text")
+        text = "("
+        for i,param in enumerate(self.param_typed):
+            text += self._normalize_string(param)
+            if i  < len(self.param_typed) - 1:
+                text+=","
+        text += ")"
+        if self.__op_id != 0x02:
+            text += ";"
+        print(text)
+        return text
 
     def get_text(self, with_size=True, raw=False, for_code=False, html=False, comment=True, for_decompiled=False):
         text = self.__raw_text
