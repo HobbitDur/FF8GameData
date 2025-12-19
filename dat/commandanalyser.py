@@ -71,7 +71,7 @@ class CommandAnalyser:
         return self.__current_if_type
 
     def get_size(self):
-        return self.__size
+        return len(self.__op_code) + 1
 
     def get_jump_value(self):
         return self.__jump_value
