@@ -186,6 +186,11 @@ class SubjectIdError(AICodeError):
         super().__init__(f"Unexpected subject_id: {subject_id}")
 
 
+class SubjectIdTenError(AICodeError):
+    def __init__(self, subject_id_10: str):
+        super().__init__(f"Unexpected subject_id_10: {subject_id_10}")
+
+
 class ParamGfError(AICodeError):
     def __init__(self, gf: str):
         super().__init__(f"Unexpected gf: {gf}")
