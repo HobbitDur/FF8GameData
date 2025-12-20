@@ -37,6 +37,8 @@ class MonsterAnalyser:
         self.sound_data = bytes()  # Section 9
         self.sound_unknown_data = bytes()  # Section 10
         self.sound_texture_data = bytes()  # Section 11
+        self.decompiler = AIDecompiler(game_data)
+        self._ai_command_list =
 
     def __str__(self):
         return "Name: {} \nData:{}".format(self.info_stat_data['monster_name'],
@@ -57,6 +59,8 @@ class MonsterAnalyser:
         self.origin_file_name = os.path.basename(file)
         # self.origin_file_checksum = get_checksum(file, algorithm='SHA256')
 
+
+    
     def analyse_loaded_data(self, game_data: GameData):
         try:
             for i in range(0, self.NUMBER_SECTION - 1):

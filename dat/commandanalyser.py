@@ -78,7 +78,7 @@ class CommandAnalyser:
 
     def set_color(self, color):
         self.__color_param = color
-        self.__analyse_op_data()
+        #self.__analyse_op_data()
 
     def set_op_id(self, op_id):
         self.reset_data()
